@@ -1,0 +1,56 @@
+{
+  "name": "obiman-assets",
+  "version": "1.0.0",
+  "description": "The assets package for Obiman (An ordering, inventory & billing management application)",
+  "author": "Allan Joshua",
+  "license": "ISC",
+  "keywords": [
+    "obiman"
+  ],
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theallanjoshua/obiman-assets.git"
+  },
+  "bugs": {
+    "url": "https://github.com/theallanjoshua/obiman-assets/issues"
+  },
+  "homepage": "https://github.com/theallanjoshua/obiman-assets#readme",
+  "dependencies": {
+    "antd": "^3.18.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.0"
+  },
+  "scripts": {
+    "dev": "webpack-dev-server --hot --config webpack.config.dev.js",
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release-patch": "npm version patch && npm run build && npm publish"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-transform-async-to-generator": "^7.4.4",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-loader": "^8.0.5",
+    "brotli-gzip-webpack-plugin": "^0.5.0",
+    "clean-webpack-plugin": "^2.0.2",
+    "css-loader": "^2.1.1",
+    "file-loader": "^3.0.1",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.5.0",
+    "style-loader": "^0.23.1",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.29.6",
+    "webpack-bundle-analyzer": "^3.3.2",
+    "webpack-cli": "^3.3.2",
+    "webpack-dev-server": "^3.3.1"
+  }
+}
