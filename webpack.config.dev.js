@@ -6,6 +6,19 @@ module.exports = {
   mode: 'development',
   entry: ['@babel/polyfill', './src/index.js'],
   devtool: 'source-map',
+  devServer: {
+    port: 8081,
+    disableHostCheck: true,
+    historyApiFallback: true,
+    hot: true,
+    https: true,
+    proxy: [{
+      context: ['/api'],
+      target: 'http://localHost:8080',
+      changeOrigin: true,
+      secure: false
+    }]
+  },
   module: {
     rules: [
       {

@@ -46,7 +46,12 @@ class Network {
     try {
       const response = await fetch(url, init);
       if(response.ok) {
-        return response.json();
+        const { output, errors } = { ...(await response.json()) };
+        if (errors.length) {
+          throw errors.join(', ');
+        } else {
+          return output;
+        }
       } else {
         throw response.statusText;
       }

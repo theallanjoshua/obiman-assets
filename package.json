@@ -20,12 +20,13 @@
   "homepage": "https://github.com/theallanjoshua/obiman-assets#readme",
   "dependencies": {
     "antd": "^3.18.2",
+    "obiman-data-models": "^1.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0"
   },
   "scripts": {
-    "dev": "webpack-dev-server --hot --config webpack.config.dev.js",
+    "dev": "webpack-dev-server --config webpack.config.dev.js",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
     "release-patch": "npm version patch && npm run build && npm publish"
