@@ -8,9 +8,12 @@ const columns = [
     key: 'label',
   },
   {
-    title: 'Quantity',
-    dataIndex: 'quantity',
-    key: 'quantity',
+    title: 'Available quantity',
+    render: (text, { quantity, unit }) => `${quantity} ${unit}`
+  },
+  {
+    title: 'Cost price',
+    render: (text, { cost, currency }) => `${cost} ${currency}`
   }
 ];
 

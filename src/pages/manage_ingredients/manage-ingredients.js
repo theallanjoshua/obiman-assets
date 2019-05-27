@@ -3,13 +3,13 @@ import AllIngredients from './components/all-ingredients';
 import Network from '../../utils/network';
 import { Ingredient } from 'obiman-data-models';
 import { PageHeader, Button } from 'antd';
+import AddIngredient from './components/add-ingredient';
 
 export default class ManageIngredients extends React.Component {
   constructor() {
     super();
     this.state = {
       loading: false,
-      successMessage: '',
       errorMessage: '',
       ingredients: []
     }
@@ -31,29 +31,18 @@ export default class ManageIngredients extends React.Component {
     this.setState({ loading: false });
   }
 
-  createIngredient = async () => {
-    const ingredient = new Ingredient();
-    ingredient.setLabel('Tomato');
-    this.setState({ loading: true, errorMessage: '', successMessage: '' });
-    try {
-      await Network.post('/api/ingredients', ingredient.get());
-      await this.fetchAllIngredients();
-    } catch (errorMessage) {
-      this.setState({ errorMessage });
-    }
-    this.setState({ loading: false });
-  }
+  showAddModal = () => this.setState({ showAddModal: true });
 
-  editIngredient = async () => {}
+  showEditModal = () => this.setState({ showEditModal: true });
 
-  deleteIngredient = async () => {}
+  hideModal = () => this.setState({ showAddModal: false, showEditModal: false });
 
   render = () => <React.Fragment>
     <PageHeader
       title='Manage ingredients'
       extra={ <Button
         type='primary'
-        onClick={this.createIngredient}
+        onClick={this.showAddModal}
         children='Add'
       />}
     />
@@ -61,6 +50,11 @@ export default class ManageIngredients extends React.Component {
     <AllIngredients
       loading={this.state.loading}
       ingredients={this.state.ingredients}
+    />
+    <AddIngredient
+      visible={this.state.showAddModal}
+      hideModal={this.hideModal}
+      fetchAllIngredients={this.fetchAllIngredients}
     />
   </React.Fragment>;
 }
