@@ -3,6 +3,12 @@ import { Modal, Alert } from 'antd';
 import IngredientInfo from './ingredient-info';
 import { Ingredient } from 'obiman-data-models';
 import Network from '../../../utils/network';
+import { INGREDIENTS_API_URL } from '../../../constants/endpoints';
+import {
+  INGREDIENT_ADDED_SUCCESSFULLY_MESSAGE,
+  ADD_MODAL_HEADER
+} from '../../../constants/manage-ingredients';
+import { ADD_BUTTON_TEXT } from '../../../constants/app';
 
 const INITIAL_STATE = {
   loading: false,
@@ -11,11 +17,20 @@ const INITIAL_STATE = {
   ingredientToCreate: {},
   showValidationErrors: false
 }
+
 export default class AddIngredient extends React.Component {
   constructor() {
     super();
     this.state = {
       ...INITIAL_STATE
+    }
+  }
+
+  componentDidUpdate = prevProps => {
+    const { visible: prevVisible } = { ...prevProps };
+    const { visible } = { ...this.props };
+    if (!prevVisible && visible) {
+      this.setState({ ...INITIAL_STATE });
     }
   }
 
@@ -29,12 +44,10 @@ export default class AddIngredient extends React.Component {
       const ingredientData = ingredient.get();
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.post('/api/ingredients', ingredientData);
-        this.setState({ errorMessage: '', successMessage: `${ingredientData.label} added to ingredients successfully` });
-        setTimeout(() => {
-          this.props.fetchAllIngredients();
-          this.hideModal();
-        }, 2000);
+        await Network.post(INGREDIENTS_API_URL, ingredientData);
+        this.setState({ errorMessage: '', successMessage: INGREDIENT_ADDED_SUCCESSFULLY_MESSAGE(ingredientData.label) });
+        this.props.fetchAllIngredients();
+        setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });
       }
@@ -42,12 +55,11 @@ export default class AddIngredient extends React.Component {
     }
   }
 
-  hideModal = () => this.setState({ ...INITIAL_STATE }, this.props.hideModal);
-
   render = () => <Modal
-    destroyOnClose={true}
-    title={'Add ingredient'}
-    okText={'Add'}
+    destroyOnClose
+    maskClosable={false}
+    title={ADD_MODAL_HEADER}
+    okText={ADD_BUTTON_TEXT}
     width={'40vw'}
     visible={this.props.visible}
     closable={!this.state.loading}
@@ -56,7 +68,7 @@ export default class AddIngredient extends React.Component {
       disabled: !!this.state.successMessage,
       loading: this.state.loading
     }}
-    onCancel={this.hideModal}
+    onCancel={this.props.hideModal}
     cancelButtonProps={{
       loading: this.state.loading
     }}
@@ -65,6 +77,7 @@ export default class AddIngredient extends React.Component {
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
     <IngredientInfo
+      ingredient={this.state.ingredientToCreate}
       showValidationErrors={this.state.showValidationErrors}
       onChange={this.onChange}
     />

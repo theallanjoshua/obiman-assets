@@ -1,0 +1,9 @@
+.input-select-group {
+  display: flex;
+  padding: 4px 0px;
+}
+
+.input-select-group .ant-select {
+  width: 100px;
+  padding-left: 4px;
+}

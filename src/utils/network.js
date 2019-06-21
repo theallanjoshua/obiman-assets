@@ -45,15 +45,11 @@ class Network {
     const init = data ? { ...params, body } : { ...params };
     try {
       const response = await fetch(url, init);
+      const { output, errors } = { ...(await response.json()) };
       if(response.ok) {
-        const { output, errors } = { ...(await response.json()) };
-        if (errors.length) {
-          throw errors.join(', ');
-        } else {
-          return output;
-        }
+        return output;
       } else {
-        throw response.statusText;
+        throw errors.join(', ');
       }
     } catch(error) {
       throw error;
