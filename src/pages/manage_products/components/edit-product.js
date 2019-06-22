@@ -62,7 +62,7 @@ export default class EditIngredient extends React.Component {
     maskClosable={false}
     title={EDIT_MODAL_HEADER}
     okText={SAVE_BUTTON_TEXT}
-    width={'40vw'}
+    width={'60vw'}
     visible={this.props.visible}
     closable={!this.state.loading}
     onOk={this.editProduct}

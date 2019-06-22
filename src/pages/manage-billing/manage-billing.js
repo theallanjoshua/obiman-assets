@@ -1,19 +1,18 @@
 import * as React from 'react';
-import AllProducts from './components/all-products';
+import AllBills from './components/all-bills';
 import Network from '../../utils/network';
+import { Bill } from 'obiman-data-models';
 import { PageHeader, Button, Alert } from 'antd';
-import AddProduct from './components/add-product';
-import EditProduct from './components/edit-product';
-import { PRODUCTS_API_URL } from '../../constants/endpoints';
+import AddBill from './components/add-bill';
+import EditBill from './components/edit-bill';
+import { BILLS_API_URL } from '../../constants/endpoints';
 import {
-  PRODUCT_DELETED_SUCCESSFULLY_MESSAGE,
-  MANAGE_PRODUCTS_PAGE_TITLE,
-  ADD_PRODUCT_BUTTON_TEXT
+  MANAGE_BILLS_PAGE_TITLE,
+  ADD_BILL_BUTTON_TEXT
 } from '../../constants/manage-products';
-import { fetchAllIngredients } from '../../utils/fetch-all-ingredients';
 import { fetchAllProducts } from '../../utils/fetch-all-products';
 
-export default class ManageProducts extends React.Component {
+export default class ManageBilling extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -28,22 +27,22 @@ export default class ManageProducts extends React.Component {
   }
 
   componentDidMount = () => {
-    this.fetchAllIngredients();
     this.fetchAllProducts();
+    this.fetchAllBills();
   }
 
-  fetchAllIngredients = async () => {
+  fetchAllProducts = async () => {
     this.setState({ loading: true, errorMessage: '' });
     try {
-      const ingredients = await fetchAllIngredients();
-      this.setState({ ingredients });
+      const products = await fetchAllProducts();
+      this.setState({ products });
     } catch (errorMessage) {
       this.setState({ errorMessage });
     }
     this.setState({ loading: false });
   }
 
-  fetchAllProducts = async () => {
+  fetchAllBills = async () => {
     this.setState({ loading: true, errorMessage: '' });
     try {
       const products = await fetchAllProducts();

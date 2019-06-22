@@ -15,6 +15,10 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
     dataIndex: 'label'
   },
   {
+    title: 'Low inventory ingredients',
+    render: (text, { lowInventoryIngredients }) => lowInventoryIngredients.join(', ')
+  },
+  {
     title: 'Description',
     dataIndex: 'description'
   },

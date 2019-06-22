@@ -16,7 +16,7 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   },
   {
     title: 'Available quantity',
-    render: (text, { quantity, unit }) => `${quantity ? `${quantity}${unit}` : `Out of stock`}`
+    render: (text, { quantity, unit }) => `${quantity ? `${quantity} ${unit}` : `Out of stock`}`
   },
   {
     title: 'Cost price',
@@ -24,7 +24,7 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   },
   {
     title: 'Threshold quantity',
-    render: (text, { thresholdQuantity, thresholdUnit }) => `${thresholdQuantity ? `${thresholdQuantity}${thresholdUnit}` : `-`}`
+    render: (text, { thresholdQuantity, thresholdUnit }) => `${thresholdQuantity ? `${thresholdQuantity} ${thresholdUnit}` : `-`}`
   },
   {
     title: 'Expiries by',

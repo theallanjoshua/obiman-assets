@@ -35,14 +35,13 @@ export default class ProductComposition extends React.Component {
         <Col span={22}>
           <ProductCompositionEntity
             showValidationErrors={this.props.showValidationErrors}
-            validationErrors={this.props.validationErrors[index] || {}}
             ingredients={availableIngredients}
             entity={entity}
             onChange={entity => this.onChange(entity, index)}
           />
         </Col>
         <Col span={2}>
-          {index > 0 ? <Button
+          {this.props.composition.length > 1 ? <Button
             icon='delete'
             type='danger'
             onClick={() => this.removeEntity(index)}

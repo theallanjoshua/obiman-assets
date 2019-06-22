@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Utils } from 'obiman-data-models';
+import { Utils, ProductCompositionEntity as PCE } from 'obiman-data-models';
 import { Row, Col, Select, InputNumber, Form } from 'antd';
 
 const formItemLayout = {
@@ -14,62 +14,67 @@ const formValidation = (showValidationErrors, validationErrors = []) => ({
 });
 
 export default class ProductCompositionEntity extends React.Component {
-  onChange = (key, value) => {
-    const { entity } = this.props;
-    this.props.onChange({ ...entity, [key]: value });
-  }
-  onIngredientChange = ingredient => this.onChange('ingredient', ingredient)
-  onQuantityChange = quantity => this.onChange('quantity', quantity)
-  onUnitChange = unit => this.onChange('unit', unit)
-  render = () => <Row gutter={8}>
-    <Col span={12}>
-      <Form.Item
-        { ...formItemLayout }
-        required
-        hasFeedback
-        { ...formValidation(this.props.showValidationErrors, this.props.validationErrors.ingredient) }
-        children={
-          <Select
-            showSearch
-            allowClear
-            placeholder={'Pick the ingredient'}
-            optionFilterProp='children'
-            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-            defaultValue={this.props.entity.label}
-            value={this.props.entity.label}
-            onChange={this.onIngredientChange}
-          >
-            {this.props.ingredients.map(({ id, label }) => <Select.Option key={id} value={id} children={label}/>)}
-          </Select>
-        }
-      />
-    </Col>
-    <Col span={12}>
-      <Form.Item
-        { ...formItemLayout }
-        required
-        { ...formValidation(this.props.showValidationErrors, [ ...(this.props.validationErrors.quantity || []), ...(this.props.validationErrors.unit || []) ]) }
-        children={
-          <div className='input-select-group'>
-            <InputNumber
-              min={0}
-              value={this.props.entity.quantity}
-              onChange={this.onQuantityChange}
-            />
+  set = (key, value) => this.props.onChange({ ...new PCE({ ...this.props.entity }).get(), [key]: value });
+  setId = ({ key }) => this.set('id', key);
+  setQuantity = quantity => this.set('quantity', quantity);
+  setUnit = unit => this.set('unit', unit);
+  render = () => {
+    const productCompositionEntity = new PCE({ ...this.props.entity });
+    const productCompositionEntityData = productCompositionEntity.get();
+    const { id: pceId, quantity: pceQuantity, unit: pceUnit } = productCompositionEntityData;
+    const validationErrors = productCompositionEntity.validate();
+    return <Row gutter={8}>
+      <Col span={12}>
+        <Form.Item
+          { ...formItemLayout }
+          required
+          hasFeedback
+          { ...formValidation(this.props.showValidationErrors, validationErrors.id) }
+          children={
             <Select
               showSearch
               allowClear
-              placeholder={'unit'}
+              labelInValue
+              placeholder={'Pick the ingredient'}
               optionFilterProp='children'
               filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-              defaultValue={this.props.entity.unit || undefined}
-              onChange={this.onUnitChange}
+              value={pceId ? { key: pceId, value: pceId } : undefined}
+              onChange={this.setId}
             >
-              {new Utils().getUnits().map(unit => <Select.Option key={unit} value={unit} children={unit}/>)}
+              {this.props.ingredients.map(({ id, label }) => <Select.Option key={id} value={id} title={label} children={label}/>)}
             </Select>
-          </div>
-        }
-      />
-    </Col>
-  </Row>
+          }
+        />
+      </Col>
+      <Col span={12}>
+        <Form.Item
+          { ...formItemLayout }
+          required
+          { ...formValidation(this.props.showValidationErrors, [ ...(validationErrors.quantity || []), ...(validationErrors.unit || []) ]) }
+          children={
+            <div className='input-select-group'>
+              <InputNumber
+                min={0}
+                value={pceQuantity}
+                onChange={this.setQuantity}
+              />
+              <Select
+                showSearch
+                allowClear
+                placeholder={'unit'}
+                optionFilterProp='children'
+                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                defaultValue={pceUnit || undefined}
+                onChange={this.setUnit}
+              >
+                {new Utils()
+                  .getUnits((this.props.ingredients.filter(({ id }) => id === pceId)[0] || {}).unit)
+                  .map(unit => <Select.Option key={unit} value={unit} children={unit}/>)}
+              </Select>
+            </div>
+          }
+        />
+      </Col>
+    </Row>;
+  }
 }

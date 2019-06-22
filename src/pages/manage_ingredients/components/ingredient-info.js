@@ -127,6 +127,7 @@ export default class IngredientInfo extends React.Component {
         children={
           <DatePicker
             showTime
+            style={{ minWidth: '240px' }}
             value={ingredientData.expiryDate ? moment(ingredientData.expiryDate) : undefined}
             onChange={this.setExpiryDate}
           />

@@ -60,7 +60,7 @@ export default class AddProduct extends React.Component {
     maskClosable={false}
     title={ADD_MODAL_HEADER}
     okText={ADD_BUTTON_TEXT}
-    width={'40vw'}
+    width={'60vw'}
     visible={this.props.visible}
     closable={!this.state.loading}
     onOk={this.addProduct}

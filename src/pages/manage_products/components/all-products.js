@@ -15,10 +15,10 @@ export default class AllIngredients extends React.Component {
     expandedRowRender={record => <List
       header={<strong>Ingredients</strong>}
       dataSource={record.composition}
-      renderItem={item => (
+      renderItem={({ label, quantity, unit, quantityGap}) => (
         <List.Item>
-          {`${item.label} - ${item.quantity} ${item.unit} `}
-          {!item.isAvailable ? <Tag color='red' children='Low inventory' /> : null}
+          {`${label} - ${quantity}${unit} `}
+          {quantityGap < 0 ? <Tag color='red' children={`Need ${quantityGap * -1}${unit} more`} /> : null}
         </List.Item>
       )}
     />}

@@ -54,7 +54,6 @@ export default class ProductInfo extends React.Component {
         children={
           <ProductComposition
             showValidationErrors={this.props.showValidationErrors}
-            validationErrors={validationErrors.composition || []}
             ingredients={this.props.ingredients}
             composition={productData.composition}
             onChange={this.setComposition}
