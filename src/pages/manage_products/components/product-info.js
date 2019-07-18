@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Input, InputNumber, Select, Row, Col } from 'antd';
+import { Form, Input, InputNumber, Select } from 'antd';
 import { Product, Utils } from 'obiman-data-models';
 import ProductComposition from './product-composition';
 
@@ -100,7 +100,7 @@ export default class ProductInfo extends React.Component {
               allowClear
               placeholder={'currency'}
               optionFilterProp='children'
-              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               value={productData.currency || undefined}
               onChange={this.setCurrency}
             >

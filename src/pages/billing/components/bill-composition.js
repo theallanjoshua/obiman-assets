@@ -1,8 +1,8 @@
 import * as React from 'react';
-import ProductCompositionEntity from './product-composition-entity';
+import BillCompositionEntity from './bill-composition-entity';
 import { Row, Col, Button } from 'antd';
 
-export default class ProductComposition extends React.Component {
+export default class BillComposition extends React.Component {
   componentDidMount() {
     if(!this.props.composition.length) {
       this.addEntity();
@@ -17,25 +17,28 @@ export default class ProductComposition extends React.Component {
     const composition = this.props.composition.map((entity, index) => index === incomingIndex ? { ...incomingEntity } : { ...entity })
     this.props.onChange(composition);
   }
-  addEntity = () => this.props.onChange([ ...this.props.composition, { ingredient: '', quantity: '', unit: '' } ]);
+  addEntity = () => this.props.onChange([ ...this.props.composition, { id: '', quantity: '' } ]);
   removeEntity = indexToRemove => this.props.onChange([ ...this.props.composition.filter((item, index) => index !== indexToRemove) ]);
   render = () => <React.Fragment>
     <Row gutter={8}>
       <Col span={11}>
-        <label>Ingredient</label>
+        <label>Product</label>
       </Col>
-      <Col span={11}>
-      <label>Quantity</label>
+      <Col span={6}>
+        <label>Quantity</label>
+      </Col>
+      <Col span={5}>
+        <label>Price</label>
       </Col>
     </Row>
     {this.props.composition.map((entity, index) => {
-      const usedIngredients = this.props.composition.filter(({ id }) => entity.id !== id).map(({ id }) => id);
-      const availableIngredients = this.props.ingredients.filter(({ id }) => !usedIngredients.includes(id));
+      const usedProducts = this.props.composition.filter(({ id }) => entity.id !== id).map(({ id }) => id);
+      const availableProducts = this.props.products.filter(({ id }) => !usedProducts.includes(id));
       return <Row key={index} gutter={8}>
         <Col span={22}>
-          <ProductCompositionEntity
+          <BillCompositionEntity
             showValidationErrors={this.props.showValidationErrors}
-            ingredients={availableIngredients}
+            products={availableProducts}
             entity={entity}
             onChange={entity => this.onChange(entity, index)}
           />

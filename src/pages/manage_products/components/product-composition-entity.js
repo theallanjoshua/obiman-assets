@@ -14,10 +14,13 @@ const formValidation = (showValidationErrors, validationErrors = []) => ({
 });
 
 export default class ProductCompositionEntity extends React.Component {
-  set = (key, value) => this.props.onChange({ ...new PCE({ ...this.props.entity }).get(), [key]: value });
-  setId = ({ key }) => this.set('id', key);
-  setQuantity = quantity => this.set('quantity', quantity);
-  setUnit = unit => this.set('unit', unit);
+  set = params => this.props.onChange({ ...new PCE({ ...this.props.entity }).get(), ...params });
+  setId = ({ key }) => {
+    const label = this.props.ingredients.filter(({ id }) => id === key)[0].label;
+    this.set({ id: key, label });
+  };
+  setQuantity = quantity => this.set({ quantity });
+  setUnit = unit => this.set({ unit });
   render = () => {
     const productCompositionEntity = new PCE({ ...this.props.entity });
     const productCompositionEntityData = productCompositionEntity.get();
@@ -37,7 +40,7 @@ export default class ProductCompositionEntity extends React.Component {
               labelInValue
               placeholder={'Pick the ingredient'}
               optionFilterProp='children'
-              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               value={pceId ? { key: pceId, value: pceId } : undefined}
               onChange={this.setId}
             >
@@ -63,7 +66,7 @@ export default class ProductCompositionEntity extends React.Component {
                 allowClear
                 placeholder={'unit'}
                 optionFilterProp='children'
-                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                 defaultValue={pceUnit || undefined}
                 onChange={this.setUnit}
               >

@@ -23,10 +23,6 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
     render: (text, { cost, currency }) => `${cost ? `${new Utils().getCurrencySymbol(currency)}${cost}` : `-`}`
   },
   {
-    title: 'Threshold quantity',
-    render: (text, { thresholdQuantity, thresholdUnit }) => `${thresholdQuantity ? `${thresholdQuantity}${thresholdUnit}` : `-`}`
-  },
-  {
     title: 'Expiries by',
     render: (text, { expiryDate }) => expiryDate ? <Tooltip title={`${moment(expiryDate).format(DATE_TIME_FORMAT)}`} children={`${moment(expiryDate).fromNow()}`} /> : '-'
   },

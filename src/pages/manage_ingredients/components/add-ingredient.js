@@ -70,7 +70,7 @@ export default class AddIngredient extends React.Component {
     }}
     onCancel={this.props.hideModal}
     cancelButtonProps={{
-      loading: this.state.loading
+      disabled: this.state.loading
     }}
   >
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}

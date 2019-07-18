@@ -11,7 +11,7 @@ import {
   ADD_PRODUCT_BUTTON_TEXT
 } from '../../constants/manage-products';
 import { fetchAllIngredients } from '../../utils/fetch-all-ingredients';
-import { fetchAllProducts } from '../../utils/fetch-all-products';
+import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
 
 export default class ManageProducts extends React.Component {
   constructor() {
@@ -27,27 +27,15 @@ export default class ManageProducts extends React.Component {
     }
   }
 
-  componentDidMount = () => {
-    this.fetchAllIngredients();
-    this.fetchAllProducts();
-  }
-
-  fetchAllIngredients = async () => {
-    this.setState({ loading: true, errorMessage: '' });
-    try {
-      const ingredients = await fetchAllIngredients();
-      this.setState({ ingredients });
-    } catch (errorMessage) {
-      this.setState({ errorMessage });
-    }
-    this.setState({ loading: false });
-  }
+  componentDidMount = () => this.fetchAllProducts();
 
   fetchAllProducts = async () => {
     this.setState({ loading: true, errorMessage: '' });
     try {
+      const ingredients = await fetchAllIngredients();
       const products = await fetchAllProducts();
-      this.setState({ products });
+      const enrichedProducts = getEnrichedProducts(products, ingredients);
+      this.setState({ ingredients, products: enrichedProducts });
     } catch (errorMessage) {
       this.setState({ errorMessage });
     }

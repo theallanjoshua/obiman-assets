@@ -5,13 +5,21 @@ import {
   HOME,
   MANAGE,
   MANAGE_INGREDIENTS,
-  MANAGE_PRODUCTS
+  MANAGE_PRODUCTS,
+  BILLING,
+  BILLING_ALL_OPEN,
+  BILLING_NEW,
+  BILLING_SEARCH
 } from '../constants/pages';
 import {
   HOME_MENU_ITEM_TITLE,
   MANAGE_SUB_MENU_TITLE,
   MANAGE_INGREDIENTS_MENU_ITEM_TITLE,
-  MANAGE_PRODUCTS_MENU_ITEM_TITLE
+  MANAGE_PRODUCTS_MENU_ITEM_TITLE,
+  BILLING_SUB_MENU_TITLE,
+  BILLING_ALL_OPEN_MENU_ITEM_TITLE,
+  BILLING_NEW_MENU_ITEM_TITLE,
+  BILLING_SEARCH_MENU_ITEM_TITLE
 } from '../constants/side-navigation';
 
 const { SubMenu, Item } = Menu;
@@ -54,9 +62,17 @@ export default class SideNavigation extends React.Component {
           <NavLink to={MANAGE_PRODUCTS}>{MANAGE_PRODUCTS_MENU_ITEM_TITLE}</NavLink>
         </Item>
       </SubMenu>
-      <Item key={'/billing'}>
-        <NavLink to={'/billing'}>{'Billing'}</NavLink>
-      </Item>
+      <SubMenu key={BILLING} title={BILLING_SUB_MENU_TITLE}>
+        <Item key={BILLING_ALL_OPEN}>
+          <NavLink to={BILLING_ALL_OPEN}>{BILLING_ALL_OPEN_MENU_ITEM_TITLE}</NavLink>
+        </Item>
+        <Item key={BILLING_NEW}>
+          <NavLink to={BILLING_NEW}>{BILLING_NEW_MENU_ITEM_TITLE}</NavLink>
+        </Item>
+        <Item key={BILLING_SEARCH}>
+          <NavLink to={BILLING_SEARCH}>{BILLING_SEARCH_MENU_ITEM_TITLE}</NavLink>
+        </Item>
+      </SubMenu>
     </Menu>
   </Drawer>;
 }

@@ -18,7 +18,7 @@ const INITIAL_STATE = {
   showValidationErrors: false
 }
 
-export default class EditIngredient extends React.Component {
+export default class EditProduct extends React.Component {
   constructor(props) {
     super(props);
     const { productToUpdate } = { ...props };
@@ -72,7 +72,7 @@ export default class EditIngredient extends React.Component {
     }}
     onCancel={this.props.hideModal}
     cancelButtonProps={{
-      loading: this.state.loading
+      disabled: this.state.loading
     }}
   >
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}

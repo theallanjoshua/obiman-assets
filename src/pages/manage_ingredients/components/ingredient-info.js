@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Input, InputNumber, Select, Row, Col, DatePicker } from 'antd';
+import { Form, Input, InputNumber, Select, DatePicker } from 'antd';
 import { Ingredient, Utils } from 'obiman-data-models';
 import moment from 'moment';
 
@@ -22,8 +22,6 @@ export default class IngredientInfo extends React.Component {
   setUnit = unit => this.set('unit', unit);
   setCost = cost => this.set('cost', cost);
   setCurrency = currency => this.set('currency', currency);
-  setThresholdQuantity = thresholdQuantity => this.set('thresholdQuantity', thresholdQuantity);
-  setThresholdUnit = thresholdUnit => this.set('thresholdUnit', thresholdUnit);
   setExpiryDate = (expiryDate, expiryDateString) => this.set('expiryDate', expiryDateString ? new Date(expiryDateString).getTime() : 0);
 
   render = () => {
@@ -62,7 +60,7 @@ export default class IngredientInfo extends React.Component {
               allowClear
               placeholder={'unit'}
               optionFilterProp='children'
-              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               defaultValue={ingredientData.unit || undefined}
               onChange={this.setUnit}
             >
@@ -87,36 +85,11 @@ export default class IngredientInfo extends React.Component {
               allowClear
               placeholder={'currency'}
               optionFilterProp='children'
-              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               defaultValue={ingredientData.currency || undefined}
               onChange={this.setCurrency}
             >
               {utils.getCurrencyCodes().map(currency => <Select.Option key={currency} value={currency} children={currency}/>)}
-            </Select>
-          </div>
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Threshold'}
-        { ...formValidation(this.props.showValidationErrors, [ ...(validationErrors.thresholdQuantity || []), ...(validationErrors.thresholdUnit || []) ]) }
-        children={
-          <div className='input-select-group'>
-            <InputNumber
-              min={0}
-              value={ingredientData.thresholdQuantity}
-              onChange={this.setThresholdQuantity}
-            />
-            <Select
-              showSearch
-              allowClear
-              placeholder={'unit'}
-              optionFilterProp='children'
-              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-              defaultValue={ingredientData.thresholdUnit || undefined}
-              onChange={this.setThresholdUnit}
-            >
-              {utils.getUnits().map(unit => <Select.Option key={unit} value={unit} children={unit}/>)}
             </Select>
           </div>
         }

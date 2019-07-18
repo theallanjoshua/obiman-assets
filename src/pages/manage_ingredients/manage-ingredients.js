@@ -106,7 +106,7 @@ export default class ManageIngredients extends React.Component {
     />
     <BulkEditIngredients
       visible={this.state.showBulkEditModal}
-      ingredients={this.state.ingredients.filter(ingredient => this.state.selectedIngredientsKeys.indexOf(ingredient.id) > -1)}
+      ingredients={this.state.ingredients.filter(ingredient => this.state.selectedIngredientsKeys.includes(ingredient.id))}
       hideModal={this.hideModal}
       fetchAllIngredients={this.fetchAllIngredients}
     />
