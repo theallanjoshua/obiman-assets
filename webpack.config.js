@@ -6,6 +6,7 @@ const BrotliGzipPlugin = require('brotli-gzip-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const outputDir = path.join(__dirname, 'dist');
+// const darkTheme = require('@ant-design/dark-theme');
 
 module.exports = {
   mode: 'production',
@@ -24,12 +25,18 @@ module.exports = {
         use: { loader: 'babel-loader' }
       },
       {
-        test: /\.css$/,
-        use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader']
-      },
-      {
         test: /\.(png|gif|wav|mp3)$/,
         loader: 'file-loader'
+      },
+      {
+        test: /\.less$/,
+        use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader', {
+          loader: 'less-loader',
+          options: {
+            // modifyVars: darkTheme.default,
+            javascriptEnabled: true
+          }
+        }]
       }
     ]
   },

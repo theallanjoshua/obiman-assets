@@ -59,7 +59,7 @@ export default class AllOpenBills extends React.Component {
             children={<div>
               <Table
                 columns={[ { dataIndex: 'label' }, { dataIndex: 'quantity' } ]}
-                dataSource={bill.composition}
+                dataSource={bill.composition.map(entity => ({ ...entity, key: entity.id }))}
                 showHeader={false}
                 pagination={false}
               />

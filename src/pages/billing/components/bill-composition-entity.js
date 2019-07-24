@@ -15,8 +15,8 @@ const formValidation = (showValidationErrors, validationErrors = []) => ({
 
 export default class BillCompositionEntity extends React.Component {
   set = params => this.props.onChange({ ...new BCE({ ...this.props.entity }).get(), ...params });
-  setId = ({ key }) => {
-    const label = this.props.products.filter(({ id }) => id === key)[0].label;
+  setId = e => {
+    const { key, label } = e || { key: '', label: '' };
     this.set({ id: key, label });
   };
   setQuantity = quantity => this.set({ quantity });
@@ -25,6 +25,7 @@ export default class BillCompositionEntity extends React.Component {
     const billCompositionEntityData = billCompositionEntity.get();
     const { id: bceId, quantity: bceQuantity } = billCompositionEntityData;
     const validationErrors = billCompositionEntity.validate();
+    const selectedProduct = this.props.products.filter(({ id }) => id === bceId)[0] || { maxRepetition: 0, price: 0 };
     return <Row gutter={8}>
       <Col span={12}>
         <Form.Item
@@ -57,7 +58,7 @@ export default class BillCompositionEntity extends React.Component {
             <div className='input-select-group'>
               <InputNumber
                 min={0}
-                max={bceId ? (this.props.products.filter(({ id }) => id === bceId)[0] || {}).maxRepetition + bceQuantity : undefined}
+                max={bceId ? selectedProduct.maxRepetition + bceQuantity : undefined}
                 value={bceQuantity}
                 onChange={this.setQuantity}
               />
@@ -68,7 +69,7 @@ export default class BillCompositionEntity extends React.Component {
       <Col span={5}>
         <Form.Item
           { ...formItemLayout }
-          children={<Statistic value={(this.props.products.filter(({ id }) => id === bceId)[0] || { price: 0 }).price * (bceQuantity || 0)} />}
+          children={<Statistic value={selectedProduct.price * (bceQuantity || 0)} />}
         />
       </Col>
     </Row>;

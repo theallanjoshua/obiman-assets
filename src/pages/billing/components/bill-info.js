@@ -18,7 +18,7 @@ const formValidation = (showValidationErrors, validationErrors = []) => ({
 export default class BillInfo extends React.Component {
   set = (key, value) => this.props.onChange({ ...new Bill({ ...this.props.bill }).get(), [key]: value });
   setLabel = e => this.set('label', e.target.value);
-  setComposition = composition => this.set('composition', composition.map(item => new BillCompositionEntity(item)));
+  setComposition = composition => this.set('composition', composition.map(item => new BillCompositionEntity(item).get()));
   render = () => {
     const bill = new Bill({ ...this.props.bill });
     const billData = bill.get();

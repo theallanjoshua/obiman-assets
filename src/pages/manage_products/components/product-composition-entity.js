@@ -15,8 +15,8 @@ const formValidation = (showValidationErrors, validationErrors = []) => ({
 
 export default class ProductCompositionEntity extends React.Component {
   set = params => this.props.onChange({ ...new PCE({ ...this.props.entity }).get(), ...params });
-  setId = ({ key }) => {
-    const label = this.props.ingredients.filter(({ id }) => id === key)[0].label;
+  setId = e => {
+    const { key, label } = e || { key: '', label: '' };
     this.set({ id: key, label });
   };
   setQuantity = quantity => this.set({ quantity });

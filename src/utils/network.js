@@ -49,7 +49,17 @@ class Network {
       if(response.ok) {
         return output;
       } else {
-        throw errors.join(', ');
+        switch(response.status) {
+          case 428: {
+            throw `Looks like somebody else beat you to it. Refresh ${errors.join(', ')}, apply your changes and try again!`;
+          }
+          case 417: {
+            throw `Looks like there isn't enough inventory to create this bill for these ingredients: ${errors.join(', ')}, apply your changes and try again!`;
+          }
+          default: {
+            throw errors.join(', ');
+          }
+        }
       }
     } catch(error) {
       throw error;

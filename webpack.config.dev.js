@@ -1,6 +1,7 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const darkTheme = require('@ant-design/dark-theme');
 
 module.exports = {
   mode: 'development',
@@ -27,12 +28,18 @@ module.exports = {
         use: { loader: 'babel-loader' }
       },
       {
-        test: /\.css$/,
-        use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader']
-      },
-      {
         test: /\.(png|gif|wav|mp3)$/,
         loader: 'file-loader'
+      },
+      {
+        test: /\.less$/,
+        use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader', {
+          loader: 'less-loader',
+          options: {
+            // modifyVars: darkTheme.default,
+            javascriptEnabled: true
+          }
+        }]
       }
     ]
   },

@@ -47,18 +47,18 @@ export default class AddBill extends React.Component {
   }
 
   onChange = billToCreate => {
-    const { previousBill: existingBill, ingredients, products } = this.state;
-    const { composition: existingBillComposition } = existingBill;
-    const { composition: incomingBillComposition } = billToCreate;
+    const { previousBill, ingredients, products } = this.state;
+    const { composition: existingBillComposition } = new Bill(previousBill).get();
+    const { composition: incomingBillComposition } = new Bill(billToCreate).get();
     const validIncomingBillComposition = incomingBillComposition.filter(({ id, quantity }) => id && quantity);
-    const ingredientsToUpdate = new Utils().getIngredientsToUpdate(ingredients, products, validIncomingBillComposition, existingBillComposition);
+    const validExistingBillComposition = existingBillComposition.filter(({ id, quantity }) => id && quantity);
+    const ingredientsToUpdate = new Utils().getIngredientsToUpdate(ingredients, products, validIncomingBillComposition, validExistingBillComposition);
     const updatedIngredients = ingredients.map(existingIngredient => {
       const updatedIngredient = ingredientsToUpdate.filter(({ id }) => existingIngredient.id === id)[0];
       return updatedIngredient || existingIngredient;
     });
     const updatedProducts = getEnrichedProducts(products, updatedIngredients);
-    const previousBill = Object.keys(new Bill(billToCreate).validate()).length ? existingBill : billToCreate;
-    this.setState({ billToCreate, previousBill, ingredients: updatedIngredients, products: updatedProducts });
+    this.setState({ billToCreate, previousBill: billToCreate, ingredients: updatedIngredients, products: updatedProducts });
   };
 
   addBill = async () => {

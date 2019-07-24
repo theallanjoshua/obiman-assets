@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Menu, Drawer } from 'antd';
 import {
   HOME,
@@ -9,18 +9,10 @@ import {
   BILLING,
   BILLING_ALL_OPEN,
   BILLING_NEW,
-  BILLING_SEARCH
+  BILLING_SEARCH,
+  PAGE_URL_TITLE_MAP
 } from '../constants/pages';
-import {
-  HOME_MENU_ITEM_TITLE,
-  MANAGE_SUB_MENU_TITLE,
-  MANAGE_INGREDIENTS_MENU_ITEM_TITLE,
-  MANAGE_PRODUCTS_MENU_ITEM_TITLE,
-  BILLING_SUB_MENU_TITLE,
-  BILLING_ALL_OPEN_MENU_ITEM_TITLE,
-  BILLING_NEW_MENU_ITEM_TITLE,
-  BILLING_SEARCH_MENU_ITEM_TITLE
-} from '../constants/side-navigation';
+import { SIDE_NAVIGATION_TITLE } from '../constants/side-navigation';
 
 const { SubMenu, Item } = Menu;
 
@@ -36,7 +28,7 @@ export default class SideNavigation extends React.Component {
   onOpenChange = openKeys => this.setState({ openKeys })
   onSelect = ({ selectedKeys }) => this.setState({ selectedKeys })
   render = () => <Drawer
-    title={'Navigation'}
+    title={SIDE_NAVIGATION_TITLE}
     placement='left'
     bodyStyle={{ padding: '0px' }}
     closable={true}
@@ -52,26 +44,26 @@ export default class SideNavigation extends React.Component {
       onSelect={this.onSelect}
     >
       <Item key={HOME}>
-        <NavLink to={HOME}>{HOME_MENU_ITEM_TITLE}</NavLink>
+        <Link to={HOME}>{PAGE_URL_TITLE_MAP[HOME]}</Link>
       </Item>
-      <SubMenu key={MANAGE} title={MANAGE_SUB_MENU_TITLE}>
+      <SubMenu key={MANAGE} title={PAGE_URL_TITLE_MAP[MANAGE]}>
         <Item key={MANAGE_INGREDIENTS}>
-          <NavLink to={MANAGE_INGREDIENTS}>{MANAGE_INGREDIENTS_MENU_ITEM_TITLE}</NavLink>
+          <Link to={MANAGE_INGREDIENTS}>{PAGE_URL_TITLE_MAP[MANAGE_INGREDIENTS]}</Link>
         </Item>
         <Item key={MANAGE_PRODUCTS}>
-          <NavLink to={MANAGE_PRODUCTS}>{MANAGE_PRODUCTS_MENU_ITEM_TITLE}</NavLink>
+          <Link to={MANAGE_PRODUCTS}>{PAGE_URL_TITLE_MAP[MANAGE_PRODUCTS]}</Link>
         </Item>
       </SubMenu>
-      <SubMenu key={BILLING} title={BILLING_SUB_MENU_TITLE}>
+      <SubMenu key={BILLING} title={PAGE_URL_TITLE_MAP[BILLING]}>
         <Item key={BILLING_ALL_OPEN}>
-          <NavLink to={BILLING_ALL_OPEN}>{BILLING_ALL_OPEN_MENU_ITEM_TITLE}</NavLink>
+          <Link to={BILLING_ALL_OPEN}>{PAGE_URL_TITLE_MAP[BILLING_ALL_OPEN]}</Link>
         </Item>
         <Item key={BILLING_NEW}>
-          <NavLink to={BILLING_NEW}>{BILLING_NEW_MENU_ITEM_TITLE}</NavLink>
+          <Link to={BILLING_NEW}>{PAGE_URL_TITLE_MAP[BILLING_NEW]}</Link>
         </Item>
-        <Item key={BILLING_SEARCH}>
-          <NavLink to={BILLING_SEARCH}>{BILLING_SEARCH_MENU_ITEM_TITLE}</NavLink>
-        </Item>
+        {/* <Item key={BILLING_SEARCH}>
+          <Link to={BILLING_SEARCH}>{PAGE_URL_TITLE_MAP[BILLING_SEARCH]}</Link>
+        </Item> */}
       </SubMenu>
     </Menu>
   </Drawer>;
