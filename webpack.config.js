@@ -2,7 +2,7 @@ const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const BrotliGzipPlugin = require('brotli-gzip-webpack-plugin');
+// const BrotliGzipPlugin = require('brotli-gzip-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const outputDir = path.join(__dirname, 'dist');
@@ -51,21 +51,21 @@ module.exports = {
       inject: true,
       useGzip: true
     }),
-    new BrotliGzipPlugin({
-      asset: '[path].br[query]',
-      algorithm: 'brotli',
-      test: /\.(js|css|html|svg)$/,
-      threshold: 10240,
-      minRatio: 0.7,
-      quality: 11
-    }),
-    new BrotliGzipPlugin({
-      asset: '[path].gz[query]',
-      algorithm: 'gzip',
-      test: /\.(js|css|html|svg)$/,
-      threshold: 10240,
-      minRatio: 0.7
-    })
+    // new BrotliGzipPlugin({
+    //   asset: '[path].br[query]',
+    //   algorithm: 'brotli',
+    //   test: /\.(js|css|html|svg)$/,
+    //   threshold: 10240,
+    //   minRatio: 0.7,
+    //   quality: 11
+    // }),
+    // new BrotliGzipPlugin({
+    //   asset: '[path].gz[query]',
+    //   algorithm: 'gzip',
+    //   test: /\.(js|css|html|svg)$/,
+    //   threshold: 10240,
+    //   minRatio: 0.7
+    // })
     // new BundleAnalyzerPlugin()
   ],
   optimization: {
