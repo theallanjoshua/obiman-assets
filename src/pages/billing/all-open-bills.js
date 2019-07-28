@@ -45,7 +45,11 @@ export default class AllOpenBills extends React.Component {
       <Row gutter={16}>
         {this.state.bills.map(bill => <Col
           key={bill.id}
-          span={4}
+          xs={{ span: 17 }}
+          sm={{ span: 13 }}
+          md={{ span: 9 }}
+          lg={{ span: 7 }}
+          xl={{ span: 5 }}
           style={{ paddingBottom: '16px' }}
         >
           <Card

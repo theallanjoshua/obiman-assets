@@ -4,8 +4,17 @@ import { Bill, BillCompositionEntity } from 'obiman-data-models';
 import BillComposition from './bill-composition';
 
 const formItemLayout = {
-  labelCol: { span: 1, offset: 6 },
-  wrapperCol: { span: 9 }
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 24 },
+    md: { span: 24 },
+    lg: { span: 1, offset: 6 }
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 24 },
+    md: { span: 24 },
+    lg: { span: 9 }}
 }
 
 const formValidation = (showValidationErrors, validationErrors = []) => ({

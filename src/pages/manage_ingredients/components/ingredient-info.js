@@ -4,8 +4,18 @@ import { Ingredient, Utils } from 'obiman-data-models';
 import moment from 'moment';
 
 const formItemLayout = {
-  labelCol: { span: 7 },
-  wrapperCol: { span: 15 }
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 24 },
+    md: { span: 24 },
+    lg: { span: 7 }
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 24 },
+    md: { span: 24 },
+    lg: { span: 15 }
+  }
 };
 
 const formValidation = (showValidationErrors, validationErrors = []) => ({
