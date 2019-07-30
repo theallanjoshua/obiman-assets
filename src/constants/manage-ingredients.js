@@ -12,7 +12,9 @@ export const ADD_MODAL_HEADER = 'Add ingredient';
 export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Ingredient',
-    dataIndex: 'label'
+    dataIndex: 'label',
+    fixed: 'left',
+    width: 100
   },
   {
     title: 'Available quantity',
@@ -43,6 +45,7 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
         children='Edit'
         onClick={() => ingredient.onEdit(ingredient)}
       />
+      <br />
       <Popconfirm
         title={`Are you sure you want to delete ${ingredient.label} from ingredients?`}
         okText={'Delete'}

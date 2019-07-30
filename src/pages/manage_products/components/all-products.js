@@ -12,15 +12,6 @@ export default class AllIngredients extends React.Component {
       onEdit: this.props.showEditModal,
       onDelete: this.props.onDeleteProduct
     }))}
-    expandedRowRender={record => <List
-      header={<strong>Ingredients</strong>}
-      dataSource={record.composition}
-      renderItem={({ label, quantity, unit, quantityGap}) => (
-        <List.Item>
-          {`${label} - ${quantity}${unit} `}
-          {quantityGap < 0 ? <Tag color='red' children={`Need ${quantityGap * -1}${unit} more`} /> : null}
-        </List.Item>
-      )}
-    />}
+    scroll={{ x: true }}
   />
 }

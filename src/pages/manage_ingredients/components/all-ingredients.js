@@ -15,5 +15,6 @@ export default class AllIngredients extends React.Component {
     rowSelection={{
       onChange: this.props.onSelectionChange
     }}
+    scroll={{ x: true }}
   />
 }
