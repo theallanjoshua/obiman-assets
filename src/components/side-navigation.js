@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom'
-import { Menu, Drawer } from 'antd';
+import { Menu, Icon, Drawer, Layout } from 'antd';
 import {
   HOME,
   MANAGE,
@@ -15,56 +15,107 @@ import {
 import { SIDE_NAVIGATION_TITLE } from '../constants/side-navigation';
 
 const { SubMenu, Item } = Menu;
+const { Sider } = Layout;
 
 export default class SideNavigation extends React.Component {
   constructor() {
     super();
     const URI = window.location.hash.replace('#','');
     this.state = {
+      isDrawer: false,
+      isCollapsed: false,
       selectedKeys: [URI],
       openKeys: [`/${URI.split('/')[1]}`]
     }
   }
-  onOpenChange = openKeys => this.setState({ openKeys })
-  onSelect = ({ selectedKeys }) => this.setState({ selectedKeys })
-  render = () => <Drawer
+  onOpenChange = openKeys => this.setState({ openKeys });
+  onSelect = ({ selectedKeys }) => this.setState({ selectedKeys });
+  onCollapse = (isCollapsed = true) => this.setState({ isCollapsed });
+  onBreakpoint = broken => this.setState({ isDrawer: broken });
+  render = () => <React.Fragment>
+    {this.state.isDrawer ? <Drawer
     title={SIDE_NAVIGATION_TITLE}
     placement='left'
     bodyStyle={{ padding: '0px' }}
-    closable={true}
-    visible={this.props.visible}
-    onClose={this.props.onClose}
-  >
-    <Menu
-      style={{ borderRight: 'none' }}
-      mode='inline'
+    closable
+    visible={!this.state.isCollapsed}
+    onClose={this.onCollapse}
+    children={<SideNavigationMenu
       selectedKeys={this.state.selectedKeys}
       openKeys={this.state.openKeys}
       onOpenChange={this.onOpenChange}
       onSelect={this.onSelect}
-    >
-      <Item key={HOME}>
-        <Link to={HOME}>{PAGE_URL_TITLE_MAP[HOME]}</Link>
-      </Item>
-      <SubMenu key={MANAGE} title={PAGE_URL_TITLE_MAP[MANAGE]}>
-        <Item key={MANAGE_INGREDIENTS}>
-          <Link to={MANAGE_INGREDIENTS}>{PAGE_URL_TITLE_MAP[MANAGE_INGREDIENTS]}</Link>
-        </Item>
-        <Item key={MANAGE_PRODUCTS}>
-          <Link to={MANAGE_PRODUCTS}>{PAGE_URL_TITLE_MAP[MANAGE_PRODUCTS]}</Link>
-        </Item>
-      </SubMenu>
-      <SubMenu key={BILLING} title={PAGE_URL_TITLE_MAP[BILLING]}>
-        <Item key={BILLING_ALL_OPEN}>
-          <Link to={BILLING_ALL_OPEN}>{PAGE_URL_TITLE_MAP[BILLING_ALL_OPEN]}</Link>
-        </Item>
-        <Item key={BILLING_NEW}>
-          <Link to={BILLING_NEW}>{PAGE_URL_TITLE_MAP[BILLING_NEW]}</Link>
-        </Item>
-        {/* <Item key={BILLING_SEARCH}>
-          <Link to={BILLING_SEARCH}>{PAGE_URL_TITLE_MAP[BILLING_SEARCH]}</Link>
-        </Item> */}
-      </SubMenu>
-    </Menu>
-  </Drawer>;
+    />}
+  /> : null}
+  <Sider
+    theme='light'
+    breakpoint={'md'}
+    collapsible
+    collapsed={this.state.isDrawer || this.state.isCollapsed}
+    collapsedWidth={0}
+    onCollapse={this.onCollapse}
+    onBreakpoint={this.onBreakpoint}
+    trigger={this.state.isCollapsed ? <Icon type='menu' /> : <Icon type='close' />}
+    children={<SideNavigationMenu
+      selectedKeys={this.state.selectedKeys}
+      openKeys={this.state.openKeys}
+      onOpenChange={this.onOpenChange}
+      onSelect={this.onSelect}
+    />}
+  />
+  </React.Fragment>;
 }
+
+const SideNavigationMenu = ({ selectedKeys, openKeys, onOpenChange, onSelect }) => <Menu
+  style={{ height: '100%' }}
+  mode='inline'
+  selectedKeys={selectedKeys}
+  openKeys={openKeys}
+  onOpenChange={onOpenChange}
+  onSelect={onSelect}
+>
+  <Item key={HOME}>
+    <Link to={HOME}>{
+      <span>
+        <Icon type='home' />
+        <span>{PAGE_URL_TITLE_MAP[HOME]}</span>
+      </span>
+      }
+    </Link>
+  </Item>
+  <SubMenu
+    key={MANAGE}
+    title={
+      <span>
+        <Icon type='control' />
+        <span>{PAGE_URL_TITLE_MAP[MANAGE]}</span>
+      </span>
+    }
+  >
+    <Item key={MANAGE_INGREDIENTS}>
+      <Link to={MANAGE_INGREDIENTS}>{PAGE_URL_TITLE_MAP[MANAGE_INGREDIENTS]}</Link>
+    </Item>
+    <Item key={MANAGE_PRODUCTS}>
+      <Link to={MANAGE_PRODUCTS}>{PAGE_URL_TITLE_MAP[MANAGE_PRODUCTS]}</Link>
+    </Item>
+  </SubMenu>
+  <SubMenu
+    key={BILLING}
+    title={
+      <span>
+        <Icon type='shopping-cart' />
+        <span>{PAGE_URL_TITLE_MAP[BILLING]}</span>
+      </span>
+    }
+  >
+    <Item key={BILLING_ALL_OPEN}>
+      <Link to={BILLING_ALL_OPEN}>{PAGE_URL_TITLE_MAP[BILLING_ALL_OPEN]}</Link>
+    </Item>
+    <Item key={BILLING_NEW}>
+      <Link to={BILLING_NEW}>{PAGE_URL_TITLE_MAP[BILLING_NEW]}</Link>
+    </Item>
+    {/* <Item key={BILLING_SEARCH}>
+      <Link to={BILLING_SEARCH}>{PAGE_URL_TITLE_MAP[BILLING_SEARCH]}</Link>
+    </Item> */}
+  </SubMenu>
+</Menu>;

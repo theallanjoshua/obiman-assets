@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Alert, PageHeader, Row, Col, Spin } from 'antd';
+import { Button, Alert, Row, Col, Spin } from 'antd';
 import BillInfo from './components/bill-info';
 import { Bill, Utils } from 'obiman-data-models';
 import Network from '../../utils/network';
@@ -11,6 +11,8 @@ import {
 } from '../../constants/billing';
 import { fetchAllIngredients } from '../../utils/fetch-all-ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
+import PageHeader from '../../components/page-header';
+import Page from '../../components/page';
 
 const INITIAL_STATE = {
   loading: false,
@@ -79,7 +81,7 @@ export default class AddBill extends React.Component {
     }
   }
 
-  render = () => <React.Fragment>
+  render = () => <Page>
     <PageHeader
       title={ADD_BILL_PAGE_TITLE}
     />
@@ -111,5 +113,5 @@ export default class AddBill extends React.Component {
         </Col>
       </Row>
     </Spin>
-  </React.Fragment>;
+  </Page>;
 }

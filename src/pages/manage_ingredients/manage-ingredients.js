@@ -1,7 +1,7 @@
 import * as React from 'react';
 import AllIngredients from './components/all-ingredients';
 import Network from '../../utils/network';
-import { PageHeader, Button, Alert } from 'antd';
+import { Button, Alert } from 'antd';
 import AddIngredient from './components/add-ingredient';
 import EditIngredient from './components/edit-ingredient';
 import BulkEditIngredients from './components/bulk-edit-ingredients';
@@ -12,6 +12,8 @@ import {
   ADD_INGREDIENT_BUTTON_TEXT
 } from '../../constants/manage-ingredients';
 import { fetchAllIngredients } from '../../utils/fetch-all-ingredients';
+import PageHeader from '../../components/page-header';
+import Page from '../../components/page';
 
 export default class ManageIngredients extends React.Component {
   constructor() {
@@ -63,11 +65,12 @@ export default class ManageIngredients extends React.Component {
 
   onSelectionChange = selectedIngredientsKeys => this.setState({ selectedIngredientsKeys });
 
-  render = () => <React.Fragment>
+  render = () => <Page>
     <PageHeader
       title={MANAGE_INGREDIENTS_PAGE_TITLE(this.state.ingredients.length)}
       extra={<React.Fragment>
         <Button
+          style={{ marginRight: '4px' }}
           type='primary'
           icon='plus'
           onClick={this.showAddModal}
@@ -110,5 +113,5 @@ export default class ManageIngredients extends React.Component {
       hideModal={this.hideModal}
       fetchAllIngredients={this.fetchAllIngredients}
     />
-  </React.Fragment>;
+  </Page>;
 }

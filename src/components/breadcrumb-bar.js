@@ -5,7 +5,7 @@ import { BREADCRUMB_MAP, PAGE_URL_TITLE_MAP } from '../constants/pages';
 
 const getBreadcrumbValue = () => BREADCRUMB_MAP[window.location.hash.replace('#','')] || [];
 
-export const BreadcrumbBar = () => <Breadcrumb>
+const BreadcrumbBar = () => <Breadcrumb>
   <Breadcrumb.Item key='home'>
     <Link to='/'><Icon type='home' /></Link>
   </Breadcrumb.Item>
@@ -13,3 +13,5 @@ export const BreadcrumbBar = () => <Breadcrumb>
     <Link to={key}>{PAGE_URL_TITLE_MAP[key]}</Link>
   </Breadcrumb.Item>)}
 </Breadcrumb>;
+
+export default BreadcrumbBar;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import AllProducts from './components/all-products';
 import Network from '../../utils/network';
-import { PageHeader, Button, Alert } from 'antd';
+import { Button, Alert } from 'antd';
 import AddProduct from './components/add-product';
 import EditProduct from './components/edit-product';
 import { PRODUCTS_API_URL } from '../../constants/endpoints';
@@ -12,6 +12,8 @@ import {
 } from '../../constants/manage-products';
 import { fetchAllIngredients } from '../../utils/fetch-all-ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
+import PageHeader from '../../components/page-header';
+import Page from '../../components/page';
 
 export default class ManageProducts extends React.Component {
   constructor() {
@@ -60,7 +62,7 @@ export default class ManageProducts extends React.Component {
     }
   }
 
-  render = () => <React.Fragment>
+  render = () => <Page>
     <PageHeader
       title={MANAGE_PRODUCTS_PAGE_TITLE(this.state.products.length)}
       extra={<Button
@@ -93,5 +95,5 @@ export default class ManageProducts extends React.Component {
       hideModal={this.hideModal}
       fetchAllProducts={this.fetchAllProducts}
     />
-  </React.Fragment>;
+  </Page>;
 }

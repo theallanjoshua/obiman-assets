@@ -1,12 +1,14 @@
 import * as React from 'react';
 import Network from '../../utils/network';
-import { PageHeader, Alert, Row, Col, Card, Button, Spin, Table, Statistic } from 'antd';
+import { Alert, Row, Col, Card, Button, Spin, Table, Statistic } from 'antd';
 import { BILLS_API_URL } from '../../constants/endpoints';
 import {
   MANAGE_BILLS_PAGE_TITLE,
   EDIT_BILL_BUTTON_TEXT
 } from '../../constants/billing';
 import { BILLING } from '../../constants/pages';
+import PageHeader from '../../components/page-header';
+import Page from '../../components/page';
 
 export default class AllOpenBills extends React.Component {
   constructor() {
@@ -33,7 +35,7 @@ export default class AllOpenBills extends React.Component {
     this.setState({ loading: false });
   }
 
-  render = () => <React.Fragment>
+  render = () => <Page>
     <PageHeader
       title={MANAGE_BILLS_PAGE_TITLE(this.state.bills.length)}
     />
@@ -42,42 +44,34 @@ export default class AllOpenBills extends React.Component {
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
     <Spin spinning={this.state.loading}>
-      <Row gutter={16}>
-        {this.state.bills.map(bill => <Col
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        {this.state.bills.map(bill => <Card
           key={bill.id}
-          xs={{ span: 17 }}
-          sm={{ span: 13 }}
-          md={{ span: 9 }}
-          lg={{ span: 7 }}
-          xl={{ span: 5 }}
-          style={{ paddingBottom: '16px' }}
-        >
-          <Card
-            title={bill.label}
-            extra={<Button
-              type='link'
-              icon='edit'
-              href={`/#${BILLING}/${bill.id}`}
-              children={EDIT_BILL_BUTTON_TEXT}
-            />}
-            children={<div>
-              <Table
-                columns={[ { dataIndex: 'label' }, { dataIndex: 'quantity' } ]}
-                dataSource={bill.composition.map(entity => ({ ...entity, key: entity.id }))}
-                showHeader={false}
-                pagination={false}
+          style={{ minWidth: '300px', maxWidth: '300px', width: '300px', margin: '5px'}}
+          title={bill.label}
+          extra={<Button
+            type='link'
+            icon='edit'
+            href={`/#${BILLING}/${bill.id}`}
+            children={EDIT_BILL_BUTTON_TEXT}
+          />}
+          children={<div>
+            <Table
+              columns={[ { dataIndex: 'label' }, { dataIndex: 'quantity' } ]}
+              dataSource={bill.composition.map(entity => ({ ...entity, key: entity.id }))}
+              showHeader={false}
+              pagination={false}
+            />
+            <br />
+            <div className='invert-direction' >
+              <Statistic
+                title={'Total'}
+                value={bill.total}
               />
-              <br />
-              <div className='invert-direction' >
-                <Statistic
-                  title={'Total'}
-                  value={bill.total}
-                />
-              </div>
-            </div>}
-          />
-        </Col>)}
-      </Row>
+            </div>
+          </div>}
+        />)}
+      </div>
     </Spin>
-  </React.Fragment>;
+  </Page>;
 }
