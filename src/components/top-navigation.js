@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { Consumer } from '../context';
-import { Button, Menu } from 'antd';
+import { Button, Menu, Avatar } from 'antd';
 import Credentials from '../utils/credentials';
 
 const { SubMenu, Item } = Menu;
 
 export default class TopNavigation extends React.Component {
   render = () => <Consumer>
-      {({ email }) => <Menu
+      {({ email, profilePicture }) => <Menu
         theme='dark'
         mode='horizontal'
       >
         <Item style={{ float: 'left' }}>Obiman</Item>
-        <SubMenu title={`Logged in as ${email}`} style={{ float: 'right' }}>
+        <SubMenu title={<Avatar src={profilePicture} children={email.substr(0,1).toUpperCase()} />} style={{ float: 'right' }}>
           <Item>My account</Item>
           <Item>My preferences</Item>
           <Item>

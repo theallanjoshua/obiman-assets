@@ -30,7 +30,8 @@ class App extends React.Component {
       loading: true,
       errorMessage: '',
       username: '',
-      email: ''
+      email: '',
+      profilePicture: ''
     };
   }
   authenticate = async () => {
@@ -38,8 +39,9 @@ class App extends React.Component {
     try {
       const { idToken } = await Credentials.authenticate();
       const { payload } = idToken;
-      const { email, username } = payload;
-      this.setState({ email, username });
+      const { email, username, picture } = payload;
+      const profilePicture = picture ? picture.includes('"url":') ? JSON.parse(picture).data.url : picture : '';
+      this.setState({ email, username, profilePicture });
     } catch (error) {
       console.log(error);
       this.setState({ errorMessage: 'Oops! Something went wrong! Try refreshing the page. If the issue persists, raise out to us at some@email.com' });
