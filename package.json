@@ -20,6 +20,7 @@
   "homepage": "https://github.com/theallanjoshua/obiman-assets#readme",
   "dependencies": {
     "@ant-design/dark-theme": "^0.2.2",
+    "amazon-cognito-auth-js-promises": "^1.1.5",
     "antd": "^3.18.2",
     "moment": "^2.24.0",
     "obiman-data-models": "^1.0.35",

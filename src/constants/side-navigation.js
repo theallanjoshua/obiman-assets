@@ -1,1 +1,1 @@
-export const SIDE_NAVIGATION_TITLE = 'Navigation';
+export const SIDE_NAVIGATION_TITLE = 'Obiman';

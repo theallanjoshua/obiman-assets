@@ -14,8 +14,8 @@ import {
 } from '../constants/pages';
 import { SIDE_NAVIGATION_TITLE } from '../constants/side-navigation';
 
-const { SubMenu, Item } = Menu;
 const { Sider } = Layout;
+const { SubMenu, Item } = Menu;
 
 export default class SideNavigation extends React.Component {
   constructor() {
@@ -66,56 +66,63 @@ export default class SideNavigation extends React.Component {
   </React.Fragment>;
 }
 
-const SideNavigationMenu = ({ selectedKeys, openKeys, onOpenChange, onSelect }) => <Menu
-  style={{ height: '100%' }}
-  mode='inline'
-  selectedKeys={selectedKeys}
-  openKeys={openKeys}
-  onOpenChange={onOpenChange}
-  onSelect={onSelect}
+const SideNavigationMenu = ({ selectedKeys, openKeys, onOpenChange, onSelect }) => <div
+  style={{
+    borderRight: '1px solid #DDD',
+    height: '100%',
+  }}
 >
-  <Item key={HOME}>
-    <Link to={HOME}>{
-      <span>
-        <Icon type='home' />
-        <span>{PAGE_URL_TITLE_MAP[HOME]}</span>
-      </span>
+  <Menu
+    style={{ borderRight: 'none' }}
+    mode='inline'
+    selectedKeys={selectedKeys}
+    openKeys={openKeys}
+    onOpenChange={onOpenChange}
+    onSelect={onSelect}
+  >
+    <Item key={HOME}>
+      <Link to={HOME}>{
+        <span>
+          <Icon type='home' />
+          <span>{PAGE_URL_TITLE_MAP[HOME]}</span>
+        </span>
+        }
+      </Link>
+    </Item>
+    <SubMenu
+      key={MANAGE}
+      title={
+        <span>
+          <Icon type='control' />
+          <span>{PAGE_URL_TITLE_MAP[MANAGE]}</span>
+        </span>
       }
-    </Link>
-  </Item>
-  <SubMenu
-    key={MANAGE}
-    title={
-      <span>
-        <Icon type='control' />
-        <span>{PAGE_URL_TITLE_MAP[MANAGE]}</span>
-      </span>
-    }
-  >
-    <Item key={MANAGE_INGREDIENTS}>
-      <Link to={MANAGE_INGREDIENTS}>{PAGE_URL_TITLE_MAP[MANAGE_INGREDIENTS]}</Link>
-    </Item>
-    <Item key={MANAGE_PRODUCTS}>
-      <Link to={MANAGE_PRODUCTS}>{PAGE_URL_TITLE_MAP[MANAGE_PRODUCTS]}</Link>
-    </Item>
-  </SubMenu>
-  <SubMenu
-    key={BILLING}
-    title={
-      <span>
-        <Icon type='shopping-cart' />
-        <span>{PAGE_URL_TITLE_MAP[BILLING]}</span>
-      </span>
-    }
-  >
-    <Item key={BILLING_ALL_OPEN}>
-      <Link to={BILLING_ALL_OPEN}>{PAGE_URL_TITLE_MAP[BILLING_ALL_OPEN]}</Link>
-    </Item>
-    <Item key={BILLING_NEW}>
-      <Link to={BILLING_NEW}>{PAGE_URL_TITLE_MAP[BILLING_NEW]}</Link>
-    </Item>
-    {/* <Item key={BILLING_SEARCH}>
-      <Link to={BILLING_SEARCH}>{PAGE_URL_TITLE_MAP[BILLING_SEARCH]}</Link>
-    </Item> */}
-  </SubMenu>
-</Menu>;
+    >
+      <Item key={MANAGE_INGREDIENTS}>
+        <Link to={MANAGE_INGREDIENTS}>{PAGE_URL_TITLE_MAP[MANAGE_INGREDIENTS]}</Link>
+      </Item>
+      <Item key={MANAGE_PRODUCTS}>
+        <Link to={MANAGE_PRODUCTS}>{PAGE_URL_TITLE_MAP[MANAGE_PRODUCTS]}</Link>
+      </Item>
+    </SubMenu>
+    <SubMenu
+      key={BILLING}
+      title={
+        <span>
+          <Icon type='shopping-cart' />
+          <span>{PAGE_URL_TITLE_MAP[BILLING]}</span>
+        </span>
+      }
+    >
+      <Item key={BILLING_ALL_OPEN}>
+        <Link to={BILLING_ALL_OPEN}>{PAGE_URL_TITLE_MAP[BILLING_ALL_OPEN]}</Link>
+      </Item>
+      <Item key={BILLING_NEW}>
+        <Link to={BILLING_NEW}>{PAGE_URL_TITLE_MAP[BILLING_NEW]}</Link>
+      </Item>
+      {/* <Item key={BILLING_SEARCH}>
+        <Link to={BILLING_SEARCH}>{PAGE_URL_TITLE_MAP[BILLING_SEARCH]}</Link>
+      </Item> */}
+    </SubMenu>
+  </Menu>
+</div>;
