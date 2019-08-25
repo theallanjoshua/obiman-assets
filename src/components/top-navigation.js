@@ -25,7 +25,12 @@ export default class TopNavigation extends React.Component {
         <Link to={HOME}>{OBIMAN_LOGO}</Link>
       </Item>
       <SubMenu
-        title={<Avatar style={toMaterialStyle(email)} src={profilePicture} children={email.substr(0,1).toUpperCase()} />}
+        title={<Avatar
+          style={{ ...toMaterialStyle(email), marginBottom: '6px' }}
+          src={profilePicture}
+          children={email.substr(0,1).toUpperCase()}
+          size='small'
+        />}
         style={{ float: 'right' }}
       >
         <Item>My account</Item>
@@ -41,8 +46,12 @@ export default class TopNavigation extends React.Component {
         </Item>
       </SubMenu>
       <SubMenu
-        title={<Badge count={2} style={{ boxShadow: 'none' }}>
-          <Icon type='bell' theme='filled' />
+        title={<Badge
+          count={2}
+          style={{ boxShadow: 'none', transform: 'scale(0.8)' }}
+          offset={[4, -6]}
+        >
+          <Icon type='bell' theme='filled' style={{ fontSize: '16px' }} />
         </Badge>}
         style={{ float: 'right' }}
       >
