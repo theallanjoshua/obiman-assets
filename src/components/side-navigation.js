@@ -12,7 +12,7 @@ import {
   BILLING_SEARCH,
   PAGE_URL_TITLE_MAP
 } from '../constants/pages';
-import { SIDE_NAVIGATION_TITLE } from '../constants/side-navigation';
+import { OBIMAN_LOGO } from '../constants/app';
 
 const { Sider } = Layout;
 const { SubMenu, Item } = Menu;
@@ -34,7 +34,7 @@ export default class SideNavigation extends React.Component {
   onBreakpoint = broken => this.setState({ isDrawer: broken });
   render = () => <React.Fragment>
     {this.state.isDrawer ? <Drawer
-    title={SIDE_NAVIGATION_TITLE}
+    title={OBIMAN_LOGO}
     placement='left'
     bodyStyle={{ padding: '0px' }}
     closable
@@ -69,7 +69,8 @@ export default class SideNavigation extends React.Component {
 const SideNavigationMenu = ({ selectedKeys, openKeys, onOpenChange, onSelect }) => <div
   style={{
     borderRight: '1px solid #DDD',
-    height: '100%',
+    height: 'inherit',
+    overflowY: 'scroll'
   }}
 >
   <Menu
@@ -80,7 +81,7 @@ const SideNavigationMenu = ({ selectedKeys, openKeys, onOpenChange, onSelect }) 
     onOpenChange={onOpenChange}
     onSelect={onSelect}
   >
-    <Item key={HOME}>
+    <Item key={HOME} style={{ marginTop: 0 }}>
       <Link to={HOME}>{
         <span>
           <Icon type='home' />

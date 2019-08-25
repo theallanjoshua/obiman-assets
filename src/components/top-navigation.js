@@ -1,30 +1,54 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom'
 import { Consumer } from '../context';
-import { Button, Menu, Avatar } from 'antd';
+import { Button, Menu, Avatar, Icon, Badge } from 'antd';
 import Credentials from '../utils/credentials';
 import toMaterialStyle from 'material-color-hash';
+import { OBIMAN_LOGO } from '../constants/app';
+import {
+  HOME
+} from '../constants/pages';
 
-const { SubMenu, Item } = Menu;
+const { SubMenu, Item, Divider } = Menu;
 
 export default class TopNavigation extends React.Component {
   render = () => <Consumer>
-      {({ email, profilePicture }) => <Menu
-        theme='dark'
-        mode='horizontal'
+      {({ email, profilePicture }) =>< Menu
+      theme='dark'
+      mode='horizontal'
+      style={{
+        padding: '0px 6px 0px 1px'
+      }}
+      selectedKeys={[]}
+    >
+      <Item>
+        <Link to={HOME}>{OBIMAN_LOGO}</Link>
+      </Item>
+      <SubMenu
+        title={<Avatar style={toMaterialStyle(email)} src={profilePicture} children={email.substr(0,1).toUpperCase()} />}
+        style={{ float: 'right' }}
       >
-        <Item style={{ float: 'left' }}>Obiman</Item>
-        <SubMenu title={<Avatar style={toMaterialStyle(email)} src={profilePicture} children={email.substr(0,1).toUpperCase()} />} style={{ float: 'right' }}>
-          <Item>My account</Item>
-          <Item>My preferences</Item>
-          <Item>
-            <Button
-              type='link'
-              children={'Logout'}
-              icon='logout'
-              onClick={() => Credentials.logout()}
-            />
-          </Item>
-        </SubMenu>
-      </Menu>}
-    </Consumer>
+        <Item>My account</Item>
+        <Item>My preferences</Item>
+        <Divider />
+        <Item>
+          <Button
+            type='link'
+            children={'Logout'}
+            icon='logout'
+            onClick={() => Credentials.logout()}
+          />
+        </Item>
+      </SubMenu>
+      <SubMenu
+        title={<Badge count={2} style={{ boxShadow: 'none' }}>
+          <Icon type='bell' theme='filled' />
+        </Badge>}
+        style={{ float: 'right' }}
+      >
+        <Item>Notification 1</Item>
+        <Item>Notification 2</Item>
+      </SubMenu>
+    </Menu>}
+  </Consumer>
 }

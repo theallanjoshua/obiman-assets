@@ -1,1 +1,0 @@
-export const SIDE_NAVIGATION_TITLE = 'Obiman';

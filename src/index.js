@@ -65,18 +65,15 @@ class App extends React.Component {
   /> : <Spin spinning={this.state.loading}>
     <Provider value={{ ...this.state }}>
         <Router>
-          <Layout>
+          <Layout style={{ height: '100vh' }}>
             <Header style={{
               padding: 0,
               background: 'transparent',
-              height: 'inherit',
+              height: 'initial',
             }}>
               <TopNavigation />
             </Header>
-            <Layout style={{
-              height: 'calc(100vh - 46px)',
-              overflowY: 'scroll'
-            }}>
+            <Layout>
               <SideNavigation />
               <Layout>
                 <Content>
