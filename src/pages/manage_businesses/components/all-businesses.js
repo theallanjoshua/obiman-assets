@@ -18,6 +18,7 @@ export default class AllBusinesses extends React.Component {
           border: '1px solid #DDD',
           borderRadius: '5px'
         }}
+        loading={this.props.loading}
         itemLayout='horizontal'
         header={<div style={{ display: 'flex', justifyContent: 'center'}}>
           <div>

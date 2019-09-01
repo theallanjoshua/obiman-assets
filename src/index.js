@@ -44,9 +44,6 @@ class App extends React.Component {
     if(prevState.email !== this.state.email && this.state.email) {
       this.fetchUser();
     }
-    if(prevState.businessId !== this.state.businessId) {
-      document.cookie = `businessId=${this.state.businessId}`;
-    }
   }
 
   authenticate = async () => {
