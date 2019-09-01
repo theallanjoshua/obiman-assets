@@ -13,13 +13,13 @@ const { SubMenu, Item, Divider } = Menu;
 
 export default class TopNavigation extends React.Component {
   render = () => <Consumer>
-      {({ email, profilePicture }) =>< Menu
+      {({ email, avatar, user, businessId, showBusinessManagement, onBusinessChange }) =>< Menu
       theme='dark'
       mode='horizontal'
       style={{
         padding: '0px 6px 0px 1px'
       }}
-      selectedKeys={[]}
+      selectedKeys={[businessId]}
     >
       <Item>
         <Link to={HOME}>{OBIMAN_LOGO}</Link>
@@ -27,22 +27,39 @@ export default class TopNavigation extends React.Component {
       <SubMenu
         title={<Avatar
           style={{ ...toMaterialStyle(email), marginBottom: '6px' }}
-          src={profilePicture}
+          src={avatar}
           children={email.substr(0,1).toUpperCase()}
           size='small'
         />}
         style={{ float: 'right' }}
       >
-        <Item>My account</Item>
-        <Item>My preferences</Item>
+        {user.businesses.map(({ id, logo, label }) => <Item
+          key={id}
+          onClick={() => onBusinessChange(id)}
+        >
+          <span>
+            <Avatar
+              style={{ ...toMaterialStyle(label), marginRight: '10px' }}
+              src={logo}
+              children={label.substr(0,1).toUpperCase()}
+              size='small'
+            />
+            <span>{label}</span>
+          </span>
+        </Item>)}
+        <Item onClick={showBusinessManagement}>Manage businesses</Item>
         <Divider />
         <Item>
-          <Button
-            type='link'
-            children={'Logout'}
-            icon='logout'
-            onClick={() => Credentials.logout()}
-          />
+          <span>
+            <Icon type='user' />
+            <span>Account</span>
+          </span>
+        </Item>
+        <Item>
+          <span>
+            <Icon type='logout' />
+            <span onClick={() => Credentials.logout()}>Logout</span>
+          </span>
         </Item>
       </SubMenu>
       <SubMenu

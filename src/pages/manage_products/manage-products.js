@@ -10,12 +10,13 @@ import {
   MANAGE_PRODUCTS_PAGE_TITLE,
   ADD_PRODUCT_BUTTON_TEXT
 } from '../../constants/manage-products';
-import { fetchAllIngredients } from '../../utils/fetch-all-ingredients';
+import { fetchAllIngredients } from '../../utils/ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
 import PageHeader from '../../components/page-header';
 import Page from '../../components/page';
+import { Consumer } from '../../context';
 
-export default class ManageProducts extends React.Component {
+class ManageProductsComponent extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -29,13 +30,25 @@ export default class ManageProducts extends React.Component {
     }
   }
 
-  componentDidMount = () => this.fetchAllProducts();
+  componentDidMount = () => {
+    const { businessId } = this.props;
+    if(businessId) {
+      this.fetchAllProducts(businessId)
+    }
+  };
 
-  fetchAllProducts = async () => {
+  componentDidUpdate = (preProps) => {
+    const { businessId } = this.props;
+    if(preProps.businessId !== businessId && preProps) {
+      this.fetchAllProducts(businessId)
+    }
+  };
+
+  fetchAllProducts = async businessId => {
     this.setState({ loading: true, errorMessage: '' });
     try {
-      const ingredients = await fetchAllIngredients();
-      const products = await fetchAllProducts();
+      const ingredients = await fetchAllIngredients(businessId);
+      const products = await fetchAllProducts(businessId);
       const enrichedProducts = getEnrichedProducts(products, ingredients);
       this.setState({ ingredients, products: enrichedProducts });
     } catch (errorMessage) {
@@ -83,12 +96,14 @@ export default class ManageProducts extends React.Component {
       deleteProduct={this.deleteProduct}
     />
     <AddProduct
+      businessId={this.props.businessId}
       ingredients={this.state.ingredients}
       visible={this.state.showAddModal}
       hideModal={this.hideModal}
       fetchAllProducts={this.fetchAllProducts}
     />
     <EditProduct
+      businessId={this.props.businessId}
       ingredients={this.state.ingredients}
       visible={this.state.showEditModal}
       productToUpdate={this.state.productToUpdate}
@@ -96,4 +111,12 @@ export default class ManageProducts extends React.Component {
       fetchAllProducts={this.fetchAllProducts}
     />
   </Page>;
+}
+
+export default class ManageProducts extends React.Component {
+  render = () => <Consumer>
+    {({ businessId }) => <ManageProductsComponent
+      businessId={businessId}
+    />}
+  </Consumer>
 }

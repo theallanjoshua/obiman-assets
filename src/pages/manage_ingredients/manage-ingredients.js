@@ -11,11 +11,12 @@ import {
   MANAGE_INGREDIENTS_PAGE_TITLE,
   ADD_INGREDIENT_BUTTON_TEXT
 } from '../../constants/manage-ingredients';
-import { fetchAllIngredients } from '../../utils/fetch-all-ingredients';
+import { fetchAllIngredients } from '../../utils/ingredients';
 import PageHeader from '../../components/page-header';
 import Page from '../../components/page';
+import { Consumer } from '../../context';
 
-export default class ManageIngredients extends React.Component {
+class ManageIngredientsComponent extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -30,12 +31,24 @@ export default class ManageIngredients extends React.Component {
     }
   }
 
-  componentDidMount = () => this.fetchAllIngredients();
+  componentDidMount = () => {
+    const { businessId } = this.props;
+    if(businessId) {
+      this.fetchAllIngredients(businessId)
+    }
+  };
 
-  fetchAllIngredients = async () => {
+  componentDidUpdate = (preProps) => {
+    const { businessId } = this.props;
+    if(preProps.businessId !== businessId && preProps) {
+      this.fetchAllIngredients(businessId)
+    }
+  };
+
+  fetchAllIngredients = async businessId => {
     this.setState({ loading: true, errorMessage: '' });
     try {
-      const ingredients = await fetchAllIngredients();
+      const ingredients = await fetchAllIngredients(businessId);
       this.setState({ ingredients });
     } catch (errorMessage) {
       this.setState({ errorMessage });
@@ -97,21 +110,32 @@ export default class ManageIngredients extends React.Component {
       onSelectionChange={this.onSelectionChange}
     />
     <AddIngredient
+      businessId={this.props.businessId}
       visible={this.state.showAddModal}
       hideModal={this.hideModal}
       fetchAllIngredients={this.fetchAllIngredients}
     />
     <EditIngredient
+      businessId={this.props.businessId}
       visible={this.state.showEditModal}
       ingredientToUpdate={this.state.ingredientToUpdate}
       hideModal={this.hideModal}
       fetchAllIngredients={this.fetchAllIngredients}
     />
     <BulkEditIngredients
+      businessId={this.props.businessId}
       visible={this.state.showBulkEditModal}
       ingredients={this.state.ingredients.filter(ingredient => this.state.selectedIngredientsKeys.includes(ingredient.id))}
       hideModal={this.hideModal}
       fetchAllIngredients={this.fetchAllIngredients}
     />
   </Page>;
+}
+
+export default class ManageIngredients extends React.Component {
+  render = () => <Consumer>
+    {({ businessId }) => <ManageIngredientsComponent
+      businessId={businessId}
+    />}
+  </Consumer>
 }

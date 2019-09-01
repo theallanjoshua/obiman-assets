@@ -6,9 +6,9 @@ import { DATE_TIME_FORMAT } from './app';
 
 export const INGREDIENT_DELETED_SUCCESSFULLY_MESSAGE = label => `${label} deleted successfully`;
 export const MANAGE_INGREDIENTS_PAGE_TITLE = count => `All ingredients (${count})`;
-export const ADD_INGREDIENT_BUTTON_TEXT = 'Add ingredient';
+export const ADD_INGREDIENT_BUTTON_TEXT = 'Add new ingredient';
 export const INGREDIENT_ADDED_SUCCESSFULLY_MESSAGE = label => `${label} added to ingredients successfully`;
-export const ADD_MODAL_HEADER = 'Add ingredient';
+export const ADD_MODAL_HEADER = 'Add new ingredient';
 export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Ingredient',

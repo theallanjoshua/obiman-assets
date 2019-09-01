@@ -8,7 +8,6 @@ import {
   MANAGE_PRODUCTS,
   BILLING,
   BILLING_ALL_OPEN,
-  BILLING_NEW,
   BILLING_SEARCH,
   PAGE_URL_TITLE_MAP
 } from '../constants/pages';
@@ -28,15 +27,23 @@ export default class SideNavigation extends React.Component {
       openKeys: [`/${URI.split('/')[1]}`]
     }
   }
+
   onOpenChange = openKeys => this.setState({ openKeys });
+
   onSelect = ({ selectedKeys }) => this.setState({ selectedKeys });
+
   onCollapse = (isCollapsed = true) => this.setState({ isCollapsed });
+
   onBreakpoint = broken => this.setState({ isDrawer: broken });
+
   render = () => <React.Fragment>
     {this.state.isDrawer ? <Drawer
     title={OBIMAN_LOGO}
     placement='left'
-    bodyStyle={{ padding: '0px' }}
+    bodyStyle={{
+      padding: '0px',
+      height: '100%'
+    }}
     closable
     visible={!this.state.isCollapsed}
     onClose={this.onCollapse}
@@ -74,8 +81,12 @@ const SideNavigationMenu = ({ selectedKeys, openKeys, onOpenChange, onSelect }) 
   }}
 >
   <Menu
-    style={{ borderRight: 'none' }}
+    style={{
+      borderRight: 'none',
+      height: '100%'
+    }}
     mode='inline'
+    // theme='dark'
     selectedKeys={selectedKeys}
     openKeys={openKeys}
     onOpenChange={onOpenChange}
@@ -117,9 +128,6 @@ const SideNavigationMenu = ({ selectedKeys, openKeys, onOpenChange, onSelect }) 
     >
       <Item key={BILLING_ALL_OPEN}>
         <Link to={BILLING_ALL_OPEN}>{PAGE_URL_TITLE_MAP[BILLING_ALL_OPEN]}</Link>
-      </Item>
-      <Item key={BILLING_NEW}>
-        <Link to={BILLING_NEW}>{PAGE_URL_TITLE_MAP[BILLING_NEW]}</Link>
       </Item>
       {/* <Item key={BILLING_SEARCH}>
         <Link to={BILLING_SEARCH}>{PAGE_URL_TITLE_MAP[BILLING_SEARCH]}</Link>

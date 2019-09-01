@@ -37,6 +37,7 @@ export default class AddProduct extends React.Component {
   onChange = productToCreate => this.setState({ productToCreate });
 
   addProduct = async () => {
+    const { businessId } = this.props;
     const product = new Product(this.state.productToCreate);
     if (Object.keys(product.validate()).length) {
       this.setState({ showValidationErrors: true });
@@ -44,9 +45,9 @@ export default class AddProduct extends React.Component {
       const productData = product.get();
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.post(PRODUCTS_API_URL, productData);
+        await Network.post(PRODUCTS_API_URL(businessId), productData);
         this.setState({ errorMessage: '', successMessage: PRODUCT_ADDED_SUCCESSFULLY_MESSAGE(productData.label) });
-        this.props.fetchAllProducts();
+        this.props.fetchAllProducts(businessId);
         setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });

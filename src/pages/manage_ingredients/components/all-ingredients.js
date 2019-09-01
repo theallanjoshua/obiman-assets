@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table } from 'antd';
+import { Table, Empty } from 'antd';
 import { ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION } from '../../../constants/manage-ingredients';
 
 export default class AllIngredients extends React.Component {
@@ -16,5 +16,8 @@ export default class AllIngredients extends React.Component {
       onChange: this.props.onSelectionChange
     }}
     scroll={{ x: true }}
+    locale={{
+      emptyText: <Empty description='No ingredients' />
+    }}
   />
 }

@@ -39,6 +39,7 @@ export default class EditProduct extends React.Component {
   onChange = productToUpdate => this.setState({ productToUpdate });
 
   editProduct = async () => {
+    const { businessId } = this.props;
     const product = new Product(this.state.productToUpdate);
     if (Object.keys(product.validate()).length) {
       this.setState({ showValidationErrors: true });
@@ -46,9 +47,9 @@ export default class EditProduct extends React.Component {
       const productData = product.get();
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.put(PRODUCTS_API_URL, productData);
+        await Network.put(PRODUCTS_API_URL(businessId), productData);
         this.setState({ errorMessage: '', successMessage: PRODUCT_EDITED_SUCCESSFULLY_MESSAGE(productData.label) });
-        this.props.fetchAllProducts();
+        this.props.fetchAllProducts(businessId);
         setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });

@@ -1,18 +1,15 @@
 import * as React from 'react';
-import { Button, Alert, Row, Col, Spin } from 'antd';
-import BillInfo from './components/bill-info';
+import { Alert, Spin, Modal } from 'antd';
+import BillInfo from './bill-info';
 import { Bill, Utils } from 'obiman-data-models';
-import Network from '../../utils/network';
-import { BILLS_API_URL } from '../../constants/endpoints';
+import Network from '../../../utils/network';
+import { BILLS_API_URL } from '../../../constants/endpoints';
 import {
   BILL_ADDED_SUCCESSFULLY_MESSAGE,
   ADD_BILL_PAGE_TITLE,
   ADD_BILL_BUTTON_TEXT
-} from '../../constants/billing';
-import { fetchAllIngredients } from '../../utils/fetch-all-ingredients';
-import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
-import PageHeader from '../../components/page-header';
-import Page from '../../components/page';
+} from '../../../constants/billing';
+import { getEnrichedProducts } from '../../../utils/products';
 
 const INITIAL_STATE = {
   loading: false,
@@ -26,26 +23,22 @@ const INITIAL_STATE = {
 }
 
 export default class AddBill extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    const { ingredients, products } = props;
     this.state = {
-      ...INITIAL_STATE
+      ...INITIAL_STATE,
+      ingredients,
+      products
     }
   }
 
-  componentDidMount = () => this.fetchAllProducts();
-
-  fetchAllProducts = async () => {
-    this.setState({ loading: true, errorMessage: '' });
-    try {
-      const ingredients = await fetchAllIngredients();
-      const products = await fetchAllProducts();
-      const enrichedProducts = getEnrichedProducts(products, ingredients);
-      this.setState({ ingredients, products: enrichedProducts });
-    } catch (errorMessage) {
-      this.setState({ errorMessage });
+  componentDidUpdate = prevProps => {
+    const { visible: prevVisible } = prevProps;
+    const { visible, ingredients, products } = this.props;
+    if (!prevVisible && visible) {
+      this.setState({ ...INITIAL_STATE, ingredients, products });
     }
-    this.setState({ loading: false });
   }
 
   onChange = billToCreate => {
@@ -64,6 +57,7 @@ export default class AddBill extends React.Component {
   };
 
   addBill = async () => {
+    const { businessId } = this.props;
     const bill = new Bill(this.state.billToCreate);
     if (Object.keys(bill.validate()).length) {
       this.setState({ showValidationErrors: true });
@@ -71,9 +65,10 @@ export default class AddBill extends React.Component {
       const billData = bill.get();
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.post(BILLS_API_URL, billData);
+        await Network.post(BILLS_API_URL(businessId), billData);
         this.setState({ errorMessage: '', successMessage: BILL_ADDED_SUCCESSFULLY_MESSAGE });
-        setTimeout(() => this.setState({ successMessage: '' }), 3000)
+        this.props.fetchAllBills(businessId);
+        setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });
       }
@@ -81,16 +76,26 @@ export default class AddBill extends React.Component {
     }
   }
 
-  render = () => <Page>
-    <PageHeader
-      title={ADD_BILL_PAGE_TITLE}
-    />
-    <Row>
-      <Col span={10} offset={6}>
-        {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
-        {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
-      </Col>
-    </Row>
+  render = () => <Modal
+    destroyOnClose
+    maskClosable={false}
+    title={ADD_BILL_PAGE_TITLE}
+    okText={ADD_BILL_BUTTON_TEXT}
+    width={'60vw'}
+    visible={this.props.visible}
+    closable={!this.state.loading}
+    onOk={this.addBill}
+    okButtonProps={{
+      disabled: !!this.state.successMessage,
+      loading: this.state.loading
+    }}
+    onCancel={this.props.hideModal}
+    cancelButtonProps={{
+      disabled: this.state.loading
+    }}
+  >
+    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
     <Spin spinning={this.state.loading}>
       <BillInfo
@@ -100,18 +105,6 @@ export default class AddBill extends React.Component {
         showValidationErrors={this.state.showValidationErrors}
         onChange={this.onChange}
       />
-      <Row>
-        <Col span={10} offset={6}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button
-              type='primary'
-              icon='plus'
-              onClick={this.addBill}
-              children={ADD_BILL_BUTTON_TEXT}
-            />
-          </div>
-        </Col>
-      </Row>
     </Spin>
-  </Page>;
+  </Modal>;
 }

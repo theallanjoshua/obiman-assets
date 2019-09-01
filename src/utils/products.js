@@ -2,12 +2,11 @@ import Network from './network';
 import { PRODUCTS_API_URL } from '../constants/endpoints';
 import { Product, ProductCompositionEntity, Ingredient, Utils } from 'obiman-data-models';
 
-export const fetchAllProducts = async () => {
+export const fetchAllProducts = async businessId => {
   try {
-    const response = await Network.get(PRODUCTS_API_URL);
-    const products = response.products
-      .sort((prevProduct, nextProduct) => prevProduct.label.localeCompare(nextProduct.label));
-    return products;
+    const { products } = await Network.get(PRODUCTS_API_URL(businessId));
+    return products
+      .sort((prv, nxt) => prv.label.localeCompare(nxt.label));;
   } catch (errorMessage) {
     throw errorMessage
   }

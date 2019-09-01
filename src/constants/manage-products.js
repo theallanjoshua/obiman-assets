@@ -6,9 +6,9 @@ import { DATE_TIME_FORMAT } from './app';
 
 export const PRODUCT_DELETED_SUCCESSFULLY_MESSAGE = label => `${label} deleted successfully`;
 export const MANAGE_PRODUCTS_PAGE_TITLE = count => `All products (${count})`;
-export const ADD_PRODUCT_BUTTON_TEXT = 'Add product';
+export const ADD_PRODUCT_BUTTON_TEXT = 'Add new product';
 export const PRODUCT_ADDED_SUCCESSFULLY_MESSAGE = label => `${label} added to products successfully`;
-export const ADD_MODAL_HEADER = 'Add product';
+export const ADD_MODAL_HEADER = 'Add new product';
 export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Product',

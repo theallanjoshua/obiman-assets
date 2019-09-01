@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, List, Tag } from 'antd';
+import { Table, Empty } from 'antd';
 import { ALL_PRODUCTS_TABLE_COLUMN_DEFINITION } from '../../../constants/manage-products';
 
 export default class AllIngredients extends React.Component {
@@ -13,5 +13,8 @@ export default class AllIngredients extends React.Component {
       onDelete: this.props.onDeleteProduct
     }))}
     scroll={{ x: true }}
+    locale={{
+      emptyText: <Empty description='No products' />
+    }}
   />
 }

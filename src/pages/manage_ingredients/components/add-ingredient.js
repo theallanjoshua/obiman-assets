@@ -37,6 +37,7 @@ export default class AddIngredient extends React.Component {
   onChange = ingredientToCreate => this.setState({ ingredientToCreate });
 
   addIngredient = async () => {
+    const { businessId } = this.props;
     const ingredient = new Ingredient(this.state.ingredientToCreate);
     if (Object.keys(ingredient.validate()).length) {
       this.setState({ showValidationErrors: true });
@@ -44,9 +45,9 @@ export default class AddIngredient extends React.Component {
       const ingredientData = ingredient.get();
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.post(INGREDIENTS_API_URL, ingredientData);
+        await Network.post(INGREDIENTS_API_URL(businessId), ingredientData);
         this.setState({ errorMessage: '', successMessage: INGREDIENT_ADDED_SUCCESSFULLY_MESSAGE(ingredientData.label) });
-        this.props.fetchAllIngredients();
+        this.props.fetchAllIngredients(businessId);
         setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });

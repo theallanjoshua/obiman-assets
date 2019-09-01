@@ -40,6 +40,7 @@ export default class BulkEditIngredients extends React.Component {
   };
 
   bulkEditIngredients = async () => {
+    const { businessId } = this.props;
     const { ingredients } = this.state;
     const errors = ingredients.reduce((acc, item) => {
       const ingredient = new Ingredient(item);
@@ -52,9 +53,9 @@ export default class BulkEditIngredients extends React.Component {
     if(!errors) {
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.put(INGREDIENTS_API_URL, ingredients);
+        await Network.put(INGREDIENTS_API_URL(businessId), ingredients);
         this.setState({ errorMessage: '', successMessage: 'Ingredients updated successfully' });
-        this.props.fetchAllIngredients();
+        this.props.fetchAllIngredients(businessId);
         setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });

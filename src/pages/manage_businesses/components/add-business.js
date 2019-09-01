@@ -1,55 +1,57 @@
 import * as React from 'react';
 import { Modal, Alert } from 'antd';
-import IngredientInfo from './ingredient-info';
-import { Ingredient } from 'obiman-data-models';
+import BusinessInfo from './business-info';
+import { Business } from 'obiman-data-models';
 import Network from '../../../utils/network';
-import { INGREDIENTS_API_URL } from '../../../constants/endpoints';
 import {
-  INGREDIENT_EDITED_SUCCESSFULLY_MESSAGE,
-  EDIT_MODAL_HEADER
-} from '../../../constants/manage-ingredients';
-import { SAVE_BUTTON_TEXT } from '../../../constants/app';
+  BUSINESSES_API_URL,
+  USERS_API_URL,
+  USERS_BUSINESSES_API_URL
+} from '../../../constants/endpoints';
+import {
+  BUSINESS_ADDED_SUCCESSFULLY_MESSAGE,
+  ADD_BUSINESS_MODAL_HEADER,
+  ADD_BUSINESS_BUTTON_TEXT
+} from '../../../constants/manage-businesses';
 
 const INITIAL_STATE = {
   loading: false,
   successMessage: '',
   errorMessage: '',
-  ingredientToUpdate: {},
+  businessToCreate: {},
   showValidationErrors: false
 }
 
-export default class EditIngredient extends React.Component {
-  constructor(props) {
-    super(props);
-    const { ingredientToUpdate } = { ...props };
+export default class AddBusiness extends React.Component {
+  constructor() {
+    super();
     this.state = {
-      ...INITIAL_STATE,
-      ingredientToUpdate
+      ...INITIAL_STATE
     }
   }
 
   componentDidUpdate = prevProps => {
     const { visible: prevVisible } = { ...prevProps };
-    const { ingredientToUpdate, visible } = { ...this.props };
+    const { visible } = { ...this.props };
     if (!prevVisible && visible) {
-      this.setState({ ...INITIAL_STATE, ingredientToUpdate });
+      this.setState({ ...INITIAL_STATE });
     }
   }
 
-  onChange = ingredientToUpdate => this.setState({ ingredientToUpdate });
+  onChange = businessToCreate => this.setState({ businessToCreate });
 
-  editIngredient = async () => {
-    const { businessId } = this.props;
-    const ingredient = new Ingredient(this.state.ingredientToUpdate);
-    if (Object.keys(ingredient.validate()).length) {
+  addBusiness = async () => {
+    const business = new Business(this.state.businessToCreate);
+    if (Object.keys(business.validate()).length) {
       this.setState({ showValidationErrors: true });
     } else {
-      const ingredientData = ingredient.get();
+      const businessData = business.get();
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.put(INGREDIENTS_API_URL(businessId), [ingredientData]);
-        this.setState({ errorMessage: '', successMessage: INGREDIENT_EDITED_SUCCESSFULLY_MESSAGE(ingredientData.label) });
-        this.props.fetchAllIngredients(businessId);
+        await Network.post(BUSINESSES_API_URL, businessData);
+        this.setState({ errorMessage: '', successMessage: BUSINESS_ADDED_SUCCESSFULLY_MESSAGE(businessData.label) });
+        await Promise.all(businessData.employees.map(({ id }) => Network.put(`${USERS_API_URL}${id}${USERS_BUSINESSES_API_URL}`, { businessId: businessData.id, isRemove: false })));
+        this.props.fetchUser();
         setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });
@@ -61,12 +63,12 @@ export default class EditIngredient extends React.Component {
   render = () => <Modal
     destroyOnClose
     maskClosable={false}
-    title={EDIT_MODAL_HEADER}
-    okText={SAVE_BUTTON_TEXT}
+    title={ADD_BUSINESS_MODAL_HEADER}
+    okText={ADD_BUSINESS_BUTTON_TEXT}
     width={'60vw'}
     visible={this.props.visible}
     closable={!this.state.loading}
-    onOk={this.editIngredient}
+    onOk={this.addBusiness}
     okButtonProps={{
       disabled: !!this.state.successMessage,
       loading: this.state.loading
@@ -79,8 +81,8 @@ export default class EditIngredient extends React.Component {
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
-    <IngredientInfo
-      ingredient={this.state.ingredientToUpdate}
+    <BusinessInfo
+      business={this.state.businessToCreate}
       showValidationErrors={this.state.showValidationErrors}
       onChange={this.onChange}
     />
