@@ -48,9 +48,9 @@ export default class AddBusiness extends React.Component {
       const businessData = business.get();
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.post(BUSINESSES_API_URL, businessData);
+        const business = await Network.post(BUSINESSES_API_URL, businessData);
         this.setState({ errorMessage: '', successMessage: BUSINESS_ADDED_SUCCESSFULLY_MESSAGE(businessData.label) });
-        await Promise.all(businessData.employees.map(({ id }) => Network.put(`${USERS_API_URL}${id}${USERS_BUSINESSES_API_URL}`, { businessId: businessData.id, isRemove: false })));
+        await Promise.all(businessData.employees.map(({ id }) => Network.put(`${USERS_API_URL}${id}${USERS_BUSINESSES_API_URL}`, { businessId: business.id, isRemove: false })));
         this.props.fetchUser();
         setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {
