@@ -77,7 +77,7 @@ class App extends React.Component {
     this.setState({ loading: false });
   }
 
-  onBusinessChange = businessId => this.setState({ businessId });
+  onBusinessChange = businessId => this.setState({ businessId, showBusinessManagement: false });
 
   showBusinessManagement = () => this.setState({ showBusinessManagement: true });
 
