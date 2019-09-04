@@ -16,8 +16,8 @@ class Credentials {
   }
   authenticate = async () => {
     try {
-      const signInUserSession = await this.auth.getSignInUserSession();
-      if(!signInUserSession.isValid()) {
+      const session = await this.auth.getSignInUserSession();
+      if(!session.isValid()) {
         const href = window.location.href;
         if (href.includes('?code=')) {
           const newUrl = window.location.href.split('?code=')[0];
@@ -28,7 +28,7 @@ class Credentials {
         }
         return await this.auth.getSignInUserSession();
       } else {
-        return signInUserSession;
+        return session;
       }
     } catch(error) {
       throw error;
@@ -40,6 +40,10 @@ class Credentials {
     } catch (error) {
       throw error;
     }
+  }
+  getAuthorizationToken = async () => {
+    const session = await this.authenticate();
+    return session.getIdToken().getJwtToken();
   }
 }
 

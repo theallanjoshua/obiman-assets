@@ -1,3 +1,5 @@
+import Credentials from './credentials';
+
 class Network {
   get = async url => {
     try{
@@ -32,12 +34,16 @@ class Network {
   }
 
   DO_NOT_USE_fetch = async (url, method, data) => {
+    const authorization = await Credentials.getAuthorizationToken();
     const params = {
       method,
       mode: 'cors',
       cache: 'no-cache',
       credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        authorization
+      },
       redirect: 'follow',
       referrer: 'no-referrer'
     };
@@ -51,10 +57,10 @@ class Network {
       } else {
         switch(response.status) {
           case 428: {
-            throw `Looks like somebody else beat you to it. Refresh ${errors.join(', ')}, apply your changes and try again!`;
+            throw `Oops! Looks like somebody else beat you to it. Refresh ${errors.join(', ')}, apply your changes and try again!`;
           }
           case 417: {
-            throw `Looks like there isn't enough inventory to create this bill for these ingredients: ${errors.join(', ')}, apply your changes and try again!`;
+            throw `Oops! Looks like there isn't enough inventory to create this bill for these ingredients: ${errors.join(', ')}, apply your changes and try again!`;
           }
           default: {
             throw errors.join(', ');

@@ -13,7 +13,7 @@ const { SubMenu, Item, Divider } = Menu;
 
 export default class TopNavigation extends React.Component {
   render = () => <Consumer>
-      {({ email, avatar, user, businessId, showBusinessManagement, onBusinessChange }) =>< Menu
+      {({ email, avatar, businesses, businessId, showBusinessManagement, onBusinessChange }) =>< Menu
       theme='dark'
       mode='horizontal'
       style={{
@@ -33,7 +33,7 @@ export default class TopNavigation extends React.Component {
         />}
         style={{ float: 'right' }}
       >
-        {user.businesses.map(({ id, logo, label }) => <Item
+        {businesses.map(({ id, logo, label }) => <Item
           key={id}
           onClick={() => onBusinessChange(id)}
         >

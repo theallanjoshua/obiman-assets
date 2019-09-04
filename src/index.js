@@ -33,7 +33,7 @@ class App extends React.Component {
       name: '',
       email: '',
       avatar: '',
-      user: {},
+      businesses: [],
       businessId: '',
       showBusinessManagement: false
     };
@@ -49,16 +49,16 @@ class App extends React.Component {
   authenticate = async () => {
     this.setState({ loading: true });
     try {
-      const { idToken } = await Credentials.authenticate();
+      const session = await Credentials.authenticate();
+      const idToken = session.getIdToken();
       const { payload } = idToken;
-      const { email, name, picture } = payload;
+      const { email, name, picture } = payload || {};
       const avatar = picture ? picture.includes('"url":') ? JSON.parse(picture).data.url : picture : '';
-      this.setState({ email, name, avatar });
+      this.setState({ email, name, avatar, loading: false });
     } catch (error) {
       console.log(error);
-      this.setState({ errorMessage: PAGE_ERROR });
+      this.setState({ errorMessage: PAGE_ERROR, loading: false });
     }
-    this.setState({ loading: false });
   }
 
   fetchUser = async () => {
@@ -67,11 +67,10 @@ class App extends React.Component {
       const user = await fetchUser(this.state.email);;
       const { businesses } = user;
       const businessId = businesses.length === 1 ? businesses[0].id : '';
-      this.setState({ user, businessId });
+      this.setState({ businesses, businessId, loading: false });
     } catch (errorMessage) {
-      this.setState({ errorMessage });
+      this.setState({ errorMessage, loading: false });
     }
-    this.setState({ loading: false });
   }
 
   onBusinessChange = businessId => this.setState({ businessId, showBusinessManagement: false });

@@ -3,32 +3,32 @@ import Employee from './employee';
 import { Business } from 'obiman-data-models';
 import { Row, Col, Button } from 'antd';
 
-const sudoRoleText = new Business().getSudoRoleText();
+const updatePermissionText = new Business().getUpdatePermissionText();
 
 export default class Employees extends React.Component {
   componentDidMount() {
     if(!this.props.employees.length) {
-      this.addEmployee(this.props.currentUser, [sudoRoleText]);
+      this.addEmployee(this.props.currentUser, [updatePermissionText]);
     }
   }
   componentDidUpdate() {
     if(!this.props.employees.length) {
-      this.addEmployee(this.props.currentUser, [sudoRoleText]);
+      this.addEmployee(this.props.currentUser, [updatePermissionText]);
     }
   }
   onChange = (incomingEmployee, incomingIndex) => {
     const employees = this.props.employees.map((employee, index) => index === incomingIndex ? { ...incomingEmployee } : { ...employee })
     this.props.onChange(employees);
   }
-  addEmployee = (id = '', roles = []) => this.props.onChange([ ...this.props.employees, { id, roles } ]);
+  addEmployee = (id = '', permissions = []) => this.props.onChange([ ...this.props.employees, { id, permissions } ]);
   removeEmployee = indexToRemove => this.props.onChange([ ...this.props.employees.filter((item, index) => index !== indexToRemove) ]);
   render = () => <React.Fragment>
     <Row gutter={8}>
       <Col span={11}>
-        <label>Employee email</label>
+        <label>Email</label>
       </Col>
       <Col span={11}>
-      <label>Role</label>
+      <label>Permissions</label>
       </Col>
     </Row>
     {this.props.employees.map((employee, index) => <Row key={index} gutter={8}>

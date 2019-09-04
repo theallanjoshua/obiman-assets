@@ -16,11 +16,11 @@ const formValidation = (showValidationErrors, validationErrors = []) => ({
 export default class Employee extends React.Component {
   set = (key, value) => this.props.onChange({ ...new EMPLOYEE({ ...this.props.employee }).get(), [key]: value });
   setId = e => this.set('id', e.target.value);
-  setRoles = roles => this.set('roles', roles);
+  setPermissions = permissions => this.set('permissions', permissions);
   render = () => {
     const employee = new EMPLOYEE({ ...this.props.employee });
     const employeeData = employee.get();
-    const { id, roles } = employeeData;
+    const { id, permissions } = employeeData;
     const validationErrors = employee.validate();
     return <Row gutter={8}>
       <Col span={12}>
@@ -42,17 +42,17 @@ export default class Employee extends React.Component {
         <Form.Item
           { ...formItemLayout }
           required
-          { ...formValidation(this.props.showValidationErrors, validationErrors.roles) }
+          { ...formValidation(this.props.showValidationErrors, validationErrors.permissions) }
           children={
             <Select
               mode='multiple'
-              placeholder={'Assign roles to the employee'}
-              defaultValue={roles}
-              onChange={this.setRoles}
+              placeholder={'Provide permission to the employee'}
+              defaultValue={permissions}
+              onChange={this.setPermissions}
             >
               {new Business()
-                .getRoles()
-                .map(role => <Select.Option key={role} value={role} children={role}/>)}
+                .getAllPermissions()
+                .map(permission => <Select.Option key={permission} value={permission} children={permission}/>)}
             </Select>
           }
         />
