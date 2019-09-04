@@ -29,8 +29,16 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
     render: (text, { expiryDate }) => expiryDate ? <Tooltip title={`${moment(expiryDate).format(DATE_TIME_FORMAT)}`} children={`${moment(expiryDate).fromNow()}`} /> : '-'
   },
   {
+    title: 'Created by',
+    render: (text, { createdBy }) => createdBy
+  },
+  {
     title: 'Created on',
     render: (text, { createdDate }) => <Tooltip title={`${moment(createdDate).format(DATE_TIME_FORMAT)}`} children={`${moment(createdDate).fromNow()}`} />
+  },
+  {
+    title: 'Last edited by',
+    render: (text, { updatedBy }) => updatedBy
   },
   {
     title: 'Last edited on',

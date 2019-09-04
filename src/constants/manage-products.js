@@ -34,8 +34,16 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
     render: (text, { price, currency }) => `${price ? `${new Utils().getCurrencySymbol(currency)}${price}` : `-`}`
   },
   {
+    title: 'Created by',
+    render: (text, { createdBy }) => createdBy
+  },
+  {
     title: 'Created on',
     render: (text, { createdDate }) => <Tooltip title={`${moment(createdDate).format(DATE_TIME_FORMAT)}`} children={`${moment(createdDate).fromNow()}`} />
+  },
+  {
+    title: 'Last edited by',
+    render: (text, { updatedBy }) => updatedBy
   },
   {
     title: 'Last edited on',

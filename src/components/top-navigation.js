@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom'
 import { Consumer } from '../context';
-import { Button, Menu, Avatar, Icon, Badge } from 'antd';
+import { Menu, Avatar, Icon, Badge } from 'antd';
 import Credentials from '../utils/credentials';
 import toMaterialStyle from 'material-color-hash';
 import { OBIMAN_LOGO } from '../constants/app';
