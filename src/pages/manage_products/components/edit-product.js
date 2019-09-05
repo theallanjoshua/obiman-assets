@@ -80,6 +80,7 @@ export default class EditProduct extends React.Component {
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
     <ProductInfo
+      currency={this.props.currency}
       ingredients={this.props.ingredients}
       product={this.state.productToUpdate}
       showValidationErrors={this.state.showValidationErrors}

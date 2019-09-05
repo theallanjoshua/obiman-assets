@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BillCompositionEntity as BCE } from 'obiman-data-models';
+import { BillCompositionEntity as BCE, Utils } from 'obiman-data-models';
 import { Row, Col, Select, InputNumber, Form, Statistic } from 'antd';
 
 const formItemLayout = {
@@ -59,6 +59,7 @@ export default class BillCompositionEntity extends React.Component {
               <InputNumber
                 min={0}
                 max={bceId ? selectedProduct.maxRepetition + bceQuantity : undefined}
+                parser={value => isNaN(value) ? 0 : value}
                 value={bceQuantity}
                 onChange={this.setQuantity}
               />
@@ -69,7 +70,10 @@ export default class BillCompositionEntity extends React.Component {
       <Col span={5}>
         <Form.Item
           { ...formItemLayout }
-          children={<Statistic value={selectedProduct.price * (bceQuantity || 0)} />}
+          children={<Statistic
+            prefix={new Utils().getCurrencySymbol(this.props.currency)}
+            value={selectedProduct.price * (bceQuantity || 0)}
+          />}
         />
       </Col>
     </Row>;

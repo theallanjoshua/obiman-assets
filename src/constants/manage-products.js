@@ -31,7 +31,7 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
   },
   {
     title: 'Selling price',
-    render: (text, { price, currency }) => `${price ? `${new Utils().getCurrencySymbol(currency)}${price}` : `-`}`
+    render: (text, { price, currency }) => `${new Utils().getCurrencySymbol(currency)}${price.toLocaleString()}`
   },
   {
     title: 'Created by',

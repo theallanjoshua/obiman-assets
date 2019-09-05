@@ -9,6 +9,7 @@ export default class AllIngredients extends React.Component {
     dataSource={this.props.products.map(product => ({
       ...product,
       key: product.id,
+      currency: this.props.currency,
       onEdit: this.props.showEditModal,
       onDelete: this.props.onDeleteProduct
     }))}

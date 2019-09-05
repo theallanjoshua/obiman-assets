@@ -18,11 +18,7 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   },
   {
     title: 'Available quantity',
-    render: (text, { quantity, unit }) => `${quantity ? `${quantity}${unit}` : `Out of stock`}`
-  },
-  {
-    title: 'Cost price',
-    render: (text, { cost, currency }) => `${cost ? `${new Utils().getCurrencySymbol(currency)}${cost}` : `-`}`
+    render: (text, { quantity, unit }) => `${quantity ? `${quantity.toLocaleString()}${unit}` : `Out of stock`}`
   },
   {
     title: 'Expiries by',

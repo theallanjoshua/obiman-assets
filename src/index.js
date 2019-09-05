@@ -66,14 +66,15 @@ class App extends React.Component {
     try {
       const user = await fetchUser(this.state.email);;
       const { businesses } = user;
-      const businessId = businesses.length === 1 ? businesses[0].id : '';
-      this.setState({ businesses, businessId, loading: false });
+      const business = businesses.length === 1 ? businesses[0] : {};
+      const { id: businessId, currency } = business;
+      this.setState({ businesses, businessId, currency, loading: false });
     } catch (errorMessage) {
       this.setState({ errorMessage, loading: false });
     }
   }
 
-  onBusinessChange = businessId => this.setState({ businessId, showBusinessManagement: false });
+  onBusinessChange = ({ id: businessId, currency }) => this.setState({ businessId, currency, showBusinessManagement: false });
 
   showBusinessManagement = () => this.setState({ showBusinessManagement: true });
 

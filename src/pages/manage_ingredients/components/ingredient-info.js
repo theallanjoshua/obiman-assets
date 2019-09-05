@@ -30,8 +30,6 @@ export default class IngredientInfo extends React.Component {
   setLabel = e => this.set('label', e.target.value);
   setQuantity = quantity => this.set('quantity', quantity);
   setUnit = unit => this.set('unit', unit);
-  setCost = cost => this.set('cost', cost);
-  setCurrency = currency => this.set('currency', currency);
   setExpiryDate = (expiryDate, expiryDateString) => this.set('expiryDate', expiryDateString ? new Date(expiryDateString).getTime() : 0);
 
   render = () => {
@@ -62,6 +60,7 @@ export default class IngredientInfo extends React.Component {
           <div className='input-select-group'>
             <InputNumber
               min={0}
+              parser={value => isNaN(value) ? 0 : value}
               value={ingredientData.quantity}
               onChange={this.setQuantity}
             />
@@ -75,31 +74,6 @@ export default class IngredientInfo extends React.Component {
               onChange={this.setUnit}
             >
               {utils.getUnits().map(unit => <Select.Option key={unit} value={unit} children={unit}/>)}
-            </Select>
-          </div>
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Cost per unit of quantity'}
-        { ...formValidation(this.props.showValidationErrors, [ ...(validationErrors.cost || []), ...(validationErrors.currency || []) ]) }
-        children={
-          <div className='input-select-group'>
-            <InputNumber
-              min={0}
-              value={ingredientData.cost}
-              onChange={this.setCost}
-            />
-            <Select
-              showSearch
-              allowClear
-              placeholder={'currency'}
-              optionFilterProp='children'
-              filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-              defaultValue={ingredientData.currency || undefined}
-              onChange={this.setCurrency}
-            >
-              {utils.getCurrencyCodes().map(currency => <Select.Option key={currency} value={currency} children={currency}/>)}
             </Select>
           </div>
         }

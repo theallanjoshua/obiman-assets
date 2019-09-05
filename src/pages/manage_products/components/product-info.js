@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Input, InputNumber, Select } from 'antd';
+import { Form, Input, InputNumber } from 'antd';
 import { Product, Utils } from 'obiman-data-models';
 import ProductComposition from './product-composition';
 
@@ -35,7 +35,6 @@ export default class ProductInfo extends React.Component {
   setComposition = composition => this.set('composition', composition);
   setRecipe = e => this.set('recipe', e.target.value);
   setPrice = price => this.set('price', price);
-  setCurrency = currency => this.set('currency', currency);
   setTax = tax => this.set('tax', tax);
 
   render = () => {
@@ -72,6 +71,24 @@ export default class ProductInfo extends React.Component {
       />
       <Form.Item
         { ...formItemLayout }
+        required
+        label={'Selling price'}
+        { ...formValidation(this.props.showValidationErrors, validationErrors.price) }
+        children={
+          <InputNumber
+            min={0}
+            value={productData.price}
+            formatter={value => `${new Utils().getCurrencySymbol(this.props.currency)} ${value}`}
+            parser={value => {
+              const parsedValue = Number(value.replace(`${new Utils().getCurrencySymbol(this.props.currency)}`, '').trim());
+              return isNaN(parsedValue) ? 0 : parsedValue;
+            }}
+            onChange={this.setPrice}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
         label={'Description'}
         children={
           <TextArea
@@ -92,31 +109,6 @@ export default class ProductInfo extends React.Component {
             value={productData.recipe}
             onChange={this.setRecipe}
           />
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Selling price'}
-        { ...formValidation(this.props.showValidationErrors, [ ...(validationErrors.price || []), ...(validationErrors.currency || []) ]) }
-        children={
-          <div className='input-select-group'>
-            <InputNumber
-              min={0}
-              value={productData.price}
-              onChange={this.setPrice}
-            />
-            <Select
-              showSearch
-              allowClear
-              placeholder={'currency'}
-              optionFilterProp='children'
-              filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-              value={productData.currency || undefined}
-              onChange={this.setCurrency}
-            >
-              {new Utils().getCurrencyCodes().map(currency => <Select.Option key={currency} value={currency} children={currency}/>)}
-            </Select>
-          </div>
         }
       />
     </Form>

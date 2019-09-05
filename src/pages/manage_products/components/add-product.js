@@ -78,6 +78,7 @@ export default class AddProduct extends React.Component {
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
     <ProductInfo
+      currency={this.props.currency}
       ingredients={this.props.ingredients}
       product={this.state.productToCreate}
       showValidationErrors={this.state.showValidationErrors}

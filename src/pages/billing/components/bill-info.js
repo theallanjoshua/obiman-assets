@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Form, Input, Statistic } from 'antd';
-import { Bill, BillCompositionEntity } from 'obiman-data-models';
+import { Bill, BillCompositionEntity, Utils } from 'obiman-data-models';
 import BillComposition from './bill-composition';
 
 const formItemLayout = {
@@ -54,6 +54,7 @@ export default class BillInfo extends React.Component {
         required
         children={
           <BillComposition
+            currency={this.props.currency}
             showValidationErrors={this.props.showValidationErrors}
             products={this.props.products}
             composition={billData.composition}
@@ -65,10 +66,8 @@ export default class BillInfo extends React.Component {
         { ...formItemLayout }
         label={'Total'}
         children={<Statistic
-          value={billData.composition.reduce((acc, { id, quantity }) => {
-            const { price } = this.props.products.filter(({ id: productId }) => id === productId)[0] || { price: 0 };
-            return acc + (price * quantity);
-          }, 0)}
+          prefix={new Utils().getCurrencySymbol(this.props.currency)}
+          value={bill.calculateTotal(this.props.products)}
         />}
       />
     </Form>

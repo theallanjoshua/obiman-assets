@@ -37,6 +37,7 @@ export default class BillComposition extends React.Component {
       return <Row key={index} gutter={8}>
         <Col span={22}>
           <BillCompositionEntity
+            currency={this.props.currency}
             showValidationErrors={this.props.showValidationErrors}
             products={availableProducts}
             entity={entity}

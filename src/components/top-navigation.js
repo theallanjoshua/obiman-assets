@@ -33,9 +33,9 @@ export default class TopNavigation extends React.Component {
         />}
         style={{ float: 'right' }}
       >
-        {businesses.map(({ id, logo, label }) => <Item
+        {businesses.map(({ id, logo, label, currency }) => <Item
           key={id}
-          onClick={() => onBusinessChange(id)}
+          onClick={() => onBusinessChange({ id, currency })}
         >
           <span>
             <Avatar
@@ -62,7 +62,7 @@ export default class TopNavigation extends React.Component {
           </span>
         </Item>
       </SubMenu>
-      <SubMenu
+      {/* <SubMenu
         title={<Badge
           count={2}
           style={{ boxShadow: 'none', transform: 'scale(0.8)' }}
@@ -74,7 +74,7 @@ export default class TopNavigation extends React.Component {
       >
         <Item>Notification 1</Item>
         <Item>Notification 2</Item>
-      </SubMenu>
+      </SubMenu> */}
     </Menu>}
   </Consumer>
 }

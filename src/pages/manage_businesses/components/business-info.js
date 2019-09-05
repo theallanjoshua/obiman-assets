@@ -56,6 +56,7 @@ export default class BusinessInfo extends React.Component {
       <Form.Item
         { ...formItemLayout }
         label={'Currency'}
+        required
         { ...formValidation(this.props.showValidationErrors, [ ...(validationErrors.price || []), ...(validationErrors.currency || []) ]) }
         children={
           <Select

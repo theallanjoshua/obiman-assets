@@ -58,6 +58,7 @@ export default class ProductCompositionEntity extends React.Component {
             <div className='input-select-group'>
               <InputNumber
                 min={0}
+                parser={value => isNaN(value) ? 0 : value}
                 value={pceQuantity}
                 onChange={this.setQuantity}
               />

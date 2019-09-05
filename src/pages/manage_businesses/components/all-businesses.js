@@ -34,7 +34,7 @@ export default class AllBusinesses extends React.Component {
           style={{
             padding: 0
           }}
-          onClick={this.props.enableEdit ? () => {} : () => this.props.onBusinessChange(business.id)}
+          onClick={this.props.enableEdit ? () => {} : () => this.props.onBusinessChange(business)}
         >
           <div style={{
             display: 'flex',

@@ -90,12 +90,14 @@ class ManageProductsComponent extends React.Component {
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
     <AllProducts
+      currency={this.props.currency}
       loading={this.state.loading}
       products={this.state.products}
       showEditModal={this.showEditModal}
       deleteProduct={this.deleteProduct}
     />
     <AddProduct
+      currency={this.props.currency}
       businessId={this.props.businessId}
       ingredients={this.state.ingredients}
       visible={this.state.showAddModal}
@@ -103,6 +105,7 @@ class ManageProductsComponent extends React.Component {
       fetchAllProducts={this.fetchAllProducts}
     />
     <EditProduct
+      currency={this.props.currency}
       businessId={this.props.businessId}
       ingredients={this.state.ingredients}
       visible={this.state.showEditModal}
@@ -115,8 +118,9 @@ class ManageProductsComponent extends React.Component {
 
 export default class ManageProducts extends React.Component {
   render = () => <Consumer>
-    {({ businessId }) => <ManageProductsComponent
+    {({ businessId, currency }) => <ManageProductsComponent
       businessId={businessId}
+      currency={currency}
     />}
   </Consumer>
 }

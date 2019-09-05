@@ -63,9 +63,10 @@ export default class EditBill extends React.Component {
       this.setState({ showValidationErrors: true });
     } else {
       const billData = bill.get();
+      const total = bill.calculateTotal(this.props.products);
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.put(BILLS_API_URL(businessId), billData);
+        await Network.put(BILLS_API_URL(businessId), { ...billData, total });
         this.setState({ errorMessage: '', successMessage: BILL_EDITED_SUCCESSFULLY_MESSAGE });
         this.props.fetchAllBills(businessId);
         setTimeout(this.props.hideModal, 2000);
@@ -99,6 +100,7 @@ export default class EditBill extends React.Component {
     <br />
     <Spin spinning={this.state.loading}>
       <BillInfo
+        currency={this.props.currency}
         products={this.state.products}
         bill={this.state.billToUpdate}
         showValidationErrors={this.state.showValidationErrors}

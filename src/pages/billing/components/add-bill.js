@@ -63,9 +63,10 @@ export default class AddBill extends React.Component {
       this.setState({ showValidationErrors: true });
     } else {
       const billData = bill.get();
+      const total = bill.calculateTotal(this.props.products);
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.post(BILLS_API_URL(businessId), billData);
+        await Network.post(BILLS_API_URL(businessId), { ...billData, total });
         this.setState({ errorMessage: '', successMessage: BILL_ADDED_SUCCESSFULLY_MESSAGE });
         this.props.fetchAllBills(businessId);
         setTimeout(this.props.hideModal, 2000);
@@ -99,6 +100,7 @@ export default class AddBill extends React.Component {
     <br />
     <Spin spinning={this.state.loading}>
       <BillInfo
+        currency={this.props.currency}
         ingredients={this.state.ingredients}
         products={this.state.products}
         bill={this.state.billToCreate}

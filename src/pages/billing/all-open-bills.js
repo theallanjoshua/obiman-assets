@@ -14,6 +14,7 @@ import AddBill from './components/add-bill';
 import EditBill from './components/edit-bill';
 import { fetchAllIngredients } from '../../utils/ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
+import { Utils } from 'obiman-data-models';
 
 class AllOpenBillsComponent extends React.Component {
   constructor() {
@@ -102,9 +103,13 @@ class AllOpenBillsComponent extends React.Component {
                 pagination={false}
               />
               <br />
-              <div className='invert-direction' >
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end'
+              }} >
                 <Statistic
                   title={'Total'}
+                  prefix={new Utils().getCurrencySymbol(this.props.currency)}
                   value={bill.total}
                 />
               </div>
@@ -114,6 +119,7 @@ class AllOpenBillsComponent extends React.Component {
       <Empty description='No open bills' />}
     </Spin>
     <AddBill
+      currency={this.props.currency}
       visible={this.state.showAddModal}
       hideModal={this.hideModal}
       businessId={this.props.businessId}
@@ -122,6 +128,7 @@ class AllOpenBillsComponent extends React.Component {
       fetchAllBills={this.fetchAllBills}
     />
     <EditBill
+      currency={this.props.currency}
       visible={this.state.showEditModal}
       hideModal={this.hideModal}
       businessId={this.props.businessId}
@@ -135,8 +142,9 @@ class AllOpenBillsComponent extends React.Component {
 
 export default class AllOpenBills extends React.Component {
   render = () => <Consumer>
-    {({ businessId }) => <AllOpenBillsComponent
+    {({ businessId, currency }) => <AllOpenBillsComponent
       businessId={businessId}
+      currency={currency}
     />}
   </Consumer>
 }
