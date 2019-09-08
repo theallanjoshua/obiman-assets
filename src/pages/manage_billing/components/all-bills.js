@@ -15,7 +15,7 @@ export default class AllBills extends React.Component {
           type='link'
           icon='edit'
           children={EDIT_BILL_BUTTON_TEXT}
-          onClick={() => this.showEditModal(bill)}
+          onClick={() => this.props.showEditModal(bill)}
         />}
         children={<div>
           <Table

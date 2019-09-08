@@ -85,6 +85,7 @@ class ManageBillingComponent extends React.Component {
       currency={this.props.currency}
       loading={this.state.loading}
       bills={this.state.bills}
+      showEditModal={this.showEditModal}
     />
     <AddBill
       currency={this.props.currency}
