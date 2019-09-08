@@ -1,22 +1,21 @@
 import * as React from 'react';
 import Network from '../../utils/network';
-import { Alert, Card, Button, Spin, Table, Statistic, Empty } from 'antd';
+import { Alert, Button } from 'antd';
 import { BILLS_API_URL } from '../../constants/endpoints';
 import {
   MANAGE_BILLS_PAGE_TITLE,
-  EDIT_BILL_BUTTON_TEXT,
   ADD_BILL_TEXT
-} from '../../constants/billing';
+} from '../../constants/manage-billing';
 import PageHeader from '../../components/page-header';
 import Page from '../../components/page';
 import { Consumer } from '../../context';
+import AllBills from './components/all-bills';
 import AddBill from './components/add-bill';
 import EditBill from './components/edit-bill';
 import { fetchAllIngredients } from '../../utils/ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
-import { Utils } from 'obiman-data-models';
 
-class AllOpenBillsComponent extends React.Component {
+class ManageBillingComponent extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -82,42 +81,11 @@ class AllOpenBillsComponent extends React.Component {
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
-    <Spin spinning={this.state.loading}>
-      {this.state.bills.length ?
-        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {this.state.bills.map(bill => <Card
-            key={bill.id}
-            style={{ minWidth: '300px', maxWidth: '300px', width: '300px', margin: '5px'}}
-            title={bill.label}
-            extra={<Button
-              type='link'
-              icon='edit'
-              children={EDIT_BILL_BUTTON_TEXT}
-              onClick={() => this.showEditModal(bill)}
-            />}
-            children={<div>
-              <Table
-                columns={[ { dataIndex: 'label' }, { dataIndex: 'quantity' } ]}
-                dataSource={bill.composition.map(entity => ({ ...entity, key: entity.id }))}
-                showHeader={false}
-                pagination={false}
-              />
-              <br />
-              <div style={{
-                display: 'flex',
-                justifyContent: 'flex-end'
-              }} >
-                <Statistic
-                  title={'Total'}
-                  prefix={new Utils().getCurrencySymbol(this.props.currency)}
-                  value={bill.total}
-                />
-              </div>
-            </div>}
-          />)}
-        </div> :
-      <Empty description='No open bills' />}
-    </Spin>
+    <AllBills
+      currency={this.props.currency}
+      loading={this.state.loading}
+      bills={this.state.bills}
+    />
     <AddBill
       currency={this.props.currency}
       visible={this.state.showAddModal}
@@ -140,9 +108,9 @@ class AllOpenBillsComponent extends React.Component {
   </Page>;
 }
 
-export default class AllOpenBills extends React.Component {
+export default class ManageBilling extends React.Component {
   render = () => <Consumer>
-    {({ businessId, currency }) => <AllOpenBillsComponent
+    {({ businessId, currency }) => <ManageBillingComponent
       businessId={businessId}
       currency={currency}
     />}

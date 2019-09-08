@@ -1,80 +1,156 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom'
 import { Consumer } from '../context';
-import { Menu, Avatar, Icon, Badge } from 'antd';
+import { Row, Col, Menu, Avatar, Icon } from 'antd';
 import Credentials from '../utils/credentials';
 import toMaterialStyle from 'material-color-hash';
 import { OBIMAN_LOGO } from '../constants/app';
 import {
-  HOME
+  HOME,
+  INGREDIENTS,
+  PRODUCTS,
+  BILLING,
+  PAGE_URL_TITLE_MAP
 } from '../constants/pages';
 
 const { SubMenu, Item, Divider } = Menu;
 
 export default class TopNavigation extends React.Component {
+  constructor() {
+    super();
+    this.state = { selectedKeys: [window.location.hash.replace('#','')] }
+  }
+
+  onSelect = ({ selectedKeys }) => this.setState({ selectedKeys });
+
   render = () => <Consumer>
-      {({ email, avatar, businesses, businessId, showBusinessManagement, onBusinessChange }) =>< Menu
-      theme='dark'
-      mode='horizontal'
+    {({ businessId, email, avatar, businesses, showBusinessManagement, onBusinessChange }) => <Row
       style={{
-        padding: '0px 6px 0px 1px'
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0px 26px'
       }}
-      selectedKeys={[businessId]}
     >
-      <Item>
-        <Link to={HOME}>{OBIMAN_LOGO}</Link>
-      </Item>
-      <SubMenu
-        title={<Avatar
-          style={{ ...toMaterialStyle(email), marginBottom: '6px' }}
-          src={avatar}
-          children={email.substr(0,1).toUpperCase()}
-          size='small'
-        />}
-        style={{ float: 'right' }}
+      <Col
+        xs={18}
+        sm={18}
+        md={3}
+        lg={3}
+        xl={3}
+        xxl={3}
       >
-        {businesses.map(({ id, logo, label, currency }) => <Item
-          key={id}
-          onClick={() => onBusinessChange({ id, currency })}
+        <Link
+          style={{ color: '#ddd' }}
+          to={HOME}
         >
-          <span>
-            <Avatar
-              style={{ ...toMaterialStyle(label), marginRight: '10px' }}
-              src={logo}
-              children={label.substr(0,1).toUpperCase()}
-              size='small'
-            />
-            <span>{label}</span>
-          </span>
-        </Item>)}
-        <Item onClick={showBusinessManagement}>Manage businesses</Item>
-        <Divider />
-        <Item>
-          <span>
-            <Icon type='user' />
-            <span>Account</span>
-          </span>
-        </Item>
-        <Item>
-          <span>
-            <Icon type='logout' />
-            <span onClick={() => Credentials.logout()}>Logout</span>
-          </span>
-        </Item>
-      </SubMenu>
-      {/* <SubMenu
-        title={<Badge
-          count={2}
-          style={{ boxShadow: 'none', transform: 'scale(0.8)' }}
-          offset={[4, -6]}
-        >
-          <Icon type='bell' theme='filled' style={{ fontSize: '16px' }} />
-        </Badge>}
-        style={{ float: 'right' }}
+            {OBIMAN_LOGO}
+        </Link>
+      </Col>
+      <Col
+        xs={0}
+        sm={0}
+        md={21}
+        lg={21}
+        xl={21}
+        xxl={21}
       >
-        <Item>Notification 1</Item>
-        <Item>Notification 2</Item>
-      </SubMenu> */}
-    </Menu>}
+        <Menu
+          theme='dark'
+          mode='horizontal'
+          onSelect={this.onSelect}
+          selectedKeys={[businessId, ...this.state.selectedKeys.filter(key => key !== businessId)]}
+          style={{ float: 'right' }}
+        >
+          {NavItems()}
+          {NavAvatarSubMenu(email, avatar, businesses, showBusinessManagement, onBusinessChange)}
+        </Menu>
+      </Col>
+      <Col
+        xs={6}
+        sm={6}
+        md={0}
+        lg={0}
+        xl={0}
+        xxl={0}
+      >
+        <Menu
+          theme='dark'
+          mode='horizontal'
+          onSelect={this.onSelect}
+          selectedKeys={[businessId, ...this.state.selectedKeys.filter(key => key !== businessId)]}
+          style={{ float: 'right' }}
+        >
+          {NavAvatarSubMenu(email, avatar, businesses, showBusinessManagement, onBusinessChange)}
+          <SubMenu title={<Icon style={{ marginRight: 0 }} type='menu' />}>
+            {NavItems()}
+          </SubMenu>
+        </Menu>
+      </Col>
+    </Row>}
   </Consumer>
 }
+
+const NavItems = () => [
+  <Item key={INGREDIENTS}>
+    <Link to={INGREDIENTS}>
+      <span>
+        <Icon type='build' />
+        {PAGE_URL_TITLE_MAP[INGREDIENTS]}
+      </span>
+    </Link>
+  </Item>,
+  <Item key={PRODUCTS}>
+    <Link to={PRODUCTS}>
+      <span>
+        <Icon type='table' />
+        {PAGE_URL_TITLE_MAP[PRODUCTS]}
+      </span>
+  </Link>
+  </Item>,
+  <Item key={BILLING}>
+    <Link to={BILLING}>
+      <span>
+        <Icon type='calculator' />
+        {PAGE_URL_TITLE_MAP[BILLING]}
+      </span>
+    </Link>
+  </Item>
+]
+
+const NavAvatarSubMenu = (email, avatar, businesses, showBusinessManagement, onBusinessChange) => <SubMenu
+  title={<Avatar
+    style={{ ...toMaterialStyle(email) }}
+    src={avatar}
+    children={email.substr(0,1).toUpperCase()}
+    size='small'
+  />}
+  >
+  {businesses.map(({ id, logo, label, currency }) => <Item
+    key={id}
+    onClick={() => onBusinessChange({ id, currency })}
+  >
+    <span>
+      <Avatar
+        style={{ ...toMaterialStyle(label), marginRight: '10px' }}
+        src={logo}
+        children={label.substr(0,1).toUpperCase()}
+        size='small'
+      />
+      <span>{label}</span>
+    </span>
+  </Item>)}
+  <Item onClick={showBusinessManagement}>Manage businesses</Item>
+  <Divider />
+  <Item>
+    <span>
+      <Icon type='user' />
+      <span>Account</span>
+    </span>
+  </Item>
+  <Item>
+    <span>
+      <Icon type='logout' />
+      <span onClick={() => Credentials.logout()}>Logout</span>
+    </span>
+  </Item>
+</SubMenu>

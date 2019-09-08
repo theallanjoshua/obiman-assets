@@ -7,7 +7,7 @@ import { BILLS_API_URL } from '../../../constants/endpoints';
 import {
   BILL_EDITED_SUCCESSFULLY_MESSAGE,
   EDIT_BILL_PAGE_TITLE
-} from '../../../constants/billing';
+} from '../../../constants/manage-billing';
 import { SAVE_BUTTON_TEXT } from '../../../constants/app';
 import { getEnrichedProducts } from '../../../utils/products';
 

@@ -8,7 +8,7 @@ import {
   BILL_ADDED_SUCCESSFULLY_MESSAGE,
   ADD_BILL_PAGE_TITLE,
   ADD_BILL_BUTTON_TEXT
-} from '../../../constants/billing';
+} from '../../../constants/manage-billing';
 import { getEnrichedProducts } from '../../../utils/products';
 
 const INITIAL_STATE = {

@@ -10,7 +10,9 @@ export const OBIMAN_LOGO = <h1 style={{
   fontFamily: 'Megrim',
   fontSize: 'xx-large',
   color: 'inherit',
-  marginBottom: 0
+  marginBottom: 0,
+  width: 'max-content',
+  lineHeight: 'initial'
 }}>
   O b i m a n
 </h1>

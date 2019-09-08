@@ -4,20 +4,19 @@ import ReactDOM from 'react-dom';
 import { Provider } from './context';
 import { Layout, BackTop, Spin, Alert } from 'antd';
 import {
-  MANAGE_INGREDIENTS,
-  MANAGE_PRODUCTS,
-  BILLING_ALL_OPEN
+  INGREDIENTS,
+  PRODUCTS,
+  BILLING
 } from './constants/pages';
 import {
   PAGE_ERROR
 } from './constants/app';
 import Credentials from './utils/credentials';
 import TopNavigation from './components/top-navigation';
-import SideNavigation from './components/side-navigation';
 import ManageIngredients from './pages/manage_ingredients/manage-ingredients';
 import ManageProducts from './pages/manage_products/manage-products';
 import ManageBusinesses from './pages/manage_businesses/manage-businesses';
-import AllOpenBills from './pages/billing/all-open-bills';
+import ManageBilling from './pages/manage_billing/manage-billing';
 import { fetchUser } from './utils/user';
 import 'antd/dist/antd.less';
 import './index.less';
@@ -104,23 +103,17 @@ class App extends React.Component {
             <Layout style={{ height: '100vh' }}>
               <Header style={{
                 padding: 0,
-                background: 'transparent',
                 height: 'initial',
               }}>
                 <TopNavigation />
               </Header>
-              <Layout>
-                <SideNavigation />
-                <Layout>
-                  <Content>
-                    <Switch>
-                      <Route exact path={MANAGE_INGREDIENTS} component={ManageIngredients} />
-                      <Route exact path={MANAGE_PRODUCTS} component={ManageProducts} />
-                      <Route exact path={BILLING_ALL_OPEN} component={AllOpenBills} />
-                    </Switch>
-                  </Content>
-                </Layout>
-              </Layout>
+                <Content>
+                  <Switch>
+                    <Route exact path={INGREDIENTS} component={ManageIngredients} />
+                    <Route exact path={PRODUCTS} component={ManageProducts} />
+                    <Route exact path={BILLING} component={ManageBilling} />
+                  </Switch>
+                </Content>
             </Layout>
         </Router>
     </Spin>}
