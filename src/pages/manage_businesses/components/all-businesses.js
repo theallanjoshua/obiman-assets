@@ -57,11 +57,11 @@ export default class AllBusinesses extends React.Component {
             /> : null}
           </div>
         </List.Item>}
-        footer={<Button
+        footer={!this.props.loading ? <Button
           type='link'
           children='Create a new business'
           onClick={this.props.showAddModal}
-        />}
+        /> : null}
       />
       {this.props.enableEdit ? <div
         style={{

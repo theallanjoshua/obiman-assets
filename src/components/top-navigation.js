@@ -119,7 +119,7 @@ const NavItems = () => [
 
 const NavAvatarSubMenu = (email, avatar, businesses, showBusinessManagement, onBusinessChange) => <SubMenu
   title={<Avatar
-    style={{ ...toMaterialStyle(email) }}
+    style={{ ...toMaterialStyle(email), marginBottom: '3px' }}
     src={avatar}
     children={email.substr(0,1).toUpperCase()}
     size='small'

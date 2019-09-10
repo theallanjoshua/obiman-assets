@@ -64,12 +64,13 @@ class ManageProductsComponent extends React.Component {
   hideModal = () => this.setState({ showAddModal: false, showEditModal: false });
 
   deleteProduct = async ({ id, label }) => {
+    const { businessId } = this.props;
     this.setState({ loading: true, errorMessage: '', successMessage: '' });
     try {
-      await Network.delete(`${PRODUCTS_API_URL}/${id}`);
+      await Network.delete(`${PRODUCTS_API_URL(businessId)}/${id}`);
       this.setState({ errorMessage: '', successMessage: PRODUCT_DELETED_SUCCESSFULLY_MESSAGE(label) });
       setTimeout(() => this.setState({ successMessage: '' }), 2000);
-      this.fetchAllProducts();
+      this.fetchAllProducts(businessId);
     } catch (errorMessage) {
       this.setState({ errorMessage, loading: false });
     }

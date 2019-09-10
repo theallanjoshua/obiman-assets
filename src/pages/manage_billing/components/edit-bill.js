@@ -37,7 +37,7 @@ export default class EditBill extends React.Component {
     const { visible: prevVisible } = prevProps;
     const { visible, ingredients, products, billToUpdate } = this.props;
     if (!prevVisible && visible) {
-      this.setState({ ...INITIAL_STATE, ingredients, products, billToUpdate });
+      this.setState({ ...INITIAL_STATE, ingredients, products, billToUpdate, previousBill: billToUpdate });
     }
   }
 

@@ -65,12 +65,13 @@ class ManageIngredientsComponent extends React.Component {
   hideModal = () => this.setState({ showAddModal: false, showEditModal: false, showBulkEditModal: false });
 
   deleteIngredient = async ({ id, label }) => {
+    const { businessId } = this.props;
     this.setState({ loading: true, errorMessage: '', successMessage: '' });
     try {
-      await Network.delete(`${INGREDIENTS_API_URL}/${id}`);
+      await Network.delete(`${INGREDIENTS_API_URL(businessId)}/${id}`);
       this.setState({ errorMessage: '', successMessage: INGREDIENT_DELETED_SUCCESSFULLY_MESSAGE(label) });
       setTimeout(() => this.setState({ successMessage: '' }), 2000);
-      this.fetchAllIngredients();
+      this.fetchAllIngredients(businessId);
     } catch (errorMessage) {
       this.setState({ errorMessage, loading: false });
     }
