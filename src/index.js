@@ -48,14 +48,16 @@ class App extends React.Component {
   authenticate = async () => {
     this.setState({ loading: true });
     try {
-      const session = await Credentials.authenticate();
-      const idToken = session.getIdToken();
-      const { payload } = idToken;
-      const { email, name, picture } = payload || {};
-      const avatar = picture ? picture.includes('"url":') ? JSON.parse(picture).data.url : picture : '';
-      this.setState({ email, name, avatar, loading: false });
+      const { session, isRedirecting } = await Credentials.authenticate();
+      console.log(isRedirecting);
+      if (!isRedirecting) {
+        const idToken = session.getIdToken();
+        const { payload } = idToken;
+        const { email, name, picture } = payload || {};
+        const avatar = picture ? picture.includes('"url":') ? JSON.parse(picture).data.url : picture : '';
+        this.setState({ email, name, avatar, loading: false });
+      }
     } catch (error) {
-      console.log(error);
       this.setState({ errorMessage: PAGE_ERROR, loading: false });
     }
   }
@@ -100,7 +102,7 @@ class App extends React.Component {
       enableEdit
     /> : <Spin spinning={this.state.loading}>
           <Router>
-            <Layout style={{ height: '100vh' }}>
+            <Layout style={{ minHeight: '100vh' }}>
               <Header style={{
                 padding: 0,
                 height: 'initial',

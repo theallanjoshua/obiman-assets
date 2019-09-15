@@ -34,22 +34,22 @@ class Network {
   }
 
   DO_NOT_USE_fetch = async (url, method, data) => {
-    const authorization = await Credentials.getAuthorizationToken();
-    const params = {
-      method,
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization
-      },
-      redirect: 'follow',
-      referrer: 'no-referrer'
-    };
-    const body = typeof data === 'string' ? data : JSON.stringify(data);
-    const init = data ? { ...params, body } : { ...params };
     try {
+      const authorization = await Credentials.getAuthorizationToken();
+      const params = {
+        method,
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization
+        },
+        redirect: 'follow',
+        referrer: 'no-referrer'
+      };
+      const body = typeof data === 'string' ? data : JSON.stringify(data);
+      const init = data ? { ...params, body } : { ...params };
       const response = await fetch(url, init);
       const { output, errors } = { ...(await response.json()) };
       if(response.ok) {
