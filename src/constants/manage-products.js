@@ -17,13 +17,8 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
     width: 100
   },
   {
-    title: 'Low inventory ingredients',
-    render: (text, { composition }) => composition
-      .filter(({ quantityGap }) => quantityGap < 0)
-      .map(({ label, quantityGap, unit }, index) => <div style={index > 0 ? { marginTop: '10px' } : {}}>
-        {label}
-        <Tag color='red' children={`Need ${quantityGap * -1}${unit} more`} />
-      </div>)
+    title: 'Issues',
+    render: (text, { issues }) => issues.map(issue => <Tag color='red' children={issue} />)
   },
   {
     title: 'Description',

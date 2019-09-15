@@ -63,7 +63,8 @@ export default class EditProduct extends React.Component {
     maskClosable={false}
     title={EDIT_MODAL_HEADER}
     okText={SAVE_BUTTON_TEXT}
-    width={'60vw'}
+    style={{ maxWidth: '90vw' }}
+    width={'720px'}
     visible={this.props.visible}
     closable={!this.state.loading}
     onOk={this.editProduct}

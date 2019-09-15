@@ -31,7 +31,9 @@ export default class BillInfo extends React.Component {
   setComposition = composition => this.set('composition', composition.map(item => new BillCompositionEntity(item).get()));
   render = () => {
     const bill = new Bill({ ...this.props.bill });
-    const billData = bill.get();
+    const billData = bill
+      .enrich(this.props.products)
+      .get();
     const validationErrors = bill.validate();
     return <Form>
       <Form.Item
@@ -66,8 +68,39 @@ export default class BillInfo extends React.Component {
         { ...formItemLayout }
         label={'Total'}
         children={<Statistic
+          precision={2}
           prefix={new Utils().getCurrencySymbol(this.props.currency)}
-          value={bill.calculateTotal(this.props.products)}
+          value={billData.taxlessTotal}
+        />}
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Tax'}
+        children={<React.Fragment>
+          {Object.keys(billData.tax).map(type => <div
+            key={type}
+            style={{
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <label style={{ marginRight: '10px' }}>{type} - </label>
+            <Statistic
+              precision={2}
+              prefix={new Utils().getCurrencySymbol(this.props.currency)}
+              value={billData.tax[type]}
+            />
+          </div>)}
+        </React.Fragment>
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'To pay'}
+        children={<Statistic
+          precision={2}
+          prefix={new Utils().getCurrencySymbol(this.props.currency)}
+          value={billData.total}
         />}
       />
     </Form>

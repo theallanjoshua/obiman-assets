@@ -65,7 +65,8 @@ export default class AddBusiness extends React.Component {
     maskClosable={false}
     title={ADD_BUSINESS_MODAL_HEADER}
     okText={ADD_BUSINESS_BUTTON_TEXT}
-    width={'60vw'}
+    style={{ maxWidth: '90vw' }}
+    width={'720px'}
     visible={this.props.visible}
     closable={!this.state.loading}
     onOk={this.addBusiness}

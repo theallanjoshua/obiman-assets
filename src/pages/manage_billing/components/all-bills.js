@@ -19,7 +19,15 @@ export default class AllBills extends React.Component {
         />}
         children={<div>
           <Table
-            columns={[ { dataIndex: 'label' }, { dataIndex: 'quantity' } ]}
+            columns={[
+              { dataIndex: 'label' },
+              { dataIndex: 'quantity' },
+              { render: (text, { price }) => <Statistic
+                precision={2}
+                prefix={new Utils().getCurrencySymbol(this.props.currency)}
+                value={price}
+              /> }
+           ]}
             dataSource={bill.composition.map(entity => ({ ...entity, key: entity.id }))}
             showHeader={false}
             pagination={false}
@@ -31,6 +39,7 @@ export default class AllBills extends React.Component {
           }} >
             <Statistic
               title={'Total'}
+              precision={2}
               prefix={new Utils().getCurrencySymbol(this.props.currency)}
               value={bill.total}
             />

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Form, Input, InputNumber } from 'antd';
 import { Product, Utils } from 'obiman-data-models';
 import ProductComposition from './product-composition';
+import TaxComposition from './tax-composition';
 
 const { TextArea } = Input;
 
@@ -84,6 +85,18 @@ export default class ProductInfo extends React.Component {
               return isNaN(parsedValue) ? 0 : parsedValue;
             }}
             onChange={this.setPrice}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Applicable tax'}
+        required
+        children={
+          <TaxComposition
+            showValidationErrors={this.props.showValidationErrors}
+            tax={productData.tax}
+            onChange={this.setTax}
           />
         }
       />

@@ -44,7 +44,13 @@ export default class BillCompositionEntity extends React.Component {
               value={bceId ? { key: bceId, value: bceId } : undefined}
               onChange={this.setId}
             >
-              {this.props.products.map(({ id, label }) => <Select.Option key={id} value={id} title={label} children={label}/>)}
+              {this.props.products.map(({ id, label, issues }) => <Select.Option
+                key={id}
+                value={id}
+                title={label}
+                children={label}
+                disabled={!!issues.length}
+              />)}
             </Select>
           }
         />
@@ -71,6 +77,7 @@ export default class BillCompositionEntity extends React.Component {
         <Form.Item
           { ...formItemLayout }
           children={<Statistic
+            precision={2}
             prefix={new Utils().getCurrencySymbol(this.props.currency)}
             value={selectedProduct.price * (bceQuantity || 0)}
           />}

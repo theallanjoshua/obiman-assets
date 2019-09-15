@@ -25,13 +25,17 @@ export const getEnrichedProducts = (products, ingredients) => products.map(item 
       .setUnit(pceUnit)
       .get();
     const ingredientData = ingredients.filter(({ id }) => id === pceId)[0] || { ...defaultIngredientData };
-    const { label, quantity, unit } = ingredientData;
+    const { label, quantity, unit, expiryDate } = ingredientData;
     const availableQuantity = new Utils().convert(quantity, unit, pceUnit);
     const quantityGap = availableQuantity - pceQuantity;
-    const maxRepetition = Math.floor(availableQuantity/pceQuantity);
-    return { ...productCompositionEntityData, label, quantityGap, maxRepetition}
+    const maxRepetition = Math.floor(availableQuantity / pceQuantity);
+    return { ...productCompositionEntityData, label, quantityGap, maxRepetition, expiryDate };
   });
-  const lowInventoryIngredients = composition.filter(({ quantityGap }) => quantityGap < 0).map(({ label }) => label);
+  const issues = composition.reduce((acc, { quantityGap, expiryDate, unit, label }) => {
+    const quantityIssue = quantityGap < 0 ? [`${label} - Need ${quantityGap * -1}${unit} more`] : [];
+    const expiryIssue = expiryDate && expiryDate <= new Date().getTime() ? [`${label} - Expired`] : [];
+    return [ ...acc, ...quantityIssue, ...expiryIssue ];
+  }, []);
   const maxRepetition = Math.floor(composition.map(({ maxRepetition }) => maxRepetition).sort((prv, nxt) => prv - nxt)[0] || 0);
-  return { ...productData, composition, lowInventoryIngredients, maxRepetition };
+  return { ...productData, composition, issues, maxRepetition };
 });

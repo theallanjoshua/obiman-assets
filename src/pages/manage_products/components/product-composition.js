@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ProductCompositionEntity from './product-composition-entity';
 import { Row, Col, Button } from 'antd';
+import { Product } from 'obiman-data-models';
 
 export default class ProductComposition extends React.Component {
   componentDidMount() {
@@ -17,7 +18,7 @@ export default class ProductComposition extends React.Component {
     const composition = this.props.composition.map((entity, index) => index === incomingIndex ? { ...incomingEntity } : { ...entity })
     this.props.onChange(composition);
   }
-  addEntity = () => this.props.onChange([ ...this.props.composition, { ingredient: '', quantity: '', unit: '' } ]);
+  addEntity = () => this.props.onChange([ ...this.props.composition, new Product().get() ]);
   removeEntity = indexToRemove => this.props.onChange([ ...this.props.composition.filter((item, index) => index !== indexToRemove) ]);
   render = () => <React.Fragment>
     <Row gutter={8}>

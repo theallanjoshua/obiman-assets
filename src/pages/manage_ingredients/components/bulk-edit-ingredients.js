@@ -69,7 +69,8 @@ export default class BulkEditIngredients extends React.Component {
     maskClosable={false}
     title={'Bulk edit quantity'}
     okText={SAVE_BUTTON_TEXT}
-    width={'60vw'}
+    style={{ maxWidth: '90vw' }}
+    width={'720px'}
     visible={this.props.visible}
     closable={!this.state.loading}
     onOk={this.bulkEditIngredients}

@@ -62,11 +62,12 @@ export default class AddBill extends React.Component {
     if (Object.keys(bill.validate()).length) {
       this.setState({ showValidationErrors: true });
     } else {
-      const billData = bill.get();
-      const total = bill.calculateTotal(this.props.products);
+      const billData = bill
+        .enrich(this.props.products)
+        .get();
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.post(BILLS_API_URL(businessId), { ...billData, total });
+        await Network.post(BILLS_API_URL(businessId), billData);
         this.setState({ errorMessage: '', successMessage: BILL_ADDED_SUCCESSFULLY_MESSAGE });
         this.props.fetchAllBills(businessId);
         setTimeout(this.props.hideModal, 2000);
@@ -82,7 +83,8 @@ export default class AddBill extends React.Component {
     maskClosable={false}
     title={ADD_BILL_PAGE_TITLE}
     okText={ADD_BILL_BUTTON_TEXT}
-    width={'60vw'}
+    style={{ maxWidth: '90vw' }}
+    width={'720px'}
     visible={this.props.visible}
     closable={!this.state.loading}
     onOk={this.addBill}
