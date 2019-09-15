@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { List, Avatar, Button, Empty } from 'antd';
+import { List, Avatar, Button, Empty, Typography } from 'antd';
 import { OBIMAN_LOGO } from '../../../constants/app';
 import toMaterialStyle from 'material-color-hash';
+import Credentials from '../../../utils/credentials';
+import { Business } from 'obiman-data-models';
+
+const { Text } = Typography;
 
 export default class AllBusinesses extends React.Component {
   render = () => <div style={{
@@ -49,7 +53,7 @@ export default class AllBusinesses extends React.Component {
               />}
               title={business.label}
             />
-            {this.props.enableEdit ? <Button
+            {this.props.enableEdit && business.employees.filter(employee => employee.id === this.props.email && employee.permissions.includes(new Business().getUpdatePermissionText())).length ? <Button
               type='link'
               icon='edit'
               children='Edit'
@@ -76,7 +80,16 @@ export default class AllBusinesses extends React.Component {
           children={'Done'}
           onClick={this.props.hideBusinessManagement}
         />
-      </div>: null}
+      </div> : <div>
+        <br />
+        <Text>Don't see your business here? </Text>
+        <Button
+          type='link'
+          style={{ padding: 0 }}
+          children={'Login with a different account'}
+          onClick={Credentials.logout}
+        />
+      </div>}
     </div>
   </div>;
 }

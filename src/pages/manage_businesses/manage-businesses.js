@@ -21,8 +21,9 @@ export default class ManageBusinesses extends React.Component {
   hideModal = () => this.setState({ showAddModal: false, showEditModal: false });
 
   render = () => <Consumer>
-    {({ loading, businesses, fetchUser, onBusinessChange, hideBusinessManagement }) => <div>
+    {({ email, loading, businesses, fetchUser, onBusinessChange, hideBusinessManagement }) => <div>
       <AllBusinesses
+        email={email}
         loading={loading}
         businesses={businesses}
         enableEdit={this.props.enableEdit}

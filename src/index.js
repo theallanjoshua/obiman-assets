@@ -102,7 +102,7 @@ class App extends React.Component {
       enableEdit
     /> : <Spin spinning={this.state.loading}>
           <Router>
-            <Layout style={{ minHeight: '100vh' }}>
+            <Layout style={{ height: '100vh' }}>
               <Header style={{
                 padding: 0,
                 height: 'initial',
