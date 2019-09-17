@@ -23,14 +23,12 @@ class Credentials {
           const newUrl = window.location.href.split('?code=')[0];
           window.history.replaceState(undefined, document.title, newUrl);
           await this.auth.parseCognitoWebResponse(href);
-          const session = await this.auth.getSignInUserSession();
-          return { session };
+          return await this.auth.getSignInUserSession();
         } else {
           this.auth.getSession();
-          return { isRedirecting: true };
         }
       } else {
-        return { session };
+        return session;
       }
     } catch (error) {
       throw error;
@@ -45,8 +43,8 @@ class Credentials {
   }
   getAuthorizationToken = async () => {
     try {
-      const { session, isRedirecting } = await this.authenticate();
-      if (!isRedirecting) {
+      const session = await this.authenticate();
+      if (session) {
         return session.getIdToken().getJwtToken();
       } else {
         throw 'Oops! Your credentials have expired, redirecting to login page'

@@ -48,9 +48,8 @@ class App extends React.Component {
   authenticate = async () => {
     this.setState({ loading: true });
     try {
-      const { session, isRedirecting } = await Credentials.authenticate();
-      console.log(isRedirecting);
-      if (!isRedirecting) {
+      const session = await Credentials.authenticate();
+      if (session) {
         const idToken = session.getIdToken();
         const { payload } = idToken;
         const { email, name, picture } = payload || {};

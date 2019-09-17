@@ -80,6 +80,7 @@ export default class BillCompositionEntity extends React.Component {
             precision={2}
             prefix={new Utils().getCurrencySymbol(this.props.currency)}
             value={selectedProduct.price * (bceQuantity || 0)}
+            valueStyle={{ fontSize: 'initial' }}
           />}
         />
       </Col>

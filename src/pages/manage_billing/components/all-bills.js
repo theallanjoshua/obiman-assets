@@ -9,23 +9,38 @@ export default class AllBills extends React.Component {
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       {this.props.bills.map(bill => <Card
         key={bill.id}
-        style={{ minWidth: '300px', maxWidth: '300px', width: '300px', margin: '5px'}}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          maxWidth: '90vw',
+          width: '300px',
+          margin: '5px'
+        }}
         title={bill.label}
+        bodyStyle={{ flexGrow: 1 }}
         extra={<Button
           type='link'
           icon='edit'
           children={EDIT_BILL_BUTTON_TEXT}
           onClick={() => this.props.showEditModal(bill)}
         />}
-        children={<div>
+        children={<div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%'
+          }}
+        >
           <Table
             columns={[
               { dataIndex: 'label' },
               { dataIndex: 'quantity' },
               { render: (text, { price }) => <Statistic
+                style={{ float: 'right' }}
                 precision={2}
                 prefix={new Utils().getCurrencySymbol(this.props.currency)}
                 value={price}
+                valueStyle={{ fontSize: 'initial' }}
               /> }
            ]}
             dataSource={bill.composition.map(entity => ({ ...entity, key: entity.id }))}
@@ -35,13 +50,16 @@ export default class AllBills extends React.Component {
           <br />
           <div style={{
             display: 'flex',
-            justifyContent: 'flex-end'
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            flexGrow: 1
           }} >
+            <strong>To pay:</strong>
             <Statistic
-              title={'Total'}
               precision={2}
               prefix={new Utils().getCurrencySymbol(this.props.currency)}
               value={bill.total}
+              valueStyle={{ color: '#cf1322' }}
             />
           </div>
         </div>}

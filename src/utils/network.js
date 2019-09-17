@@ -38,7 +38,6 @@ class Network {
       const authorization = await Credentials.getAuthorizationToken();
       const params = {
         method,
-        mode: 'cors',
         cache: 'no-cache',
         credentials: 'same-origin',
         headers: {

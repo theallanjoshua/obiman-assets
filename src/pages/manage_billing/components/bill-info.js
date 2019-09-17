@@ -71,29 +71,20 @@ export default class BillInfo extends React.Component {
           precision={2}
           prefix={new Utils().getCurrencySymbol(this.props.currency)}
           value={billData.taxlessTotal}
+          style={{ float: 'right' }}
         />}
       />
-      <Form.Item
+      {Object.keys(billData.tax).map(type => <Form.Item
+        key={type}
         { ...formItemLayout }
-        label={'Tax'}
-        children={<React.Fragment>
-          {Object.keys(billData.tax).map(type => <div
-            key={type}
-            style={{
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            <label style={{ marginRight: '10px' }}>{type} - </label>
-            <Statistic
-              precision={2}
-              prefix={new Utils().getCurrencySymbol(this.props.currency)}
-              value={billData.tax[type]}
-            />
-          </div>)}
-        </React.Fragment>
-        }
-      />
+        label={type}
+        children={<Statistic
+            precision={2}
+            prefix={`+ ${new Utils().getCurrencySymbol(this.props.currency)}`}
+            value={billData.tax[type]}
+            style={{ float: 'right' }}
+          />}
+      />)}
       <Form.Item
         { ...formItemLayout }
         label={'To pay'}
@@ -101,6 +92,8 @@ export default class BillInfo extends React.Component {
           precision={2}
           prefix={new Utils().getCurrencySymbol(this.props.currency)}
           value={billData.total}
+          valueStyle={{ color: '#cf1322' }}
+          style={{ float: 'right', borderTop: '1px solid #ddd' }}
         />}
       />
     </Form>
