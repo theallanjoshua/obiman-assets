@@ -33,7 +33,7 @@ export const getEnrichedProducts = (products, ingredients) => products.map(item 
   });
   const issues = composition.reduce((acc, { quantityGap, expiryDate, unit, label }) => {
     const quantityIssue = quantityGap < 0 ? [`${label} - Need ${quantityGap * -1}${unit} more`] : [];
-    const expiryIssue = expiryDate && expiryDate <= new Date().getTime() ? [`${label} - Expired`] : [];
+    const expiryIssue = expiryDate && expiryDate <= Date.now() ? [`${label} - Expired`] : [];
     return [ ...acc, ...quantityIssue, ...expiryIssue ];
   }, []);
   const maxRepetition = Math.floor(composition.map(({ maxRepetition }) => maxRepetition).sort((prv, nxt) => prv - nxt)[0] || 0);

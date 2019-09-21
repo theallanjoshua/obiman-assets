@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Table, Empty } from 'antd';
 import { ALL_PRODUCTS_TABLE_COLUMN_DEFINITION } from '../../../constants/manage-products';
 
-export default class AllIngredients extends React.Component {
+export default class AllProducts extends React.Component {
   render = () => <Table
     loading={this.props.loading}
     columns={ALL_PRODUCTS_TABLE_COLUMN_DEFINITION}

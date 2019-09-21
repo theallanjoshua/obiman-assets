@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Input, Statistic } from 'antd';
+import { Form, Input, Statistic, Select } from 'antd';
 import { Bill, BillCompositionEntity, Utils } from 'obiman-data-models';
 import BillComposition from './bill-composition';
 
@@ -29,6 +29,7 @@ export default class BillInfo extends React.Component {
   set = (key, value) => this.props.onChange({ ...new Bill({ ...this.props.bill }).get(), [key]: value });
   setLabel = e => this.set('label', e.target.value);
   setComposition = composition => this.set('composition', composition.map(item => new BillCompositionEntity(item).get()));
+  setStatus = status => this.set('status', status);
   render = () => {
     const bill = new Bill({ ...this.props.bill });
     const billData = bill
@@ -67,34 +68,60 @@ export default class BillInfo extends React.Component {
       <Form.Item
         { ...formItemLayout }
         label={'Total'}
-        children={<Statistic
-          precision={2}
-          prefix={new Utils().getCurrencySymbol(this.props.currency)}
-          value={billData.taxlessTotal}
-          style={{ float: 'right' }}
-        />}
+        children={
+          <Statistic
+            precision={2}
+            prefix={new Utils().getCurrencySymbol(this.props.currency)}
+            value={billData.taxlessTotal}
+            style={{ float: 'right' }}
+          />
+        }
       />
       {Object.keys(billData.tax).map(type => <Form.Item
         key={type}
         { ...formItemLayout }
         label={type}
-        children={<Statistic
+        children={
+          <Statistic
             precision={2}
             prefix={`+ ${new Utils().getCurrencySymbol(this.props.currency)}`}
             value={billData.tax[type]}
             style={{ float: 'right' }}
-          />}
+          />
+        }
       />)}
       <Form.Item
         { ...formItemLayout }
         label={'To pay'}
-        children={<Statistic
-          precision={2}
-          prefix={new Utils().getCurrencySymbol(this.props.currency)}
-          value={billData.total}
-          valueStyle={{ color: '#cf1322' }}
-          style={{ float: 'right', borderTop: '1px solid #ddd' }}
-        />}
+        children={
+          <Statistic
+            precision={2}
+            prefix={new Utils().getCurrencySymbol(this.props.currency)}
+            value={billData.total}
+            valueStyle={{ color: '#cf1322' }}
+            style={{ float: 'right', borderTop: '1px solid #ddd' }}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Status'}
+        required
+        hasFeedback
+        { ...formValidation(this.props.showValidationErrors, validationErrors.status) }
+        children={
+          <Select
+            showSearch
+            allowClear
+            placeholder={'Pick a status'}
+            optionFilterProp='children'
+            filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
+            value={billData.status}
+            onChange={this.setStatus}
+          >
+            {[ bill.getStartState(), ...bill.getOtherStates(), bill.getEndState() ].map(state => <Select.Option key={state} value={state} children={state}/>)}
+          </Select>
+        }
       />
     </Form>
   };

@@ -65,7 +65,7 @@ export default class BusinessInfo extends React.Component {
             placeholder={'currency'}
             optionFilterProp='children'
             filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-            value={businessData.currency || undefined}
+            value={businessData.currency}
             onChange={this.setCurrency}
           >
             {new Utils().getCurrencyCodes().map(currency => <Select.Option key={currency} value={currency} children={currency}/>)}

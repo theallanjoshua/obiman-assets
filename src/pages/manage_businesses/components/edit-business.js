@@ -3,11 +3,7 @@ import { Modal, Alert } from 'antd';
 import BusinessInfo from './business-info';
 import { Business } from 'obiman-data-models';
 import Network from '../../../utils/network';
-import {
-  BUSINESSES_API_URL,
-  USERS_API_URL,
-  USERS_BUSINESSES_API_URL
-} from '../../../constants/endpoints';
+import { BUSINESSES_API_URL } from '../../../constants/endpoints';
 import {
   BUSINESS_EDITED_SUCCESSFULLY_MESSAGE,
   EDIT_BUSINESS_MODAL_HEADER
@@ -46,18 +42,11 @@ export default class EditBusiness extends React.Component {
       this.setState({ showValidationErrors: true });
     } else {
       const businessData = business.get();
-      const { id: businessId, label, employees: incomingEmployees } = businessData;
+      const { id, label } = businessData;
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.put(`${BUSINESSES_API_URL}/${businessId}`, businessData);
+        await Network.put(`${BUSINESSES_API_URL}/${id}`, businessData);
         this.setState({ errorMessage: '', successMessage: BUSINESS_EDITED_SUCCESSFULLY_MESSAGE(label) });
-        const { employees: existingEmployees } = this.props.businessToUpdate;
-        const usersToRemove = existingEmployees.filter(({ id }) => !incomingEmployees.filter(employee => employee.id === id).length);
-        const usersToAdd = incomingEmployees.filter(({ id }) => !existingEmployees.filter(employee => employee.id === id).length);
-        await Promise.all([
-          ...usersToAdd.map(({ id }) => Network.put(`${USERS_API_URL}${id}${USERS_BUSINESSES_API_URL}`, { businessId, isRemove: false })),
-          ...usersToRemove.map(({ id }) => Network.put(`${USERS_API_URL}${id}${USERS_BUSINESSES_API_URL}`, { businessId, isRemove: true }))
-        ]);
         this.props.fetchUser();
         setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {

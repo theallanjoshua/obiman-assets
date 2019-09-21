@@ -47,7 +47,7 @@ export default class Employee extends React.Component {
             <Select
               mode='multiple'
               placeholder={'Provide permission to the employee'}
-              defaultValue={permissions}
+              value={permissions}
               onChange={this.setPermissions}
             >
               {new Business()

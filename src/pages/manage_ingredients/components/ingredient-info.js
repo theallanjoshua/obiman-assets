@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Form, Input, InputNumber, Select, DatePicker } from 'antd';
 import { Ingredient, Utils } from 'obiman-data-models';
 import moment from 'moment';
+import { DATE_TIME_FORMAT } from '../../../constants/app';
 
 const formItemLayout = {
   labelCol: {
@@ -30,7 +31,10 @@ export default class IngredientInfo extends React.Component {
   setLabel = e => this.set('label', e.target.value);
   setQuantity = quantity => this.set('quantity', quantity);
   setUnit = unit => this.set('unit', unit);
-  setExpiryDate = (expiryDate, expiryDateString) => this.set('expiryDate', expiryDateString ? new Date(expiryDateString).getTime() : 0);
+  setExpiryDate = expiryDate => this.set('expiryDate', expiryDate.valueOf());
+  setLocation = e => this.set('location', e.target.value);
+  setThresholdQuantity = thresholdQuantity => this.set('thresholdQuantity', thresholdQuantity);
+  setThresholdUnit = thresholdUnit => this.set('thresholdUnit', thresholdUnit);
 
   render = () => {
     const utils = new Utils();
@@ -70,7 +74,7 @@ export default class IngredientInfo extends React.Component {
               placeholder={'unit'}
               optionFilterProp='children'
               filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-              defaultValue={ingredientData.unit || undefined}
+              value={ingredientData.unit}
               onChange={this.setUnit}
             >
               {utils.getUnits().map(unit => <Select.Option key={unit} value={unit} children={unit}/>)}
@@ -84,10 +88,49 @@ export default class IngredientInfo extends React.Component {
         children={
           <DatePicker
             showTime
-            style={{ minWidth: '240px' }}
+            style={{ width: '100%' }}
             value={ingredientData.expiryDate ? moment(ingredientData.expiryDate) : undefined}
+            format={DATE_TIME_FORMAT}
             onChange={this.setExpiryDate}
           />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Location of the ingredient'}
+        children={
+          <Input
+            placeholder={'Enter the location of the ingredient'}
+            value={ingredientData.location}
+            onChange={this.setLocation}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Threshold quantity'}
+        { ...formValidation(this.props.showValidationErrors, [ ...(validationErrors.thresholdQuantity || []), ...(validationErrors.thresholdUnit || []) ]) }
+        children={
+          <div className='input-select-group'>
+            <InputNumber
+              min={0}
+              parser={value => isNaN(value) ? 0 : value}
+              value={ingredientData.thresholdQuantity}
+              onChange={this.setThresholdQuantity}
+            />
+            <Select
+              disabled={!ingredientData.unit}
+              showSearch
+              allowClear
+              placeholder={'unit'}
+              optionFilterProp='children'
+              filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
+              value={ingredientData.thresholdUnit}
+              onChange={this.setThresholdUnit}
+            >
+              {utils.getUnits(ingredientData.unit).map(unit => <Select.Option key={unit} value={unit} children={unit}/>)}
+            </Select>
+          </div>
         }
       />
     </Form>

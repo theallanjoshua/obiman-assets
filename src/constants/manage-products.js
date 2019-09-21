@@ -18,7 +18,7 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
   },
   {
     title: 'Issues',
-    render: (text, { issues }) => issues.map(issue => <Tag color='red' children={issue} />)
+    render: (text, { issues }) => issues.map(issue => <Tag key={issue} color='red' children={issue} />)
   },
   {
     title: 'Description',

@@ -50,7 +50,7 @@ class ManageBillingComponent extends React.Component {
       const ingredients = await fetchAllIngredients(businessId);
       const products = await fetchAllProducts(businessId);
       const enrichedProducts = getEnrichedProducts(products, ingredients);
-      const response = await Network.get(BILLS_API_URL(businessId));
+      const response = await Network.get(BILLS_API_URL(businessId, 'status=Open'));
       const bills = response.bills
         .sort((prevBill, nextBill) => prevBill.label.localeCompare(nextBill.label));
       this.setState({ bills, ingredients, products: enrichedProducts });

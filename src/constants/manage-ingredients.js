@@ -18,11 +18,19 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   },
   {
     title: 'Available quantity',
-    render: (text, { quantity, unit }) => `${quantity ? `${quantity.toLocaleString()}${unit}` : `Out of stock`}`
+    render: (text, { quantity, unit, thresholdQuantity, thresholdUnit }) => {
+      const convertedQuantity = thresholdUnit ? new Utils().convert(quantity, unit, thresholdUnit) : quantity;
+      const style = !convertedQuantity ? { color: '#cf1322' } : convertedQuantity < thresholdQuantity ? { color: '#ffbf00' } : { color: '#3f8600' } ;
+      return <h1 style={style}>{`${quantity ? `${quantity.toLocaleString()}${unit}` : `Out of stock`}`}</h1>
+    }
   },
   {
     title: 'Expiries by',
     render: (text, { expiryDate }) => expiryDate ? <Tooltip title={`${moment(expiryDate).format(DATE_TIME_FORMAT)}`} children={`${moment(expiryDate).fromNow()}`} /> : '-'
+  },
+  {
+    title: 'Location',
+    dataIndex: 'location',
   },
   {
     title: 'Created by',

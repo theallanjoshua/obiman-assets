@@ -68,7 +68,7 @@ export default class ProductCompositionEntity extends React.Component {
                 placeholder={'unit'}
                 optionFilterProp='children'
                 filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-                defaultValue={pceUnit || undefined}
+                value={pceUnit}
                 onChange={this.setUnit}
               >
                 {new Utils()
