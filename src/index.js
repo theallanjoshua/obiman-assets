@@ -8,9 +8,7 @@ import {
   PRODUCTS,
   BILLING
 } from './constants/pages';
-import {
-  PAGE_ERROR
-} from './constants/app';
+import { PAGE_ERROR } from './constants/app';
 import Credentials from './utils/credentials';
 import TopNavigation from './components/top-navigation';
 import ManageIngredients from './pages/manage_ingredients/manage-ingredients';
@@ -57,7 +55,9 @@ class App extends React.Component {
         this.setState({ email, name, avatar, loading: false });
       }
     } catch (error) {
-      this.setState({ errorMessage: PAGE_ERROR, loading: false });
+      if(error) {
+        this.setState({ errorMessage: PAGE_ERROR, loading: false });
+      }
     }
   }
 

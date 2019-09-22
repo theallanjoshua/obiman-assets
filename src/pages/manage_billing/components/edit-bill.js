@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Spin, Modal } from 'antd';
+import { Alert, Spin, Modal, Typography, Tooltip } from 'antd';
 import BillInfo from './bill-info';
 import { Bill, Utils } from 'obiman-data-models';
 import Network from '../../../utils/network';
@@ -8,8 +8,11 @@ import {
   BILL_EDITED_SUCCESSFULLY_MESSAGE,
   EDIT_BILL_PAGE_TITLE
 } from '../../../constants/manage-billing';
-import { SAVE_BUTTON_TEXT } from '../../../constants/app';
+import { SAVE_BUTTON_TEXT, DATE_TIME_FORMAT } from '../../../constants/app';
 import { getEnrichedProducts } from '../../../utils/products';
+import moment from 'moment';
+
+const { Text } = Typography;
 
 const INITIAL_STATE = {
   loading: false,
@@ -81,7 +84,21 @@ export default class EditBill extends React.Component {
   render = () => <Modal
     destroyOnClose
     maskClosable={false}
-    title={EDIT_BILL_PAGE_TITLE}
+    title={<div>
+      {EDIT_BILL_PAGE_TITLE}
+      <br />
+      <Text type='secondary' style={{ fontSize: 'x-small' }}>
+        Created by {this.state.billToUpdate.createdBy}
+        <Tooltip title={`${moment(this.state.billToUpdate.createdDate).format(DATE_TIME_FORMAT)}`} children={` ${moment(this.state.billToUpdate.createdDate).fromNow()}`} />
+      </Text>
+      <br />
+      {this.state.billToUpdate.updatedBy && this.state.billToUpdate.updatedDate ?
+        <Text type='secondary' style={{ fontSize: 'x-small' }}>
+          Last edited by {this.state.billToUpdate.updatedBy}
+          <Tooltip title={`${moment(this.state.billToUpdate.updatedDate).format(DATE_TIME_FORMAT)}`} children={` ${moment(this.state.billToUpdate.updatedDate).fromNow()}`} />
+        </Text>
+      : null}
+    </div>}
     okText={SAVE_BUTTON_TEXT}
     style={{ maxWidth: '90vw' }}
     width={'720px'}

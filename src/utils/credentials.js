@@ -23,10 +23,10 @@ class Credentials {
           const newUrl = window.location.href.split('?code=')[0];
           window.history.replaceState(undefined, document.title, newUrl);
           await this.auth.parseCognitoWebResponse(href);
-          return await this.auth.getSignInUserSession();
         } else {
-          this.auth.getSession();
+          await this.auth.getSession();
         }
+        return await this.auth.getSignInUserSession();
       } else {
         return session;
       }
