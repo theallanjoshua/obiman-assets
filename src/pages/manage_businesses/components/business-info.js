@@ -3,6 +3,7 @@ import { Form, Input, Select } from 'antd';
 import { Business, Utils } from 'obiman-data-models';
 import { Consumer } from '../../../context';
 import Employees from './employees';
+import ImageUploader from '../../../components/image-uploader';
 
 const formItemLayout = {
   labelCol: {
@@ -70,6 +71,16 @@ export default class BusinessInfo extends React.Component {
           >
             {new Utils().getCurrencyCodes().map(currency => <Select.Option key={currency} value={currency} children={currency}/>)}
           </Select>
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Logo'}
+        children={
+          <ImageUploader
+            s3Key={businessData.logo}
+            onChange={this.setLogo}
+          />
         }
       />
       <Form.Item

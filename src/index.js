@@ -2,7 +2,7 @@ import * as React from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import { Provider } from './context';
-import { Layout, BackTop, Spin, Alert } from 'antd';
+import { Layout, Spin, Alert } from 'antd';
 import {
   INGREDIENTS,
   PRODUCTS,
@@ -121,7 +121,4 @@ class App extends React.Component {
   </Provider>;
 }
 
-ReactDOM.render(<div>
-  <BackTop />
-  <App />
-</div>, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById('app'));

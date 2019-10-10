@@ -33,15 +33,16 @@ class Network {
     }
   }
 
-  DO_NOT_USE_fetch = async (url, method, data) => {
+  DO_NOT_USE_fetch = async (url, method, data, isJsonContent = true) => {
     try {
+      const contentType = { 'Content-Type': 'application/json' };
       const authorization = await Credentials.getAuthorizationToken();
       const params = {
         method,
         cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
-          'Content-Type': 'application/json',
+          ...(isJsonContent ? contentType : {}),
           authorization
         },
         redirect: 'follow',

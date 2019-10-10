@@ -25,6 +25,7 @@
     "material-color-hash": "^0.1.6",
     "moment": "^2.24.0",
     "obiman-data-models": "^1.0.54",
+    "prettysize": "^2.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0"

@@ -3,6 +3,7 @@ import { Form, Input, InputNumber } from 'antd';
 import { Product, Utils } from 'obiman-data-models';
 import ProductComposition from './product-composition';
 import TaxComposition from './tax-composition';
+import ImageUploader from '../../../components/image-uploader';
 
 const { TextArea } = Input;
 
@@ -121,6 +122,16 @@ export default class ProductInfo extends React.Component {
             placeholder={'Enter the recipe for the product'}
             value={productData.recipe}
             onChange={this.setRecipe}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Image'}
+        children={
+          <ImageUploader
+            s3Key={productData.image}
+            onChange={this.setImage}
           />
         }
       />

@@ -14,7 +14,7 @@ export default class AllBusinesses extends React.Component {
     alignItems: 'center',
     height: '100vh'
   }}>
-    <div>
+    <div style={{ width: 'min-content' }}>
       <List
         style={{
           width: '500px',
