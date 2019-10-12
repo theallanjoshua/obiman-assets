@@ -32,7 +32,6 @@ export default class AddBill extends React.Component {
       products
     }
   }
-
   componentDidUpdate = prevProps => {
     const { visible: prevVisible } = prevProps;
     const { visible, ingredients, products } = this.props;
@@ -40,7 +39,6 @@ export default class AddBill extends React.Component {
       this.setState({ ...INITIAL_STATE, ingredients, products });
     }
   }
-
   onChange = billToCreate => {
     const { previousBill, ingredients, products } = this.state;
     const { composition: existingBillComposition } = new Bill(previousBill).get();
@@ -55,7 +53,6 @@ export default class AddBill extends React.Component {
     const updatedProducts = getEnrichedProducts(products, updatedIngredients);
     this.setState({ billToCreate, previousBill: billToCreate, ingredients: updatedIngredients, products: updatedProducts });
   };
-
   addBill = async () => {
     const { businessId } = this.props;
     const bill = new Bill(this.state.billToCreate);
@@ -77,7 +74,6 @@ export default class AddBill extends React.Component {
       this.setState({ loading: false });
     }
   }
-
   render = () => <Modal
     destroyOnClose
     maskClosable={false}

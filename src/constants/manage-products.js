@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Utils } from 'obiman-data-models';
 import moment from 'moment';
-import { Popconfirm, Button, Tooltip, Tag } from 'antd';
-import { DATE_TIME_FORMAT, DEFAULT_TABLE_FEATURES } from './app';
+import { Popconfirm, Button, Tag } from 'antd';
+import { DEFAULT_TABLE_FEATURES } from './app';
+import Timestamp from '../components/timestamp';
 
 export const MANAGE_PRODUCTS_PAGE_TITLE = count => `All products (${count})`;
 export const PRODUCT_DELETED_SUCCESSFULLY_MESSAGE = label => `${label} deleted successfully`;
@@ -45,7 +46,7 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Created on',
     dataIndex: 'createdDate',
-    render: (text, { createdDate }) => <Tooltip title={`${moment(createdDate).format(DATE_TIME_FORMAT)}`} children={`${moment(createdDate).fromNow()}`} />,
+    render: (text, { createdDate }) => <Timestamp value={createdDate} />,
     ...DEFAULT_TABLE_FEATURES(({ createdDate }) => createdDate, ({ createdDate }) => moment(createdDate).fromNow(), 'Search created on')
   },
   {
@@ -57,7 +58,7 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Last edited on',
     dataIndex: 'updatedDate',
-    render: (text, { updatedDate }) => updatedDate ? <Tooltip title={`${moment(updatedDate).format(DATE_TIME_FORMAT)}`} children={`${moment(updatedDate).fromNow()}`} /> : '-',
+    render: (text, { updatedDate }) => updatedDate ? <Timestamp value={updatedDate} /> : '-',
     ...DEFAULT_TABLE_FEATURES(({ updatedDate }) => updatedDate, ({ updatedDate }) => moment(updatedDate).fromNow(), 'Search last edited on')
   },
   {

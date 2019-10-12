@@ -25,7 +25,6 @@ export default class AddProduct extends React.Component {
       ...INITIAL_STATE
     }
   }
-
   componentDidUpdate = prevProps => {
     const { visible: prevVisible } = { ...prevProps };
     const { visible } = { ...this.props };
@@ -33,9 +32,7 @@ export default class AddProduct extends React.Component {
       this.setState({ ...INITIAL_STATE });
     }
   }
-
   onChange = productToCreate => this.setState({ productToCreate });
-
   addProduct = async () => {
     const { businessId } = this.props;
     const product = new Product(this.state.productToCreate);
@@ -55,7 +52,6 @@ export default class AddProduct extends React.Component {
       this.setState({ loading: false });
     }
   }
-
   render = () => <Modal
     destroyOnClose
     maskClosable={false}

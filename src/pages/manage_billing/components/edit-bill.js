@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Spin, Modal, Typography, Tooltip } from 'antd';
+import { Alert, Spin, Modal, Typography } from 'antd';
 import BillInfo from './bill-info';
 import { Bill, Utils } from 'obiman-data-models';
 import Network from '../../../utils/network';
@@ -8,9 +8,9 @@ import {
   BILL_EDITED_SUCCESSFULLY_MESSAGE,
   EDIT_BILL_PAGE_TITLE
 } from '../../../constants/manage-billing';
-import { SAVE_BUTTON_TEXT, DATE_TIME_FORMAT } from '../../../constants/app';
+import { SAVE_BUTTON_TEXT } from '../../../constants/app';
 import { getEnrichedProducts } from '../../../utils/products';
-import moment from 'moment';
+import AuditTrail from '../../../components/audit-trail';
 
 const { Text } = Typography;
 
@@ -35,7 +35,6 @@ export default class EditBill extends React.Component {
       products
     };
   }
-
   componentDidUpdate = prevProps => {
     const { visible: prevVisible } = prevProps;
     const { visible, ingredients, products, billToUpdate } = this.props;
@@ -43,7 +42,6 @@ export default class EditBill extends React.Component {
       this.setState({ ...INITIAL_STATE, ingredients, products, billToUpdate, previousBill: billToUpdate });
     }
   }
-
   onChange = billToUpdate => {
     const { previousBill: existingBill, ingredients, products } = this.state;
     const { composition: existingBillComposition } = new Bill(existingBill).get();
@@ -58,7 +56,6 @@ export default class EditBill extends React.Component {
     const updatedProducts = getEnrichedProducts(products, updatedIngredients);
     this.setState({ billToUpdate, previousBill: billToUpdate, ingredients: updatedIngredients, products: updatedProducts });
   };
-
   editBill = async () => {
     const { businessId } = this.props;
     const bill = new Bill(this.state.billToUpdate);
@@ -80,7 +77,6 @@ export default class EditBill extends React.Component {
       this.setState({ loading: false });
     }
   }
-
   render = () => <Modal
     destroyOnClose
     maskClosable={false}
@@ -88,14 +84,19 @@ export default class EditBill extends React.Component {
       {EDIT_BILL_PAGE_TITLE}
       <br />
       <Text type='secondary' style={{ fontSize: 'x-small' }}>
-        Created by {this.state.billToUpdate.createdBy}
-        <Tooltip title={`${moment(this.state.billToUpdate.createdDate).format(DATE_TIME_FORMAT)}`} children={` ${moment(this.state.billToUpdate.createdDate).fromNow()}`} />
+        <AuditTrail
+          prefixText={'Created'}
+          date={this.state.billToUpdate.createdDate}
+          user={this.state.billToUpdate.createdBy}
+        />
       </Text>
-      <br />
       {this.state.billToUpdate.updatedBy && this.state.billToUpdate.updatedDate ?
         <Text type='secondary' style={{ fontSize: 'x-small' }}>
-          Last edited by {this.state.billToUpdate.updatedBy}
-          <Tooltip title={`${moment(this.state.billToUpdate.updatedDate).format(DATE_TIME_FORMAT)}`} children={` ${moment(this.state.billToUpdate.updatedDate).fromNow()}`} />
+          <AuditTrail
+            prefixText={'Last edited'}
+            date={this.state.billToUpdate.updatedDate}
+            user={this.state.billToUpdate.updatedBy}
+          />
         </Text>
       : null}
     </div>}

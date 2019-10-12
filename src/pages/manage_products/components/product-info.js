@@ -38,7 +38,6 @@ export default class ProductInfo extends React.Component {
   setRecipe = e => this.set('recipe', e.target.value);
   setPrice = price => this.set('price', price);
   setTax = tax => this.set('tax', tax);
-
   render = () => {
     const product = new Product({ ...this.props.product });
     const productData = product.get();

@@ -1,12 +1,7 @@
 import * as React from 'react';
-import { Spin, Card, Button, Table, Statistic, Empty, Typography, Tooltip, Avatar } from 'antd';
+import { Spin, Card, Button, Table, Statistic, Empty } from 'antd';
 import { Utils } from 'obiman-data-models';
 import { EDIT_BILL_BUTTON_TEXT } from '../../../constants/manage-billing';
-import { DATE_TIME_FORMAT } from '../../../constants/app';
-import moment from 'moment';
-import toMaterialStyle from 'material-color-hash';
-
-const { Text } = Typography;
 
 export default class AllBills extends React.Component {
   render = () => <Spin spinning={this.props.loading}>
@@ -23,18 +18,6 @@ export default class AllBills extends React.Component {
         }}
         bodyStyle={{ flexGrow: 1 }}
         title={<div>
-          <Text type='secondary' style={{ fontSize: 'x-small' }}>
-            {`Created `}
-            <Tooltip title={`${moment(bill.createdDate).format(DATE_TIME_FORMAT)}`} children={`${moment(bill.createdDate).fromNow()}`} />
-            {` by `}
-            <Tooltip title={bill.createdBy} children={
-              <Avatar
-                style={{ ...toMaterialStyle(bill.createdBy) }}
-                children={bill.createdBy.substr(0,1).toUpperCase()}
-                size='small'
-              />
-            } />
-          </Text>
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -49,20 +32,6 @@ export default class AllBills extends React.Component {
               onClick={() => this.props.showEditModal(bill)}
             />
           </div>
-          {bill.updatedDate ?
-            <Text type='secondary' style={{ fontSize: 'x-small' }}>
-              {`Last edited `}
-              <Tooltip title={`${moment(bill.updatedDate).format(DATE_TIME_FORMAT)}`} children={` ${moment(bill.updatedDate).fromNow()}`} />
-              {` by `}
-              <Tooltip title={bill.updatedBy} children={
-                <Avatar
-                  style={{ ...toMaterialStyle(bill.updatedBy) }}
-                  children={bill.updatedBy.substr(0,1).toUpperCase()}
-                  size='small'
-                />
-              } />
-            </Text>
-          : null}
         </div>}
         children={<div style={{
           display: 'flex',

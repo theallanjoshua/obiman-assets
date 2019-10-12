@@ -29,21 +29,18 @@ class ManageProductsComponent extends React.Component {
       showEditModal: false
     }
   }
-
   componentDidMount = () => {
     const { businessId } = this.props;
     if(businessId) {
       this.fetchAllProducts(businessId)
     }
   };
-
   componentDidUpdate = (preProps) => {
     const { businessId } = this.props;
     if(preProps.businessId !== businessId && preProps) {
       this.fetchAllProducts(businessId)
     }
   };
-
   fetchAllProducts = async businessId => {
     this.setState({ loading: true, errorMessage: '' });
     try {
@@ -56,13 +53,9 @@ class ManageProductsComponent extends React.Component {
     }
     this.setState({ loading: false });
   }
-
   showAddModal = () => this.setState({ showAddModal: true });
-
   showEditModal = productToUpdate => this.setState({ productToUpdate, showEditModal: true });
-
   hideModal = () => this.setState({ showAddModal: false, showEditModal: false });
-
   deleteProduct = async ({ id, label }) => {
     const { businessId } = this.props;
     this.setState({ loading: true, errorMessage: '', successMessage: '' });
@@ -75,7 +68,6 @@ class ManageProductsComponent extends React.Component {
       this.setState({ errorMessage, loading: false });
     }
   }
-
   render = () => <Page>
     <PageHeader
       title={MANAGE_PRODUCTS_PAGE_TITLE(this.state.products.length)}

@@ -8,7 +8,6 @@ class Network {
       throw error;
     }
   }
-
   post = async (url, data) => {
     try{
       return await this.DO_NOT_USE_fetch(url, 'POST', data);
@@ -16,7 +15,6 @@ class Network {
       throw error;
     }
   }
-
   put = async (url, data) => {
     try{
       return await this.DO_NOT_USE_fetch(url, 'PUT', data);
@@ -24,7 +22,6 @@ class Network {
       throw error;
     }
   }
-
   delete = async url => {
     try{
       return await this.DO_NOT_USE_fetch(url, 'DELETE');
@@ -32,7 +29,6 @@ class Network {
       throw error;
     }
   }
-
   DO_NOT_USE_fetch = async (url, method, data, isJsonContent = true) => {
     try {
       const contentType = { 'Content-Type': 'application/json' };

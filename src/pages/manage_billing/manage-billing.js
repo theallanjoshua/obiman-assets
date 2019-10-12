@@ -29,21 +29,18 @@ class ManageBillingComponent extends React.Component {
       billToUpdate: {}
     }
   }
-
   componentDidMount = () => {
     const { businessId } = this.props;
     if(businessId) {
       this.fetchAllBills(businessId)
     }
   };
-
   componentDidUpdate = (preProps) => {
     const { businessId } = this.props;
     if(preProps.businessId !== businessId && preProps) {
       this.fetchAllBills(businessId)
     }
   };
-
   fetchAllBills = async businessId => {
     this.setState({ loading: true, errorMessage: '' });
     try {
@@ -59,13 +56,9 @@ class ManageBillingComponent extends React.Component {
     }
     this.setState({ loading: false });
   }
-
   showAddModal = () => this.setState({ showAddModal: true });
-
   showEditModal = billToUpdate => this.setState({ billToUpdate, showEditModal: true });
-
   hideModal = () => this.setState({ showAddModal: false, showEditModal: false });
-
   render = () => <Page>
     <PageHeader
       title={MANAGE_BILLS_PAGE_TITLE(this.state.bills.length)}

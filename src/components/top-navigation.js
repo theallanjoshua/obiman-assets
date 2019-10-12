@@ -12,6 +12,7 @@ import {
   BILLING,
   PAGE_URL_TITLE_MAP
 } from '../constants/pages';
+import BusinessAvatar from './business-avatar';
 
 const { SubMenu, Item, Divider } = Menu;
 
@@ -20,9 +21,7 @@ export default class TopNavigation extends React.Component {
     super();
     this.state = { selectedKeys: [window.location.hash.replace('#','')] }
   }
-
   onSelect = ({ selectedKeys }) => this.setState({ selectedKeys });
-
   render = () => <Consumer>
     {({ businessId, email, avatar, businesses, showBusinessManagement, onBusinessChange }) => <Row
       style={{
@@ -130,23 +129,15 @@ const NavAvatarSubMenu = (email, avatar, businesses, showBusinessManagement, onB
     onClick={() => onBusinessChange({ id, currency })}
   >
     <span>
-      <Avatar
-        style={{ ...toMaterialStyle(label), marginRight: '10px' }}
-        src={logo}
-        children={label.substr(0,1).toUpperCase()}
-        size='small'
+      <BusinessAvatar
+        name={label}
+        logo={logo}
       />
       <span>{label}</span>
     </span>
   </Item>)}
   <Item onClick={showBusinessManagement}>Manage businesses</Item>
   <Divider />
-  <Item>
-    <span>
-      <Icon type='user' />
-      <span>Account</span>
-    </span>
-  </Item>
   <Item>
     <span>
       <Icon type='logout' />

@@ -13,13 +13,9 @@ export default class ManageBusinesses extends React.Component {
       showEditModal: false
     }
   }
-
   showAddModal = () => this.setState({ showAddModal: true });
-
   showEditModal = businessToUpdate => this.setState({ businessToUpdate, showEditModal: true });
-
   hideModal = () => this.setState({ showAddModal: false, showEditModal: false });
-
   render = () => <Consumer>
     {({ email, loading, businesses, fetchUser, onBusinessChange, hideBusinessManagement }) => <div>
       <AllBusinesses

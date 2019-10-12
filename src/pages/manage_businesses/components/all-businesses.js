@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { List, Avatar, Button, Empty, Typography } from 'antd';
+import { List, Button, Empty, Typography } from 'antd';
 import { OBIMAN_LOGO } from '../../../constants/app';
-import toMaterialStyle from 'material-color-hash';
 import Credentials from '../../../utils/credentials';
 import { Business } from 'obiman-data-models';
+import BusinessAvatar from '../../../components/business-avatar';
 
 const { Text } = Typography;
 
@@ -45,11 +45,9 @@ export default class AllBusinesses extends React.Component {
             alignItems: 'center'
           }}>
             <List.Item.Meta
-              avatar={<Avatar
-                style={{ ...toMaterialStyle(business.label), marginRight: '10px' }}
-                children={business.label.substr(0,1).toUpperCase()}
-                size='small'
-                src={business.logo}
+              avatar={<BusinessAvatar
+                name={business.label}
+                logo={business.logo}
               />}
               title={business.label}
             />

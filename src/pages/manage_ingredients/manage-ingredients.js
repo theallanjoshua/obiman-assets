@@ -30,21 +30,18 @@ class ManageIngredientsComponent extends React.Component {
       showBulkEditModal: false
     }
   }
-
   componentDidMount = () => {
     const { businessId } = this.props;
     if(businessId) {
       this.fetchAllIngredients(businessId)
     }
   };
-
   componentDidUpdate = (preProps) => {
     const { businessId } = this.props;
     if(preProps.businessId !== businessId && preProps) {
       this.fetchAllIngredients(businessId)
     }
   };
-
   fetchAllIngredients = async businessId => {
     this.setState({ loading: true, errorMessage: '' });
     try {
@@ -55,15 +52,10 @@ class ManageIngredientsComponent extends React.Component {
     }
     this.setState({ loading: false });
   }
-
   showAddModal = () => this.setState({ showAddModal: true });
-
   showEditModal = ingredientToUpdate => this.setState({ ingredientToUpdate, showEditModal: true });
-
   showBulkEditModal = () => this.setState({ showBulkEditModal: true });
-
   hideModal = () => this.setState({ showAddModal: false, showEditModal: false, showBulkEditModal: false });
-
   deleteIngredient = async ({ id, label }) => {
     const { businessId } = this.props;
     this.setState({ loading: true, errorMessage: '', successMessage: '' });
@@ -76,9 +68,7 @@ class ManageIngredientsComponent extends React.Component {
       this.setState({ errorMessage, loading: false });
     }
   }
-
   onSelectionChange = selectedIngredientsKeys => this.setState({ selectedIngredientsKeys });
-
   render = () => <Page>
     <PageHeader
       title={MANAGE_INGREDIENTS_PAGE_TITLE(this.state.ingredients.length)}

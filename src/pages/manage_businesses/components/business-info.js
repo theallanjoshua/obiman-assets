@@ -33,7 +33,6 @@ export default class BusinessInfo extends React.Component {
   setLogo = logo => this.set('logo', logo);
   setCurrency = currency => this.set('currency', currency);
   setEmployees = employees => this.set('employees', employees);
-
   render = () => <Consumer>
   {({ email }) => {
     const business = new Business({ ...this.props.business });

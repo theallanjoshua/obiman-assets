@@ -36,13 +36,11 @@ class App extends React.Component {
     };
   }
   componentDidMount = () => this.authenticate();
-
   componentDidUpdate = (prevProps, prevState) => {
     if(prevState.email !== this.state.email && this.state.email) {
       this.fetchUser();
     }
   }
-
   authenticate = async () => {
     this.setState({ loading: true });
     try {
@@ -60,7 +58,6 @@ class App extends React.Component {
       }
     }
   }
-
   fetchUser = async () => {
     this.setState({ loading: true, errorMessage: '' });
     try {
@@ -73,13 +70,9 @@ class App extends React.Component {
       this.setState({ errorMessage, loading: false });
     }
   }
-
   onBusinessChange = ({ id: businessId, currency }) => this.setState({ businessId, currency, showBusinessManagement: false });
-
   showBusinessManagement = () => this.setState({ showBusinessManagement: true });
-
   hideBusinessManagement = () => this.setState({ showBusinessManagement: false });
-
   render = () => <Provider value={{ ...this.state,
     fetchUser: this.fetchUser,
     onBusinessChange: this.onBusinessChange,

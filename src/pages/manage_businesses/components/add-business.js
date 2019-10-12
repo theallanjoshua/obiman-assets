@@ -25,7 +25,6 @@ export default class AddBusiness extends React.Component {
       ...INITIAL_STATE
     }
   }
-
   componentDidUpdate = prevProps => {
     const { visible: prevVisible } = { ...prevProps };
     const { visible } = { ...this.props };
@@ -33,9 +32,7 @@ export default class AddBusiness extends React.Component {
       this.setState({ ...INITIAL_STATE });
     }
   }
-
   onChange = businessToCreate => this.setState({ businessToCreate });
-
   addBusiness = async () => {
     const business = new Business(this.state.businessToCreate);
     if (Object.keys(business.validate()).length) {
@@ -54,7 +51,6 @@ export default class AddBusiness extends React.Component {
       this.setState({ loading: false });
     }
   }
-
   render = () => <Modal
     destroyOnClose
     maskClosable={false}

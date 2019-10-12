@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Utils } from 'obiman-data-models';
+import { Popconfirm, Button } from 'antd';
+import { DEFAULT_TABLE_FEATURES } from './app';
+import Timestamp from '../components/timestamp';
 import moment from 'moment';
-import { Popconfirm, Button, Tooltip } from 'antd';
-import { DATE_TIME_FORMAT, DEFAULT_TABLE_FEATURES } from './app';
 
 export const MANAGE_INGREDIENTS_PAGE_TITLE = count => `All ingredients (${count})`;
 export const INGREDIENT_DELETED_SUCCESSFULLY_MESSAGE = label => `${label} deleted successfully`;
@@ -32,7 +33,7 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Expiries by',
     dataIndex: 'expiryDate',
-    render: (text, { expiryDate }) => expiryDate ? <Tooltip title={`${moment(expiryDate).format(DATE_TIME_FORMAT)}`} children={`${moment(expiryDate).fromNow()}`} /> : '-',
+    render: (text, { expiryDate }) => expiryDate ? <Timestamp value={expiryDate} /> : '-',
     ...DEFAULT_TABLE_FEATURES(({ expiryDate }) => expiryDate, ({ expiryDate }) => moment(expiryDate).fromNow(), 'Search expires by')
   },
   {
@@ -49,7 +50,7 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Created on',
     dataIndex: 'createdDate',
-    render: (text, { createdDate }) => <Tooltip title={`${moment(createdDate).format(DATE_TIME_FORMAT)}`} children={`${moment(createdDate).fromNow()}`} />,
+    render: (text, { createdDate }) => <Timestamp value={createdDate} />,
     ...DEFAULT_TABLE_FEATURES(({ createdDate }) => createdDate, ({ createdDate }) => moment(createdDate).fromNow(), 'Search created on')
   },
   {
@@ -61,7 +62,7 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Last edited on',
     dataIndex: 'updatedDate',
-    render: (text, { updatedDate }) => updatedDate ? <Tooltip title={`${moment(updatedDate).format(DATE_TIME_FORMAT)}`} children={`${moment(updatedDate).fromNow()}`} /> : '-',
+    render: (text, { updatedDate }) => updatedDate ? <Timestamp value={updatedDate} /> : '-',
     ...DEFAULT_TABLE_FEATURES(({ updatedDate }) => updatedDate, ({ updatedDate }) => moment(updatedDate).fromNow(), 'Search last edited on')
   },
   {
