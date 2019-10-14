@@ -14,6 +14,7 @@ import AddBill from './components/add-bill';
 import EditBill from './components/edit-bill';
 import { fetchAllIngredients } from '../../utils/ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
+import PrintBill from './components/print-bill';
 
 class ManageBillingComponent extends React.Component {
   constructor() {
@@ -26,7 +27,9 @@ class ManageBillingComponent extends React.Component {
       bills: [],
       showAddModal: false,
       showEditModal: false,
-      billToUpdate: {}
+      showPrintModal: false,
+      billToUpdate: {},
+      billToPrint: {}
     }
   }
   componentDidMount = () => {
@@ -35,9 +38,9 @@ class ManageBillingComponent extends React.Component {
       this.fetchAllBills(businessId)
     }
   };
-  componentDidUpdate = (preProps) => {
+  componentDidUpdate = prevProps => {
     const { businessId } = this.props;
-    if(preProps.businessId !== businessId && preProps) {
+    if(prevProps.businessId !== businessId && businessId) {
       this.fetchAllBills(businessId)
     }
   };
@@ -58,7 +61,8 @@ class ManageBillingComponent extends React.Component {
   }
   showAddModal = () => this.setState({ showAddModal: true });
   showEditModal = billToUpdate => this.setState({ billToUpdate, showEditModal: true });
-  hideModal = () => this.setState({ showAddModal: false, showEditModal: false });
+  showPrintModal = billToPrint => this.setState({ billToPrint, showPrintModal: true });
+  hideModal = () => this.setState({ showAddModal: false, showEditModal: false, showPrintModal: false });
   render = () => <Page>
     <PageHeader
       title={MANAGE_BILLS_PAGE_TITLE(this.state.bills.length)}
@@ -79,6 +83,7 @@ class ManageBillingComponent extends React.Component {
       loading={this.state.loading}
       bills={this.state.bills}
       showEditModal={this.showEditModal}
+      showPrintModal={this.showPrintModal}
     />
     <AddBill
       currency={this.props.currency}
@@ -99,14 +104,19 @@ class ManageBillingComponent extends React.Component {
       billToUpdate={this.state.billToUpdate}
       fetchAllBills={this.fetchAllBills}
     />
+    <PrintBill
+      visible={this.state.showPrintModal}
+      hideModal={this.hideModal}
+      billToPrint={this.state.billToPrint}
+    />
   </Page>;
 }
 
 export default class ManageBilling extends React.Component {
   render = () => <Consumer>
-    {({ businessId, currency }) => <ManageBillingComponent
-      businessId={businessId}
-      currency={currency}
+    {({ currentBusiness }) => <ManageBillingComponent
+      businessId={currentBusiness.id}
+      currency={currentBusiness.currency}
     />}
   </Consumer>
 }

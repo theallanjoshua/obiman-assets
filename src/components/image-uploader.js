@@ -1,10 +1,8 @@
 import * as React from 'react';
-import Credentials from '../utils/credentials';
 import { Upload, Icon, Card, Typography } from 'antd';
 import pretty from 'prettysize';
-import { FILE_API_URL } from '../constants/endpoints';
+import Network from '../utils/network';
 import AuditTrail from './audit-trail';
-import { fetchS3Object } from '../utils/s3';
 
 const { Dragger } = Upload;
 const { Meta } = Card;
@@ -16,19 +14,14 @@ export default class ImageUploader extends React.Component {
     this.state = {
       loading: false,
       errorMessage: '',
-      authorization: '',
       uploadedFile: {}
     };
-  }
-  authorize = async () => {
-    const authorization = await Credentials.getAuthorizationToken();
-    this.setState({ authorization });
   }
   fetchUploadedFile = async s3Key => {
     if (s3Key) {
       this.setState({ loading: true, errorMessage: '' });
       try {
-        const uploadedFile = await fetchS3Object(s3Key);
+        const uploadedFile = await Network.getFile(s3Key);
         this.setState({ uploadedFile, loading: false });
       } catch (errorMessage) {
         this.setState({ errorMessage, loading: false });
@@ -38,18 +31,15 @@ export default class ImageUploader extends React.Component {
   componentDidMount = () => {
     const { s3Key: incomingS3Key } = this.props;
     this.fetchUploadedFile(incomingS3Key);
-    this.authorize();
   }
   componentDidUpdate = prevProps => {
     const { s3Key: incomingS3Key } = this.props;
     const { s3Key: existingS3Key } = prevProps;
     if(incomingS3Key !== existingS3Key) {
       this.fetchUploadedFile(incomingS3Key);
-      this.authorize();
     }
   }
   beforeUpload = file => {
-    this.authorize();
     const isJpgOrPng = ['image/jpeg', 'image/png'].includes(file.type);
     if (!isJpgOrPng) {
       this.setState({ errorMessage: 'You can only upload JPG/PNG file!' });
@@ -62,29 +52,22 @@ export default class ImageUploader extends React.Component {
     }
     return true;
   }
-  onRemove = async () => {
-    // this.setState({ loading: true, errorMessage: '' });
-    // try {
-    //   await Network.delete(FILE_API_URL(this.props.s3Key));
-    //   await this.setState({ loading: false });
-    //   this.props.onChange('');
-    // } catch (errorMessage) {
-    //   this.setState({ errorMessage, loading: false });
-    // }
-    this.props.onChange('');
+  onUpload = async ({ file }) => {
+    try {
+      const s3Key = await Network.uploadFile(file);
+      this.props.onChange(s3Key);
+    } catch (errorMessage) {
+      this.setState({ errorMessage })
+    }
   }
+  onRemove = async () => this.props.onChange('');
   render = () => !this.props.s3Key ? <Dragger
-    name='file'
     accept='image/jpeg,image/png'
     beforeUpload={this.beforeUpload}
-    action={FILE_API_URL()}
-    headers={{ authorization: this.state.authorization }}
-    onChange={({ file }) => {
-      const { status, response } = file;
-      if (status === 'done') {
-        const { output: { s3Key } } = response;
-        this.props.onChange(s3Key);
-      }
+    customRequest={this.onUpload}
+    showUploadList={{
+      showPreviewIcon: true,
+      showRemoveIcon: false
     }}
   >
     <p className='ant-upload-drag-icon'>

@@ -21,14 +21,21 @@ export default class BillComposition extends React.Component {
   removeEntity = indexToRemove => this.props.onChange([ ...this.props.composition.filter((item, index) => index !== indexToRemove) ]);
   render = () => <React.Fragment>
     <Row gutter={8}>
-      <Col span={11}>
-        <label>Product</label>
-      </Col>
-      <Col span={6}>
-        <label>Quantity</label>
-      </Col>
-      <Col span={5}>
-        <label>Price</label>
+      <Col span={22}>
+        <Row gutter={8}>
+          <Col span={10}>
+            <label>Product</label>
+          </Col>
+          <Col span={4}>
+            <label>Qty</label>
+          </Col>
+          <Col span={5}>
+            <label>Price</label>
+          </Col>
+          <Col span={5}>
+            <label>Amt</label>
+          </Col>
+        </Row>
       </Col>
     </Row>
     {this.props.composition.map((entity, index) => {

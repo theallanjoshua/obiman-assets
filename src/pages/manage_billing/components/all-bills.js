@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { Spin, Card, Button, Table, Statistic, Empty } from 'antd';
-import { Utils } from 'obiman-data-models';
-import { EDIT_BILL_BUTTON_TEXT } from '../../../constants/manage-billing';
+import { Spin, Card, Button, Empty, Tooltip } from 'antd';
+import {
+  EDIT_BILL_BUTTON_TEXT,
+  PRINT_BILL_BUTTON_TEXT
+} from '../../../constants/manage-billing';
+import BillTotal from './bill-total';
+import BillCompositionReadonly from './bill-composition-readonly';
 
 export default class AllBills extends React.Component {
   render = () => <Spin spinning={this.props.loading}>
@@ -16,7 +20,10 @@ export default class AllBills extends React.Component {
           width: '300px',
           margin: '5px'
         }}
-        bodyStyle={{ flexGrow: 1 }}
+        bodyStyle={{
+          flexGrow: 1,
+          padding: '0px'
+        }}
         title={<div>
           <div style={{
             display: 'flex',
@@ -24,51 +31,40 @@ export default class AllBills extends React.Component {
             flexWrap: 'wrap'
           }}>
             {bill.label}
-            <Button
-              style={{ padding: 0 }}
-              type='link'
-              icon='edit'
-              children={EDIT_BILL_BUTTON_TEXT}
-              onClick={() => this.props.showEditModal(bill)}
-            />
+            <div>
+              <Tooltip
+                title={EDIT_BILL_BUTTON_TEXT}
+                children={<Button
+                  type='link'
+                  icon='edit'
+                  onClick={() => this.props.showEditModal(bill)}
+                />}
+              />
+              <Tooltip
+                title={PRINT_BILL_BUTTON_TEXT}
+                children={<Button
+                  type='link'
+                  icon='printer'
+                  onClick={() => this.props.showPrintModal(bill)}
+                />}
+              />
+            </div>
           </div>
         </div>}
         children={<div style={{
           display: 'flex',
           flexDirection: 'column',
-          height: '100%'
+          height: '100%',
+          justifyContent: 'space-between'
         }}>
-          <Table
-            columns={[
-              { dataIndex: 'label' },
-              { dataIndex: 'quantity' },
-              { render: (text, { price }) => <Statistic
-                style={{ float: 'right' }}
-                precision={2}
-                prefix={new Utils().getCurrencySymbol(this.props.currency)}
-                value={price}
-                valueStyle={{ fontSize: 'initial' }}
-              /> }
-           ]}
-            dataSource={bill.composition.map(entity => ({ ...entity, key: entity.id }))}
-            showHeader={false}
-            pagination={false}
+          <BillCompositionReadonly
+            composition={bill.composition}
+            currency={this.props.currency}
           />
-          <br />
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            flexGrow: 1
-          }} >
-            <strong>To pay:</strong>
-            <Statistic
-              precision={2}
-              prefix={new Utils().getCurrencySymbol(this.props.currency)}
-              value={bill.total}
-              valueStyle={{ color: '#cf1322' }}
-            />
-          </div>
+          <BillTotal
+            bill={bill}
+            currency={this.props.currency}
+          />
         </div>}
       />)}
     </div> :

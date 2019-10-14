@@ -24,11 +24,12 @@
     "antd": "^3.18.2",
     "material-color-hash": "^0.1.6",
     "moment": "^2.24.0",
-    "obiman-data-models": "^1.0.54",
+    "obiman-data-models": "^1.0.56",
     "prettysize": "^2.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.0"
+    "react-router-dom": "^5.0.0",
+    "react-to-print": "^2.4.0"
   },
   "scripts": {
     "dev": "webpack-dev-server --config webpack.config.dev.js",

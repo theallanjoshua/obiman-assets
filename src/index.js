@@ -31,7 +31,7 @@ class App extends React.Component {
       email: '',
       avatar: '',
       businesses: [],
-      businessId: '',
+      currentBusiness: {},
       showBusinessManagement: false
     };
   }
@@ -63,14 +63,13 @@ class App extends React.Component {
     try {
       const user = await fetchUser(this.state.email);;
       const { businesses } = user;
-      const business = businesses.length === 1 ? businesses[0] : {};
-      const { id: businessId, currency } = business;
-      this.setState({ businesses, businessId, currency, loading: false });
+      const currentBusiness = businesses.length === 1 ? businesses[0] : {};
+      this.setState({ businesses, currentBusiness, loading: false });
     } catch (errorMessage) {
       this.setState({ errorMessage, loading: false });
     }
   }
-  onBusinessChange = ({ id: businessId, currency }) => this.setState({ businessId, currency, showBusinessManagement: false });
+  onBusinessChange = currentBusiness => this.setState({ currentBusiness, showBusinessManagement: false });
   showBusinessManagement = () => this.setState({ showBusinessManagement: true });
   hideBusinessManagement = () => this.setState({ showBusinessManagement: false });
   render = () => <Provider value={{ ...this.state,
@@ -89,7 +88,7 @@ class App extends React.Component {
         marginRight: 'auto',
         marginTop: '20px'
       }}
-    /> : !this.state.businessId ? <ManageBusinesses
+    /> : !this.state.currentBusiness.id ? <ManageBusinesses
     /> : this.state.showBusinessManagement ? <ManageBusinesses
       enableEdit
     /> : <Spin spinning={this.state.loading}>

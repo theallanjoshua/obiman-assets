@@ -27,7 +27,7 @@ export default class BillCompositionEntity extends React.Component {
     const validationErrors = billCompositionEntity.validate();
     const selectedProduct = this.props.products.filter(({ id }) => id === bceId)[0] || { maxRepetition: 0, price: 0 };
     return <Row gutter={8}>
-      <Col span={12}>
+      <Col span={10}>
         <Form.Item
           { ...formItemLayout }
           required
@@ -38,7 +38,7 @@ export default class BillCompositionEntity extends React.Component {
               showSearch
               allowClear
               labelInValue
-              placeholder={'Pick the product'}
+              placeholder={'Eg: Apple'}
               optionFilterProp='children'
               filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               value={bceId ? { key: bceId, value: bceId } : undefined}
@@ -55,7 +55,7 @@ export default class BillCompositionEntity extends React.Component {
           }
         />
       </Col>
-      <Col span={7}>
+      <Col span={4}>
         <Form.Item
           { ...formItemLayout }
           required
@@ -71,6 +71,17 @@ export default class BillCompositionEntity extends React.Component {
               />
             </div>
           }
+        />
+      </Col>
+      <Col span={5}>
+        <Form.Item
+          { ...formItemLayout }
+          children={<Statistic
+            precision={2}
+            prefix={new Utils().getCurrencySymbol(this.props.currency)}
+            value={selectedProduct.price}
+            valueStyle={{ fontSize: 'initial' }}
+          />}
         />
       </Col>
       <Col span={5}>

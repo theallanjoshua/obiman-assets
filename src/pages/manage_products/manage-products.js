@@ -35,9 +35,9 @@ class ManageProductsComponent extends React.Component {
       this.fetchAllProducts(businessId)
     }
   };
-  componentDidUpdate = (preProps) => {
+  componentDidUpdate = prevProps => {
     const { businessId } = this.props;
-    if(preProps.businessId !== businessId && preProps) {
+    if(prevProps.businessId !== businessId && businessId) {
       this.fetchAllProducts(businessId)
     }
   };
@@ -111,9 +111,9 @@ class ManageProductsComponent extends React.Component {
 
 export default class ManageProducts extends React.Component {
   render = () => <Consumer>
-    {({ businessId, currency }) => <ManageProductsComponent
-      businessId={businessId}
-      currency={currency}
+    {({ currentBusiness }) => <ManageProductsComponent
+      businessId={currentBusiness.id}
+      currency={currentBusiness.currency}
     />}
   </Consumer>
 }

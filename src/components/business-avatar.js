@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Avatar } from 'antd';
 import toMaterialStyle from 'material-color-hash';
-import { fetchS3Object } from '../utils/s3';
+import Network from '../utils/network';
 
 export default class BusinessAvatar extends React.Component {
   constructor() {
@@ -20,7 +20,7 @@ export default class BusinessAvatar extends React.Component {
   fetchSrc = async logo => {
     if (logo) {
       try {
-        const { url } = await fetchS3Object(logo);
+        const { url } = await Network.getFile(logo);
         this.setState({ src: url });
       } catch (errorMessage) {
         this.setState({ errorMessage });

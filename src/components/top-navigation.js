@@ -23,7 +23,7 @@ export default class TopNavigation extends React.Component {
   }
   onSelect = ({ selectedKeys }) => this.setState({ selectedKeys });
   render = () => <Consumer>
-    {({ businessId, email, avatar, businesses, showBusinessManagement, onBusinessChange }) => <Row
+    {({ currentBusiness, email, avatar, businesses, showBusinessManagement, onBusinessChange }) => <Row
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -57,7 +57,7 @@ export default class TopNavigation extends React.Component {
           theme='dark'
           mode='horizontal'
           onSelect={this.onSelect}
-          selectedKeys={[businessId, ...this.state.selectedKeys.filter(key => key !== businessId)]}
+          selectedKeys={[currentBusiness.id, ...this.state.selectedKeys.filter(key => key !== currentBusiness.id)]}
           style={{ float: 'right' }}
         >
           {NavItems()}
@@ -76,7 +76,7 @@ export default class TopNavigation extends React.Component {
           theme='dark'
           mode='horizontal'
           onSelect={this.onSelect}
-          selectedKeys={[businessId, ...this.state.selectedKeys.filter(key => key !== businessId)]}
+          selectedKeys={[currentBusiness.id, ...this.state.selectedKeys.filter(key => key !== currentBusiness.id)]}
           style={{ float: 'right' }}
         >
           {NavAvatarSubMenu(email, avatar, businesses, showBusinessManagement, onBusinessChange)}

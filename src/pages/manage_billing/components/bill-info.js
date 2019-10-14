@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Form, Input, Statistic, Select } from 'antd';
-import { Bill, BillCompositionEntity, Utils } from 'obiman-data-models';
+import { Form, Input, Select, Row, Col } from 'antd';
+import { Bill, BillCompositionEntity } from 'obiman-data-models';
 import BillComposition from './bill-composition';
+import BillTotal from './bill-total';
 
 const formItemLayout = {
   labelCol: {
@@ -18,6 +19,12 @@ const formItemLayout = {
   }
 };
 
+const billTotalLayout = {
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 24 },
+  lg: { span: 19, offset: 4 }
+}
 const formValidation = (showValidationErrors, validationErrors = []) => ({
   validateStatus: showValidationErrors ? validationErrors.length ? 'error' : 'success' : '',
   help: showValidationErrors ? validationErrors.length > 1 ? <ul>
@@ -29,6 +36,7 @@ export default class BillInfo extends React.Component {
   set = (key, value) => this.props.onChange({ ...new Bill({ ...this.props.bill }).get(), [key]: value });
   setLabel = e => this.set('label', e.target.value);
   setComposition = composition => this.set('composition', composition.map(item => new BillCompositionEntity(item).get()));
+  setCustomer = e => this.set('customer', e.target.value);
   setStatus = status => this.set('status', status);
   render = () => {
     const bill = new Bill({ ...this.props.bill });
@@ -45,9 +53,20 @@ export default class BillInfo extends React.Component {
         { ...formValidation(this.props.showValidationErrors, validationErrors.label) }
         children={
           <Input
-            placeholder={'Enter a name for the bill'}
+            placeholder={'Eg: Table 1'}
             value={billData.label}
             onChange={this.setLabel}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Customer info'}
+        children={
+          <Input
+            placeholder={'Eg: +91-9876543210 or someone@email.com'}
+            value={billData.customer}
+            onChange={this.setCustomer}
           />
         }
       />
@@ -65,44 +84,14 @@ export default class BillInfo extends React.Component {
           />
         }
       />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Total'}
-        children={
-          <Statistic
-            precision={2}
-            prefix={new Utils().getCurrencySymbol(this.props.currency)}
-            value={billData.taxlessTotal}
-            style={{ float: 'right' }}
-          />
-        }
-      />
-      {Object.keys(billData.tax).map(type => <Form.Item
-        key={type}
-        { ...formItemLayout }
-        label={type}
-        children={
-          <Statistic
-            precision={2}
-            prefix={`+ ${new Utils().getCurrencySymbol(this.props.currency)}`}
-            value={billData.tax[type]}
-            style={{ float: 'right' }}
-          />
-        }
-      />)}
-      <Form.Item
-        { ...formItemLayout }
-        label={'To pay'}
-        children={
-          <Statistic
-            precision={2}
-            prefix={new Utils().getCurrencySymbol(this.props.currency)}
-            value={billData.total}
-            valueStyle={{ color: '#cf1322' }}
-            style={{ float: 'right', borderTop: '1px solid #ddd' }}
-          />
-        }
-      />
+      <Row>
+        <Col { ...billTotalLayout }>
+        <BillTotal
+          bill={billData}
+          currency={this.props.currency}
+        />
+        </Col>
+      </Row>
       <Form.Item
         { ...formItemLayout }
         label={'Status'}
@@ -113,10 +102,10 @@ export default class BillInfo extends React.Component {
           <Select
             showSearch
             allowClear
-            placeholder={'Pick a status'}
+            placeholder={'Eg: Open'}
             optionFilterProp='children'
             filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-            value={billData.status}
+            value={billData.status || undefined}
             onChange={this.setStatus}
           >
             {[ bill.getStartState(), ...bill.getOtherStates(), bill.getEndState() ].map(state => <Select.Option key={state} value={state} children={state}/>)}

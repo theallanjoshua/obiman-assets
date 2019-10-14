@@ -5,6 +5,8 @@ import { Consumer } from '../../../context';
 import Employees from './employees';
 import ImageUploader from '../../../components/image-uploader';
 
+const { TextArea } = Input;
+
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -31,6 +33,9 @@ export default class BusinessInfo extends React.Component {
   set = (key, value) => this.props.onChange({ ...new Business({ ...this.props.business }).get(), [key]: value });
   setLabel = e => this.set('label', e.target.value);
   setLogo = logo => this.set('logo', logo);
+  setAddress = e => this.set('address', e.target.value);
+  setContact = e => this.set('contact', e.target.value);
+  setCoordinates = coordinates => this.set('coordinates', coordinates);
   setCurrency = currency => this.set('currency', currency);
   setEmployees = employees => this.set('employees', employees);
   render = () => <Consumer>
@@ -47,9 +52,32 @@ export default class BusinessInfo extends React.Component {
         { ...formValidation(this.props.showValidationErrors, validationErrors.label) }
         children={
           <Input
-            placeholder={'Enter a name for the business'}
+            placeholder={'Eg: Joe\'s Pizza'}
             value={businessData.label}
             onChange={this.setLabel}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Address'}
+        children={
+          <TextArea
+            autosize={{ minRows: 4 }}
+            placeholder={'Eg: 15, Yemen road, Yemen'}
+            value={businessData.address}
+            onChange={this.setAddress}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Contact'}
+        children={
+          <Input
+            placeholder={'Eg: +91-9876543210 or someone@email.com'}
+            value={businessData.contact}
+            onChange={this.setContact}
           />
         }
       />
@@ -62,10 +90,10 @@ export default class BusinessInfo extends React.Component {
           <Select
             showSearch
             allowClear
-            placeholder={'currency'}
+            placeholder={'Eg: INR'}
             optionFilterProp='children'
             filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-            value={businessData.currency}
+            value={businessData.currency || undefined}
             onChange={this.setCurrency}
           >
             {new Utils().getCurrencyCodes().map(currency => <Select.Option key={currency} value={currency} children={currency}/>)}

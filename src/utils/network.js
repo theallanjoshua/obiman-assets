@@ -1,9 +1,10 @@
 import Credentials from './credentials';
+import { FILE_API_URL } from '../constants/endpoints';
 
 class Network {
   get = async url => {
     try{
-      return await this.DO_NOT_USE_fetch(url, 'GET');
+      return await this.DO_NOT_USE_fetch(url);
     } catch (error) {
       throw error;
     }
@@ -29,16 +30,44 @@ class Network {
       throw error;
     }
   }
-  DO_NOT_USE_fetch = async (url, method, data, isJsonContent = true) => {
+  getFile = async s3Key => {
     try {
-      const contentType = { 'Content-Type': 'application/json' };
+      return await this.DO_NOT_USE_fetch(`${FILE_API_URL}?operation=getObject&s3Key=${encodeURIComponent(s3Key)}`);
+    } catch (error) {
+      throw error;
+    }
+  }
+  uploadFile = async file => {
+    try {
+      const { size, name, type } = file;
+      const { url, label, tags } = await this.DO_NOT_USE_fetch(`${FILE_API_URL}?operation=putObject&s3Key=${encodeURIComponent(name)}&size=${size}`);
+      const params = {
+        method: 'PUT',
+        cache: 'no-cache',
+        mode: 'cors',
+        headers: {
+          'Content-Type': type,
+          'x-amz-tagging': tags
+        },
+        body: file,
+        redirect: 'follow',
+        referrer: 'no-referrer'
+      }
+      await fetch(url, params);
+      return label;
+    } catch (error) {
+      throw error;
+    }
+  }
+  DO_NOT_USE_fetch = async (url, method = 'GET', data) => {
+    try {
       const authorization = await Credentials.getAuthorizationToken();
       const params = {
         method,
         cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
-          ...(isJsonContent ? contentType : {}),
+          'Content-Type': 'application/json',
           authorization
         },
         redirect: 'follow',
