@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, Statistic } from 'antd';
+import { Table } from 'antd';
 import { Utils } from 'obiman-data-models';
 
 export default class BillCompositionReadonly extends React.Component {
@@ -16,22 +16,12 @@ export default class BillCompositionReadonly extends React.Component {
       },
       {
         title: 'Price',
-        render: (text, { price }) => <Statistic
-          precision={2}
-          prefix={new Utils().getCurrencySymbol(this.props.currency)}
-          value={price}
-          valueStyle={{ fontSize: 'initial' }}
-        />,
+        render: (text, { price }) => `${new Utils().getCurrencySymbol(this.props.currency)}${price.toFixed(2)}`,
         align: 'right'
       },
       {
         title: 'Amt',
-        render: (text, { price, quantity }) => <Statistic
-          precision={2}
-          prefix={new Utils().getCurrencySymbol(this.props.currency)}
-          value={price * quantity}
-          valueStyle={{ fontSize: 'initial' }}
-        />,
+        render: (text, { price, quantity }) => `${new Utils().getCurrencySymbol(this.props.currency)}${(price * quantity).toFixed(2)}`,
         align: 'right'
       }
   ]}

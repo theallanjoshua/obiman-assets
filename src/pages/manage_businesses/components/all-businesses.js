@@ -3,7 +3,7 @@ import { List, Button, Empty, Typography } from 'antd';
 import { OBIMAN_LOGO } from '../../../constants/app';
 import Credentials from '../../../utils/credentials';
 import { Business } from 'obiman-data-models';
-import BusinessAvatar from '../../../components/business-avatar';
+import S3ToImage from '../../../components/s3-to-image';
 
 const { Text } = Typography;
 
@@ -45,9 +45,10 @@ export default class AllBusinesses extends React.Component {
             alignItems: 'center'
           }}>
             <List.Item.Meta
-              avatar={<BusinessAvatar
-                name={business.label}
-                logo={business.logo}
+              avatar={<S3ToImage
+                isAvatar
+                alt={business.label}
+                s3Key={business.logo}
               />}
               title={business.label}
             />

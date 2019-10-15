@@ -12,7 +12,7 @@ import {
   BILLING,
   PAGE_URL_TITLE_MAP
 } from '../constants/pages';
-import BusinessAvatar from './business-avatar';
+import S3ToImage from './s3-to-image';
 
 const { SubMenu, Item, Divider } = Menu;
 
@@ -124,16 +124,17 @@ const NavAvatarSubMenu = (email, avatar, businesses, showBusinessManagement, onB
     size='small'
   />}
   >
-  {businesses.map(({ id, logo, label, currency }) => <Item
-    key={id}
-    onClick={() => onBusinessChange({ id, currency })}
+  {businesses.map(business => <Item
+    key={business.id}
+    onClick={() => onBusinessChange(business)}
   >
     <span>
-      <BusinessAvatar
-        name={label}
-        logo={logo}
+      <S3ToImage
+        isAvatar
+        alt={business.label}
+        s3Key={business.logo}
       />
-      <span>{label}</span>
+      <span>{business.label}</span>
     </span>
   </Item>)}
   <Item onClick={showBusinessManagement}>Manage businesses</Item>

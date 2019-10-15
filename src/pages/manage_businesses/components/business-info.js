@@ -4,6 +4,7 @@ import { Business, Utils } from 'obiman-data-models';
 import { Consumer } from '../../../context';
 import Employees from './employees';
 import ImageUploader from '../../../components/image-uploader';
+import Contacts from './contacts';
 
 const { TextArea } = Input;
 
@@ -34,7 +35,7 @@ export default class BusinessInfo extends React.Component {
   setLabel = e => this.set('label', e.target.value);
   setLogo = logo => this.set('logo', logo);
   setAddress = e => this.set('address', e.target.value);
-  setContact = e => this.set('contact', e.target.value);
+  setContacts = contacts => this.set('contacts', contacts);
   setCoordinates = coordinates => this.set('coordinates', coordinates);
   setCurrency = currency => this.set('currency', currency);
   setEmployees = employees => this.set('employees', employees);
@@ -60,24 +61,11 @@ export default class BusinessInfo extends React.Component {
       />
       <Form.Item
         { ...formItemLayout }
-        label={'Address'}
+        label={'Logo'}
         children={
-          <TextArea
-            autosize={{ minRows: 4 }}
-            placeholder={'Eg: 15, Yemen road, Yemen'}
-            value={businessData.address}
-            onChange={this.setAddress}
-          />
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Contact'}
-        children={
-          <Input
-            placeholder={'Eg: +91-9876543210 or someone@email.com'}
-            value={businessData.contact}
-            onChange={this.setContact}
+          <ImageUploader
+            s3Key={businessData.logo}
+            onChange={this.setLogo}
           />
         }
       />
@@ -102,11 +90,26 @@ export default class BusinessInfo extends React.Component {
       />
       <Form.Item
         { ...formItemLayout }
-        label={'Logo'}
+        label={'Contact'}
+        required
+        { ...formValidation(this.props.showValidationErrors, validationErrors.contacts) }
         children={
-          <ImageUploader
-            s3Key={businessData.logo}
-            onChange={this.setLogo}
+          <Contacts
+            showValidationErrors={this.props.showValidationErrors}
+            contacts={businessData.contacts}
+            onChange={this.setContacts}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Address'}
+        children={
+          <TextArea
+            autosize={{ minRows: 4 }}
+            placeholder={'Eg: 15, Yemen road, Yemen'}
+            value={businessData.address}
+            onChange={this.setAddress}
           />
         }
       />
@@ -114,6 +117,7 @@ export default class BusinessInfo extends React.Component {
         { ...formItemLayout }
         label={'Employees'}
         required
+        { ...formValidation(this.props.showValidationErrors, validationErrors.employees) }
         children={
           <Employees
             showValidationErrors={this.props.showValidationErrors}
