@@ -31,7 +31,7 @@ export default class TaxCompositionEntity extends React.Component {
           { ...formValidation(this.props.showValidationErrors, validationErrors.type) }
           children={
             <Input
-              placeholder={'Enter the type of tax'}
+              placeholder={'Eg: VAT'}
               value={type}
               onChange={this.setType}
             />

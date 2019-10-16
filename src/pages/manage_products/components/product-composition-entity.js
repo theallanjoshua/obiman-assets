@@ -38,7 +38,7 @@ export default class ProductCompositionEntity extends React.Component {
               showSearch
               allowClear
               labelInValue
-              placeholder={'Pick the ingredient'}
+              placeholder={'Eg: Onion'}
               optionFilterProp='children'
               filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               value={pceId ? { key: pceId, value: pceId } : undefined}
@@ -65,10 +65,10 @@ export default class ProductCompositionEntity extends React.Component {
               <Select
                 showSearch
                 allowClear
-                placeholder={'unit'}
+                placeholder={'Eg: g'}
                 optionFilterProp='children'
                 filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-                value={pceUnit}
+                value={pceUnit || undefined}
                 onChange={this.setUnit}
               >
                 {new Utils()

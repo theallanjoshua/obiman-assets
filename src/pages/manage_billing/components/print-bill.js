@@ -5,6 +5,8 @@ import BillTotal from './bill-total';
 import ReactToPrint from 'react-to-print';
 import { Consumer } from '../../../context';
 import S3ToImage from '../../../components/s3-to-image';
+import moment from 'moment';
+import { DATE_TIME_FORMAT } from '../../../constants/app';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -68,6 +70,32 @@ export default class PrintBill extends React.Component {
               <Text style={{ paddingRight: '20px' }}>{contactGroup[2].info}</Text>
             </div> : null}
           </div>)}
+        </div>
+        <br />
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Text>
+              <Text strong>Order ID: </Text>
+              {this.props.billToPrint.id}
+            </Text>
+            <Text>
+              <Text strong>Customer info: </Text>
+              {this.props.billToPrint.customer}
+            </Text>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Text>
+              <Text strong>Date: </Text>
+              {moment(Number(this.props.billToPrint.createdDate)).format(DATE_TIME_FORMAT)}
+            </Text>
+            <Text>
+              <Text strong>Duration: </Text>
+              {moment.duration(moment(Number(this.props.billToPrint.updatedDate || Date.now())).diff(Number(this.props.billToPrint.createdDate))).humanize()}
+            </Text>
+            </div>
         </div>
         <br />
         <BillCompositionReadonly

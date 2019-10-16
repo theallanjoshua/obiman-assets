@@ -51,9 +51,19 @@ export default class ProductInfo extends React.Component {
         { ...formValidation(this.props.showValidationErrors, validationErrors.label) }
         children={
           <Input
-            placeholder={'Enter a name for the product'}
+            placeholder={'Eg: Salad'}
             value={productData.label}
             onChange={this.setLabel}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Image'}
+        children={
+          <ImageUploader
+            s3Key={productData.image}
+            onChange={this.setImage}
           />
         }
       />
@@ -106,7 +116,7 @@ export default class ProductInfo extends React.Component {
         children={
           <TextArea
             autosize={{ minRows: 4 }}
-            placeholder={'Enter a description for the product'}
+            placeholder={'Eg: This rich and flavorful salad features fresh spinach and green onions drizzled with...'}
             value={productData.description}
             onChange={this.setDescription}
           />
@@ -118,19 +128,9 @@ export default class ProductInfo extends React.Component {
         children={
           <TextArea
             autosize={{ minRows: 4 }}
-            placeholder={'Enter the recipe for the product'}
+            placeholder={'Eg: Place 6 onions in a medium saucepan with enough cold water to cover...'}
             value={productData.recipe}
             onChange={this.setRecipe}
-          />
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Image'}
-        children={
-          <ImageUploader
-            s3Key={productData.image}
-            onChange={this.setImage}
           />
         }
       />

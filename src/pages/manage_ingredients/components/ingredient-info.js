@@ -44,13 +44,13 @@ export default class IngredientInfo extends React.Component {
     return <Form>
       <Form.Item
         { ...formItemLayout }
-        label={'Name of the ingredient'}
+        label={'Name'}
         required
         hasFeedback
         { ...formValidation(this.props.showValidationErrors, validationErrors.label) }
         children={
           <Input
-            placeholder={'Enter a name for the ingredient'}
+            placeholder={'Eg: Onion'}
             value={ingredientData.label}
             onChange={this.setLabel}
           />
@@ -71,10 +71,10 @@ export default class IngredientInfo extends React.Component {
             <Select
               showSearch
               allowClear
-              placeholder={'unit'}
+              placeholder={'Eg: Kg'}
               optionFilterProp='children'
               filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-              value={ingredientData.unit}
+              value={ingredientData.unit || undefined}
               onChange={this.setUnit}
             >
               {utils.getUnits().map(unit => <Select.Option key={unit} value={unit} children={unit}/>)}
@@ -97,10 +97,10 @@ export default class IngredientInfo extends React.Component {
       />
       <Form.Item
         { ...formItemLayout }
-        label={'Location of the ingredient'}
+        label={'Location'}
         children={
           <Input
-            placeholder={'Enter the location of the ingredient'}
+            placeholder={'Eg: Freezer'}
             value={ingredientData.location}
             onChange={this.setLocation}
           />
@@ -122,10 +122,10 @@ export default class IngredientInfo extends React.Component {
               disabled={!ingredientData.unit}
               showSearch
               allowClear
-              placeholder={'unit'}
+              placeholder={'Eg: g'}
               optionFilterProp='children'
               filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-              value={ingredientData.thresholdUnit}
+              value={ingredientData.thresholdUnit || undefined}
               onChange={this.setThresholdUnit}
             >
               {utils.getUnits(ingredientData.unit).map(unit => <Select.Option key={unit} value={unit} children={unit}/>)}
