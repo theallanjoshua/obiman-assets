@@ -42,6 +42,12 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
     ...DEFAULT_TABLE_FEATURES(({ location }) => location, ({ location }) => location, 'Search locations')
   },
   {
+    title: 'Cost price',
+    dataIndex: 'cost',
+    render: (text, { cost, currency, unit }) => cost ? `${new Utils().getCurrencySymbol(currency)}${cost.toLocaleString()}/${unit}` : '-',
+    ...DEFAULT_TABLE_FEATURES(({ cost }) => cost, ({ cost, currency, unit }) => cost ? `${new Utils().getCurrencySymbol(currency)}${cost.toLocaleString()}/${unit}` : '-', 'Search cost price')
+  },
+  {
     title: 'Created by',
     dataIndex: 'createdBy',
     render: (text, { createdBy }) => createdBy,

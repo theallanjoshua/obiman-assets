@@ -42,12 +42,12 @@ export default class ImageUploader extends React.Component {
   beforeUpload = file => {
     const isJpgOrPng = ['image/jpeg', 'image/png'].includes(file.type);
     if (!isJpgOrPng) {
-      this.setState({ errorMessage: 'You can only upload JPG/PNG file!' });
+      this.setState({ errorMessage: 'Only .jpg and .png files are allowed' });
       return false;
     }
     const isLt2M = file.size / (1024 * 1024) < 2;
     if (!isLt2M) {
-      this.setState({ errorMessage: 'Image must smaller than 2MB!' });
+      this.setState({ errorMessage: 'File size cannot exceed 2MB' });
       return false;
     }
     return true;

@@ -5,10 +5,8 @@ import { Utils } from 'obiman-data-models';
 export default class BillTotal extends React.Component {
   render = () => <div>
     <div
+      className='space-between bottom-align'
       style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
         padding: '10px 24px'
       }}
     >
@@ -22,10 +20,8 @@ export default class BillTotal extends React.Component {
     </div>
     {Object.keys(this.props.bill.tax).map(type => <div
       key={type}
+      className='space-between bottom-align'
       style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
         padding: '10px 24px'
       }}
     >
@@ -38,12 +34,12 @@ export default class BillTotal extends React.Component {
         valueStyle={{ fontSize: 'initial' }}
       />
     </div>)}
-    <div style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
-      padding: '24px'
-    }} >
+    <div
+      className='space-between bottom-align'
+      style={{
+        padding: '24px'
+      }}
+    >
       <strong>To pay:</strong>
       <Statistic
         precision={2}

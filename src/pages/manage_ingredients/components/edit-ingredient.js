@@ -81,6 +81,7 @@ export default class EditIngredient extends React.Component {
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
     <IngredientInfo
+      currency={this.props.currency}
       ingredient={this.state.ingredientToUpdate}
       showValidationErrors={this.state.showValidationErrors}
       onChange={this.onChange}

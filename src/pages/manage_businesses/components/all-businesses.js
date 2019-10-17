@@ -8,12 +8,7 @@ import S3ToImage from '../../../components/s3-to-image';
 const { Text } = Typography;
 
 export default class AllBusinesses extends React.Component {
-  render = () => <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh'
-  }}>
+  render = () => <div className='center-align' style={{ height: '100vh' }}>
     <div style={{ width: 'min-content' }}>
       <List
         style={{
@@ -24,7 +19,7 @@ export default class AllBusinesses extends React.Component {
         }}
         loading={this.props.loading}
         itemLayout='horizontal'
-        header={<div style={{ display: 'flex', justifyContent: 'center'}}>
+        header={<div className='center-align'>
           <div>
             {OBIMAN_LOGO}
           </div>
@@ -40,10 +35,7 @@ export default class AllBusinesses extends React.Component {
           }}
           onClick={this.props.enableEdit ? () => {} : () => this.props.onBusinessChange(business)}
         >
-          <div style={{
-            display: 'flex',
-            alignItems: 'center'
-          }}>
+          <div className='center-align'>
             <List.Item.Meta
               avatar={<S3ToImage
                 isAvatar
@@ -67,10 +59,9 @@ export default class AllBusinesses extends React.Component {
         /> : null}
       />
       {this.props.enableEdit ? <div
+        className='center-align'
         style={{
           width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
           marginTop: '40px'
         }}
       >

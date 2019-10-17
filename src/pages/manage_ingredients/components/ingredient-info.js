@@ -3,6 +3,7 @@ import { Form, Input, InputNumber, Select, DatePicker } from 'antd';
 import { Ingredient, Utils } from 'obiman-data-models';
 import moment from 'moment';
 import { DATE_TIME_FORMAT } from '../../../constants/app';
+import ImageUploader from '../../../components/image-uploader';
 
 const formItemLayout = {
   labelCol: {
@@ -29,13 +30,14 @@ const formValidation = (showValidationErrors, validationErrors = []) => ({
 export default class IngredientInfo extends React.Component {
   set = (key, value) => this.props.onChange({ ...new Ingredient({ ...this.props.ingredient }).get(), [key]: value });
   setLabel = e => this.set('label', e.target.value);
+  setImage = image => this.set('image', image);
   setQuantity = quantity => this.set('quantity', quantity);
   setUnit = unit => this.set('unit', unit);
   setExpiryDate = expiryDate => this.set('expiryDate', expiryDate.valueOf());
   setLocation = e => this.set('location', e.target.value);
   setThresholdQuantity = thresholdQuantity => this.set('thresholdQuantity', thresholdQuantity);
   setThresholdUnit = thresholdUnit => this.set('thresholdUnit', thresholdUnit);
-
+  setCost = cost => this.set('cost', cost);
   render = () => {
     const utils = new Utils();
     const ingredient = new Ingredient({ ...this.props.ingredient });
@@ -58,20 +60,29 @@ export default class IngredientInfo extends React.Component {
       />
       <Form.Item
         { ...formItemLayout }
+        label={'Image'}
+        children={
+          <ImageUploader
+            s3Key={ingredientData.image}
+            onChange={this.setImage}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
         label={'Quantity available'}
         { ...formValidation(this.props.showValidationErrors, [ ...(validationErrors.quantity || []), ...(validationErrors.unit || []) ]) }
         children={
           <div className='input-select-group'>
             <InputNumber
               min={0}
-              parser={value => isNaN(value) ? 0 : value}
               value={ingredientData.quantity}
               onChange={this.setQuantity}
             />
             <Select
               showSearch
               allowClear
-              placeholder={'Eg: Kg'}
+              placeholder={'Eg: kg'}
               optionFilterProp='children'
               filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               value={ingredientData.unit || undefined}
@@ -114,7 +125,6 @@ export default class IngredientInfo extends React.Component {
           <div className='input-select-group'>
             <InputNumber
               min={0}
-              parser={value => isNaN(value) ? 0 : value}
               value={ingredientData.thresholdQuantity}
               onChange={this.setThresholdQuantity}
             />
@@ -131,6 +141,21 @@ export default class IngredientInfo extends React.Component {
               {utils.getUnits(ingredientData.unit).map(unit => <Select.Option key={unit} value={unit} children={unit}/>)}
             </Select>
           </div>
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={`Cost price ${ingredientData.unit ? `per ${ingredientData.unit}` : ``}`}
+        { ...formValidation(this.props.showValidationErrors, validationErrors.cost) }
+        children={
+          <InputNumber
+            min={0}
+            precision={2}
+            value={ingredientData.cost}
+            formatter={value => `${new Utils().getCurrencySymbol(this.props.currency)} ${value}`}
+            parser={value => value.replace(`${new Utils().getCurrencySymbol(this.props.currency)}`, '').trim()}
+            onChange={this.setCost}
+          />
         }
       />
     </Form>

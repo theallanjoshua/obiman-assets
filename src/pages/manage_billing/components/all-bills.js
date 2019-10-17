@@ -10,12 +10,11 @@ import BillCompositionReadonly from './bill-composition-readonly';
 export default class AllBills extends React.Component {
   render = () => <Spin spinning={this.props.loading}>
   {this.props.bills.length ?
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <div className='flex-wrap'>
       {this.props.bills.map(bill => <Card
         key={bill.id}
+        className='flex-column'
         style={{
-          display: 'flex',
-          flexDirection: 'column',
           maxWidth: '90vw',
           width: '300px',
           margin: '5px'
@@ -25,11 +24,7 @@ export default class AllBills extends React.Component {
           padding: '0px'
         }}
         title={<div>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap'
-          }}>
+          <div className='flex-wrap space-between'>
             {bill.label}
             <div>
               <Tooltip
@@ -51,12 +46,7 @@ export default class AllBills extends React.Component {
             </div>
           </div>
         </div>}
-        children={<div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          justifyContent: 'space-between'
-        }}>
+        children={<div className='space-between flex-column' style={{ height: '100%' }}>
           <BillCompositionReadonly
             composition={bill.composition}
             currency={this.props.currency}

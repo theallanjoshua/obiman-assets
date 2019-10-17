@@ -47,12 +47,10 @@ export default class TaxCompositionEntity extends React.Component {
             <InputNumber
               min={0}
               max={100}
+              precision={2}
               value={percentage}
               formatter={value => `${value}%`}
-              parser={value => {
-                const parsedValue = Number(value.replace('%', '').trim());
-                return isNaN(parsedValue) ? 0 : parsedValue;
-              }}
+              parser={value => value.replace('%', '').trim()}
               onChange={this.setPercentage}
             />
           }

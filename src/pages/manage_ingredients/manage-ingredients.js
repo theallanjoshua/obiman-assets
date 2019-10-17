@@ -93,6 +93,7 @@ class ManageIngredientsComponent extends React.Component {
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
     <AllIngredients
+      currency={this.props.currency}
       loading={this.state.loading}
       ingredients={this.state.ingredients}
       showEditModal={this.showEditModal}
@@ -101,12 +102,14 @@ class ManageIngredientsComponent extends React.Component {
       onSelectionChange={this.onSelectionChange}
     />
     <AddIngredient
+      currency={this.props.currency}
       businessId={this.props.businessId}
       visible={this.state.showAddModal}
       hideModal={this.hideModal}
       fetchAllIngredients={this.fetchAllIngredients}
     />
     <EditIngredient
+      currency={this.props.currency}
       businessId={this.props.businessId}
       visible={this.state.showEditModal}
       ingredientToUpdate={this.state.ingredientToUpdate}
@@ -114,6 +117,7 @@ class ManageIngredientsComponent extends React.Component {
       fetchAllIngredients={this.fetchAllIngredients}
     />
     <BulkEditIngredients
+      currency={this.props.currency}
       businessId={this.props.businessId}
       visible={this.state.showBulkEditModal}
       ingredients={this.state.ingredients.filter(ingredient => this.state.selectedIngredientsKeys.includes(ingredient.id))}
@@ -127,6 +131,7 @@ export default class ManageIngredients extends React.Component {
   render = () => <Consumer>
     {({ currentBusiness }) => <ManageIngredientsComponent
       businessId={currentBusiness.id}
+      currency={currentBusiness.currency}
     />}
   </Consumer>
 }

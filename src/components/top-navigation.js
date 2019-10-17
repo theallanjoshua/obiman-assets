@@ -24,11 +24,8 @@ export default class TopNavigation extends React.Component {
   onSelect = ({ selectedKeys }) => this.setState({ selectedKeys });
   render = () => <Consumer>
     {({ currentBusiness, email, avatar, businesses, showBusinessManagement, onBusinessChange }) => <Row
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0px 26px'
-      }}
+      className='center-align'
+      style={{ padding: '0px 26px' }}
     >
       <Col
         xs={18}

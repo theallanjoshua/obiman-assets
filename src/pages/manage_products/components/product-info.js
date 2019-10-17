@@ -88,12 +88,10 @@ export default class ProductInfo extends React.Component {
         children={
           <InputNumber
             min={0}
+            precision={2}
             value={productData.price}
             formatter={value => `${new Utils().getCurrencySymbol(this.props.currency)} ${value}`}
-            parser={value => {
-              const parsedValue = Number(value.replace(`${new Utils().getCurrencySymbol(this.props.currency)}`, '').trim());
-              return isNaN(parsedValue) ? 0 : parsedValue;
-            }}
+            parser={value => value.replace(`${new Utils().getCurrencySymbol(this.props.currency)}`, '').trim()}
             onChange={this.setPrice}
           />
         }

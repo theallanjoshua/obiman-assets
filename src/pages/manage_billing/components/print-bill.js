@@ -18,10 +18,7 @@ export default class PrintBill extends React.Component {
       width={'720px'}
       visible={this.props.visible}
       onCancel={this.props.hideModal}
-      footer={<div style={{
-        display: 'flex',
-        justifyContent: 'flex-end'
-      }}>
+      footer={<div className='right-align'>
         <Button
           children={'Cancel'}
           onClick={this.props.hideModal}
@@ -35,48 +32,33 @@ export default class PrintBill extends React.Component {
           />}
           content={() => this.billRef}
         />
-
       </div>}
     >
       <div ref={billRef => this.billRef = billRef}>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}>
+        <div  className='flex-column center-align'>
           {currentBusiness.logo ? <S3ToImage
             alt={currentBusiness.label}
             s3Key={currentBusiness.logo}
           /> : null}
           <Title>{currentBusiness.label}</Title>
-          {currentBusiness.address ? <div style={{ display: 'flex', alignItems: 'baseline' }}>
+          {currentBusiness.address ? <div className='center-align'>
             <Icon type='home' style={{ paddingRight: '8px' }} />
             <Paragraph>{currentBusiness.address}</Paragraph>
           </div> : null}
-          {(currentBusiness.contacts || []).reduce((acc, contact) => {
+          {/* {(currentBusiness.contacts || []).reduce((acc, contact) => {
             const potentialContactGroup = acc.filter(contactGroup => contactGroup.length < 3)[0] || [];
             return [ ...acc.filter(contactGroup => contactGroup.length === 3), [ ...potentialContactGroup, contact ] ]
-          }, []).map(contactGroup => <div key={contactGroup[0].type} style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>
-              <Icon type={contactGroup[0].type} style={{ paddingRight: '8px' }} />
-              <Text style={{ paddingRight: '20px' }}>{contactGroup[0].info}</Text>
-            </div>
-            {contactGroup[1] ? <div>
-              <Icon type={contactGroup[1].type} style={{ paddingRight: '8px' }} />
-              <Text style={{ paddingRight: '20px' }}>{contactGroup[1].info}</Text>
-            </div> : null}
-            {contactGroup[2] ? <div>
-              <Icon type={contactGroup[2].type} style={{ paddingRight: '8px' }} />
-              <Text style={{ paddingRight: '20px' }}>{contactGroup[2].info}</Text>
-            </div> : null}
-          </div>)}
+          }, [])} */}
+          <div className='flex-wrap space-between'>
+            {(currentBusiness.contacts || []).map(({ type, info }) => <div key={type}>
+              <Icon type={type} style={{ paddingRight: '8px' }} />
+              <Text style={{ paddingRight: '20px' }}>{info}</Text>
+            </div>)}
+          </div>
         </div>
         <br />
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between'
-        }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className='space-between'>
+          <div className='flex-column'>
             <Text>
               <Text strong>Order ID: </Text>
               {this.props.billToPrint.id}
@@ -86,7 +68,7 @@ export default class PrintBill extends React.Component {
               {this.props.billToPrint.customer}
             </Text>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className='flex-column'>
             <Text>
               <Text strong>Date: </Text>
               {moment(Number(this.props.billToPrint.createdDate)).format(DATE_TIME_FORMAT)}

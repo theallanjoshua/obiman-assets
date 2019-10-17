@@ -65,7 +65,6 @@ export default class BillCompositionEntity extends React.Component {
               <InputNumber
                 min={0}
                 max={bceId ? selectedProduct.maxRepetition + bceQuantity : undefined}
-                parser={value => isNaN(value) ? 0 : value}
                 value={bceQuantity}
                 onChange={this.setQuantity}
               />
