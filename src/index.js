@@ -45,13 +45,11 @@ class App extends React.Component {
     this.setState({ loading: true });
     try {
       const session = await Credentials.authenticate();
-      if (session) {
-        const idToken = session.getIdToken();
-        const { payload } = idToken;
-        const { email, name, picture } = payload || {};
-        const avatar = picture ? picture.includes('"url":') ? JSON.parse(picture).data.url : picture : '';
-        this.setState({ email, name, avatar, loading: false });
-      }
+      const idToken = session.getIdToken();
+      const { payload } = idToken;
+      const { email, name, picture } = payload || {};
+      const avatar = picture ? picture.includes('"url":') ? JSON.parse(picture).data.url : picture : '';
+      this.setState({ email, name, avatar, loading: false });
     } catch (error) {
       if(error) {
         this.setState({ errorMessage: PAGE_ERROR, loading: false });

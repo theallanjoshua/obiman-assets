@@ -38,6 +38,7 @@ export default class ProductInfo extends React.Component {
   setRecipe = e => this.set('recipe', e.target.value);
   setPrice = price => this.set('price', price);
   setTax = tax => this.set('tax', tax);
+  setClassification = e => this.set('classification', e.target.value);
   render = () => {
     const product = new Product({ ...this.props.product });
     const productData = product.get();
@@ -51,7 +52,7 @@ export default class ProductInfo extends React.Component {
         { ...formValidation(this.props.showValidationErrors, validationErrors.label) }
         children={
           <Input
-            placeholder={'Eg: Salad'}
+            placeholder={'Eg: Caesar salad'}
             value={productData.label}
             onChange={this.setLabel}
           />
@@ -64,6 +65,17 @@ export default class ProductInfo extends React.Component {
           <ImageUploader
             s3Key={productData.image}
             onChange={this.setImage}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Classification'}
+        children={
+          <Input
+            placeholder={'Eg: Salad'}
+            value={productData.classification}
+            onChange={this.setClassification}
           />
         }
       />

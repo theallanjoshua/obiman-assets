@@ -6,9 +6,7 @@ export default class BillTotal extends React.Component {
   render = () => <div>
     <div
       className='space-between bottom-align'
-      style={{
-        padding: '10px 24px'
-      }}
+      style={{ padding: '10px 24px' }}
     >
       <strong>Total:</strong>
       <Statistic
@@ -21,9 +19,7 @@ export default class BillTotal extends React.Component {
     {Object.keys(this.props.bill.tax).map(type => <div
       key={type}
       className='space-between bottom-align'
-      style={{
-        padding: '10px 24px'
-      }}
+      style={{ padding: '10px 24px' }}
     >
       <strong>{type}:</strong>
       <Statistic
@@ -36,9 +32,7 @@ export default class BillTotal extends React.Component {
     </div>)}
     <div
       className='space-between bottom-align'
-      style={{
-        padding: '24px'
-      }}
+      style={{ padding: '24px' }}
     >
       <strong>To pay:</strong>
       <Statistic

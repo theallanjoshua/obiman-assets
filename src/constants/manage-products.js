@@ -27,6 +27,11 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
     ...DEFAULT_TABLE_FEATURES(({ issues }) => issues.join(', '), ({ issues }) => issues.join(', '), 'Search issues')
   },
   {
+    title: 'Classification',
+    dataIndex: 'classification',
+    ...DEFAULT_TABLE_FEATURES(({ classification }) => classification, ({ classification }) => classification, 'Search classification')
+  },
+  {
     title: 'Description',
     dataIndex: 'description',
     ...DEFAULT_TABLE_FEATURES(({ description }) => description, ({ description }) => description, 'Search description')
@@ -40,7 +45,6 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Created by',
     dataIndex: 'createdBy',
-    render: (text, { createdBy }) => createdBy,
     ...DEFAULT_TABLE_FEATURES(({ createdBy }) => createdBy, ({ createdBy }) => createdBy, 'Search created by')
   },
   {
@@ -52,7 +56,6 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Last edited by',
     dataIndex: 'updatedBy',
-    render: (text, { updatedBy }) => updatedBy,
     ...DEFAULT_TABLE_FEATURES(({ updatedBy }) => updatedBy, ({ updatedBy }) => updatedBy, 'Search last edited by')
   },
   {

@@ -28,10 +28,7 @@ export default class ImageUploader extends React.Component {
       }
     }
   }
-  componentDidMount = () => {
-    const { s3Key: incomingS3Key } = this.props;
-    this.fetchUploadedFile(incomingS3Key);
-  }
+  componentDidMount = () => this.fetchUploadedFile(this.props.s3Key);
   componentDidUpdate = prevProps => {
     const { s3Key: incomingS3Key } = this.props;
     const { s3Key: existingS3Key } = prevProps;
@@ -65,6 +62,7 @@ export default class ImageUploader extends React.Component {
     accept='image/jpeg,image/png'
     beforeUpload={this.beforeUpload}
     customRequest={this.onUpload}
+    listType='picture'
     showUploadList={{
       showPreviewIcon: true,
       showRemoveIcon: false

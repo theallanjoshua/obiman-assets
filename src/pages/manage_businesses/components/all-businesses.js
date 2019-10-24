@@ -30,9 +30,7 @@ export default class AllBusinesses extends React.Component {
         dataSource={this.props.businesses}
         renderItem={business =>  <List.Item
           className={`business-list-item${this.props.enableEdit ? `` : ` clickable`}`}
-          style={{
-            padding: 0
-          }}
+          style={{ padding: 0 }}
           onClick={this.props.enableEdit ? () => {} : () => this.props.onBusinessChange(business)}
         >
           <div className='center-align'>

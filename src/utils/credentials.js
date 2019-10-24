@@ -20,11 +20,18 @@ class Credentials {
       if(!session.isValid()) {
         const href = window.location.href;
         if (href.includes('?code=')) {
-          const newUrl = window.location.href.split('?code=')[0];
+          const newUrl = href.split('?code=')[0];
           window.history.replaceState(undefined, document.title, newUrl);
           await this.auth.parseCognitoWebResponse(href);
         } else {
-          await this.auth.getSession();
+          try {
+            await this.auth.getSession();
+          } catch (error) {
+            if (error) {
+              await this.logout();
+            }
+            throw error;
+          }
         }
         return await this.auth.getSignInUserSession();
       } else {

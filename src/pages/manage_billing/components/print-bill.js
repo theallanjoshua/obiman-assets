@@ -41,14 +41,10 @@ export default class PrintBill extends React.Component {
             s3Key={currentBusiness.logo}
           /> : null}
           <Title>{currentBusiness.label}</Title>
-          {currentBusiness.address ? <div className='center-align'>
+          {currentBusiness.address ? <div className='baseline-align'>
             <Icon type='home' style={{ paddingRight: '8px' }} />
             <Paragraph>{currentBusiness.address}</Paragraph>
           </div> : null}
-          {/* {(currentBusiness.contacts || []).reduce((acc, contact) => {
-            const potentialContactGroup = acc.filter(contactGroup => contactGroup.length < 3)[0] || [];
-            return [ ...acc.filter(contactGroup => contactGroup.length === 3), [ ...potentialContactGroup, contact ] ]
-          }, [])} */}
           <div className='flex-wrap space-between'>
             {(currentBusiness.contacts || []).map(({ type, info }) => <div key={type}>
               <Icon type={type} style={{ paddingRight: '8px' }} />

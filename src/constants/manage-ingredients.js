@@ -33,7 +33,7 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Expiries by',
     dataIndex: 'expiryDate',
-    render: (text, { expiryDate }) => expiryDate ? <Timestamp value={expiryDate} /> : '-',
+    render: (text, { expiryDate }) => expiryDate ? expiryDate < Date.now() ? <span><h1 style={{ color: '#cf1322' }}>Expired</h1> (<Timestamp value={expiryDate} />)</span> : <Timestamp value={expiryDate} /> : '-',
     ...DEFAULT_TABLE_FEATURES(({ expiryDate }) => expiryDate, ({ expiryDate }) => moment(expiryDate).fromNow(), 'Search expires by')
   },
   {
@@ -50,7 +50,6 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Created by',
     dataIndex: 'createdBy',
-    render: (text, { createdBy }) => createdBy,
     ...DEFAULT_TABLE_FEATURES(({ createdBy }) => createdBy, ({ createdBy }) => createdBy, 'Search created by')
   },
   {
@@ -62,7 +61,6 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Last edited by',
     dataIndex: 'updatedBy',
-    render: (text, { updatedBy }) => updatedBy,
     ...DEFAULT_TABLE_FEATURES(({ updatedBy }) => updatedBy, ({ updatedBy }) => updatedBy, 'Search created by')
   },
   {

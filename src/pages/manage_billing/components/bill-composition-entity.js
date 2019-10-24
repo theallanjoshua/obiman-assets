@@ -38,19 +38,24 @@ export default class BillCompositionEntity extends React.Component {
               showSearch
               allowClear
               labelInValue
-              placeholder={'Eg: Salad'}
+              placeholder={'Eg: Caesar salad'}
               optionFilterProp='children'
               filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               value={bceId ? { key: bceId, value: bceId } : undefined}
               onChange={this.setId}
             >
-              {this.props.products.map(({ id, label, issues }) => <Select.Option
-                key={id}
-                value={id}
-                title={label}
-                children={label}
-                disabled={!!issues.length}
-              />)}
+              {Array.from(new Set(this.props.products.map(({ classification}) => classification))).map(classification => <Select.OptGroup
+                key={classification}
+                label={classification || 'Others'}
+              >
+                {this.props.products.filter(product => product.classification === classification).map(({ id, label, issues }) => <Select.Option
+                  key={id}
+                  value={id}
+                  title={label}
+                  children={label}
+                  disabled={!!issues.length}
+                />)}
+              </Select.OptGroup>)}
             </Select>
           }
         />
