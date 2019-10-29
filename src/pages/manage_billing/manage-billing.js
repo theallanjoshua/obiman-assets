@@ -113,6 +113,7 @@ class ManageBillingComponent extends React.Component {
 }
 
 export default class ManageBilling extends React.Component {
+  componentDidMount = () => document.title = 'Billing - Obiman';
   render = () => <Consumer>
     {({ currentBusiness }) => <ManageBillingComponent
       businessId={currentBusiness.id}

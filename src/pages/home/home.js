@@ -12,6 +12,7 @@ import rf from 'random-facts';
 const { Text } = Typography;
 
 export default class Home extends React.Component {
+  componentDidMount = () => document.title = 'Home - Obiman';
   render = () => <Page>
     <Result
       icon={<Icon type='smile' theme='twoTone' twoToneColor='#52c41a' />}

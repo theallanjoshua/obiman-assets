@@ -128,6 +128,7 @@ class ManageIngredientsComponent extends React.Component {
 }
 
 export default class ManageIngredients extends React.Component {
+  componentDidMount = () => document.title = 'Ingredients - Obiman';
   render = () => <Consumer>
     {({ currentBusiness }) => <ManageIngredientsComponent
       businessId={currentBusiness.id}

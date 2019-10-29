@@ -110,6 +110,7 @@ class ManageProductsComponent extends React.Component {
 }
 
 export default class ManageProducts extends React.Component {
+  componentDidMount = () => document.title = 'Products - Obiman';
   render = () => <Consumer>
     {({ currentBusiness }) => <ManageProductsComponent
       businessId={currentBusiness.id}

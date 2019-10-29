@@ -5,6 +5,7 @@ import { Result, Button } from 'antd';
 import { HOME, PAGE_URL_TITLE_MAP } from '../../constants/pages';
 
 export default class NotFound extends React.Component {
+  componentDidMount = () => document.title = '404 - Obiman';
   render = () => <Page>
     <Result
       status='404'
