@@ -4,13 +4,16 @@ import ReactDOM from 'react-dom';
 import { Provider } from './context';
 import { Layout, Spin, Alert } from 'antd';
 import {
+  HOME,
   INGREDIENTS,
   PRODUCTS,
   BILLING
 } from './constants/pages';
 import { PAGE_ERROR } from './constants/app';
 import Credentials from './utils/credentials';
-import TopNavigation from './components/top-navigation';
+import { TopNavigation, BottomNavigation } from './components/navigation';
+import Home from './pages/home/home';
+import NotFound from './pages/not_found/not-found';
 import ManageIngredients from './pages/manage_ingredients/manage-ingredients';
 import ManageProducts from './pages/manage_products/manage-products';
 import ManageBusinesses from './pages/manage_businesses/manage-businesses';
@@ -19,7 +22,7 @@ import { fetchUser } from './utils/user';
 import 'antd/dist/antd.less';
 import './index.less';
 
-const { Header, Content } = Layout;
+const { Header, Content, Footer } = Layout;
 
 class App extends React.Component {
   constructor() {
@@ -45,11 +48,13 @@ class App extends React.Component {
     this.setState({ loading: true });
     try {
       const session = await Credentials.authenticate();
-      const idToken = session.getIdToken();
-      const { payload } = idToken;
-      const { email, name, picture } = payload || {};
-      const avatar = picture ? picture.includes('"url":') ? JSON.parse(picture).data.url : picture : '';
-      this.setState({ email, name, avatar, loading: false });
+      if (session) {
+        const idToken = session.getIdToken();
+        const { payload } = idToken;
+        const { email, name, picture } = payload || {};
+        const avatar = picture ? picture.includes('"url":') ? JSON.parse(picture).data.url : picture : '';
+        this.setState({ email, name, avatar, loading: false });
+      }
     } catch (error) {
       if(error) {
         this.setState({ errorMessage: PAGE_ERROR, loading: false });
@@ -98,13 +103,18 @@ class App extends React.Component {
               }}>
                 <TopNavigation />
               </Header>
-                <Content>
-                  <Switch>
-                    <Route exact path={INGREDIENTS} component={ManageIngredients} />
-                    <Route exact path={PRODUCTS} component={ManageProducts} />
-                    <Route exact path={BILLING} component={ManageBilling} />
-                  </Switch>
-                </Content>
+              <Content>
+                <Switch>
+                  <Route exact path={HOME} component={Home} />
+                  <Route exact path={INGREDIENTS} component={ManageIngredients} />
+                  <Route exact path={PRODUCTS} component={ManageProducts} />
+                  <Route exact path={BILLING} component={ManageBilling} />
+                  <Route component={NotFound} />
+                </Switch>
+              </Content>
+              <Footer style={{ padding: '0px' }}>
+                <BottomNavigation />
+              </Footer>
             </Layout>
         </Router>
     </Spin>}

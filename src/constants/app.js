@@ -15,7 +15,8 @@ export const OBIMAN_LOGO = <h1
     color: 'inherit',
     marginBottom: 0,
     width: 'max-content',
-    lineHeight: 'initial'
+    lineHeight: 'initial',
+    padding: '5px 0px'
   }}
 >
   O b i m a n

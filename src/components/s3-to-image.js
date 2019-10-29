@@ -30,7 +30,7 @@ export default class S3ToImage extends React.Component {
     }
   }
   render = () => this.props.isAvatar ? <Avatar
-    style={{ ...(!this.state.src ? toMaterialStyle(this.props.alt) : {}), marginRight: '10px' }}
+    style={{ ...(!this.state.src ? toMaterialStyle(this.props.alt) : { background: '#FFF' }) }}
     children={(this.props.alt || '').substr(0,1).toUpperCase()}
     size='small'
     src={this.state.src}
