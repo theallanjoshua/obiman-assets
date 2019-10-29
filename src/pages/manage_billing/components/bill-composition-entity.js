@@ -38,9 +38,9 @@ export default class BillCompositionEntity extends React.Component {
               showSearch
               allowClear
               labelInValue
+              filterOption
               placeholder={'Eg: Caesar salad'}
               optionFilterProp='children'
-              filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               value={bceId ? { key: bceId, value: bceId } : undefined}
               onChange={this.setId}
             >

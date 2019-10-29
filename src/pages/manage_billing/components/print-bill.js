@@ -45,7 +45,7 @@ export default class PrintBill extends React.Component {
             <Icon type='home' style={{ paddingRight: '8px' }} />
             <Paragraph>{currentBusiness.address}</Paragraph>
           </div> : null}
-          <div className='flex-wrap space-between'>
+          <div className='space-between flex-wrap'>
             {(currentBusiness.contacts || []).map(({ type, info }) => <div key={type}>
               <Icon type={type} style={{ paddingRight: '8px' }} />
               <Text style={{ paddingRight: '20px' }}>{info}</Text>
@@ -53,7 +53,7 @@ export default class PrintBill extends React.Component {
           </div>
         </div>
         <br />
-        <div className='space-between'>
+        <div className='space-between flex-wrap'>
           <div className='flex-column'>
             <Text>
               <Text strong>Order ID: </Text>

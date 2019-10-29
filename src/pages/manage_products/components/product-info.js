@@ -125,7 +125,7 @@ export default class ProductInfo extends React.Component {
         label={'Description'}
         children={
           <TextArea
-            autosize={{ minRows: 4 }}
+            autoSize={{ minRows: 4 }}
             placeholder={'Eg: This rich and flavorful salad features fresh spinach and green onions drizzled with...'}
             value={productData.description}
             onChange={this.setDescription}
@@ -137,7 +137,7 @@ export default class ProductInfo extends React.Component {
         label={'Recipe'}
         children={
           <TextArea
-            autosize={{ minRows: 4 }}
+            autoSize={{ minRows: 4 }}
             placeholder={'Eg: Place 6 onions in a medium saucepan with enough cold water to cover...'}
             value={productData.recipe}
             onChange={this.setRecipe}

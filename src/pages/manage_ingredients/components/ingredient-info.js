@@ -82,9 +82,9 @@ export default class IngredientInfo extends React.Component {
             <Select
               showSearch
               allowClear
+              filterOption
               placeholder={'Eg: kg'}
               optionFilterProp='children'
-              filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               value={ingredientData.unit || undefined}
               onChange={this.setUnit}
             >
@@ -132,9 +132,9 @@ export default class IngredientInfo extends React.Component {
               disabled={!ingredientData.unit}
               showSearch
               allowClear
+              filterOption
               placeholder={'Eg: g'}
               optionFilterProp='children'
-              filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               value={ingredientData.thresholdUnit || undefined}
               onChange={this.setThresholdUnit}
             >

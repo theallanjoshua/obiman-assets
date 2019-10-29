@@ -38,9 +38,9 @@ export default class ProductCompositionEntity extends React.Component {
               showSearch
               allowClear
               labelInValue
+              filterOption
               placeholder={'Eg: Onion'}
               optionFilterProp='children'
-              filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
               value={pceId ? { key: pceId, value: pceId } : undefined}
               onChange={this.setId}
             >
@@ -64,9 +64,9 @@ export default class ProductCompositionEntity extends React.Component {
               <Select
                 showSearch
                 allowClear
+                filterOption
                 placeholder={'Eg: g'}
                 optionFilterProp='children'
-                filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                 value={pceUnit || undefined}
                 onChange={this.setUnit}
               >

@@ -38,9 +38,9 @@ export default class Contact extends React.Component {
             style={{ width: '120px' }}
             showSearch
             allowClear
+            filterOption
             placeholder={'Eg: Phone'}
             optionFilterProp='children'
-            filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
             value={type || undefined}
             onChange={this.setType}
           >

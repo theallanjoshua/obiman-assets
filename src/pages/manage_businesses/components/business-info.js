@@ -78,9 +78,9 @@ export default class BusinessInfo extends React.Component {
           <Select
             showSearch
             allowClear
+            filterOption
             placeholder={'Eg: INR'}
             optionFilterProp='children'
-            filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
             value={businessData.currency || undefined}
             onChange={this.setCurrency}
           >
@@ -106,7 +106,7 @@ export default class BusinessInfo extends React.Component {
         label={'Address'}
         children={
           <TextArea
-            autosize={{ minRows: 4 }}
+            autoSize={{ minRows: 4 }}
             placeholder={'Eg: 15, Yemen road, Yemen'}
             value={businessData.address}
             onChange={this.setAddress}

@@ -102,9 +102,9 @@ export default class BillInfo extends React.Component {
           <Select
             showSearch
             allowClear
+            filterOption
             placeholder={'Eg: Open'}
             optionFilterProp='children'
-            filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
             value={billData.status || undefined}
             onChange={this.setStatus}
           >
