@@ -145,6 +145,8 @@ export default class IngredientInfo extends React.Component {
       />
       <Form.Item
         { ...formItemLayout }
+        required
+        hasFeedback
         label={`Cost price ${ingredientData.unit ? `per ${ingredientData.unit}` : ``}`}
         { ...formValidation(this.props.showValidationErrors, validationErrors.cost) }
         children={

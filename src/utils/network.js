@@ -65,6 +65,7 @@ class Network {
       const params = {
         method,
         cache: 'no-cache',
+        mode: 'cors',
         credentials: 'same-origin',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ class Network {
       };
       const body = typeof data === 'string' ? data : JSON.stringify(data);
       const init = data ? { ...params, body } : { ...params };
-      const response = await fetch(url, init);
+      const response = await fetch(`${process.env.NODE_ENV !== 'development' ?  'https://api.theobiman.com' : ''}/${url}`, init);
       const { output, errors } = { ...(await response.json()) };
       if(response.ok) {
         return output;
