@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Input, InputNumber } from 'antd';
+import { Form, Input, InputNumber, Select } from 'antd';
 import { Product, Utils } from 'obiman-data-models';
 import ProductComposition from './product-composition';
 import TaxComposition from './tax-composition';
@@ -37,8 +37,9 @@ export default class ProductInfo extends React.Component {
   setComposition = composition => this.set('composition', composition);
   setRecipe = e => this.set('recipe', e.target.value);
   setPrice = price => this.set('price', price);
+  setProfit = profit => this.set('profit', profit);
   setTax = tax => this.set('tax', tax);
-  setClassification = e => this.set('classification', e.target.value);
+  setClassification = classification => this.set('classification', classification);
   render = () => {
     const product = new Product({ ...this.props.product });
     const productData = product.get();
@@ -72,17 +73,22 @@ export default class ProductInfo extends React.Component {
         { ...formItemLayout }
         label={'Classification'}
         children={
-          <Input
+          <Select
+            showSearch
+            allowClear
+            filterOption
             placeholder={'Eg: Salad'}
-            value={productData.classification}
+            optionFilterProp='children'
+            value={productData.classification || undefined}
             onChange={this.setClassification}
-          />
+          >
+            {this.props.classifications.map(classification => <Select.Option key={classification} value={classification} children={classification}/>)}
+          </Select>
         }
       />
       <Form.Item
         { ...formItemLayout }
         label={'Ingredients used'}
-        required
         children={
           <ProductComposition
             showValidationErrors={this.props.showValidationErrors}
@@ -110,12 +116,28 @@ export default class ProductInfo extends React.Component {
       />
       <Form.Item
         { ...formItemLayout }
-        label={'Applicable tax'}
         required
+        label={'Profit'}
+        { ...formValidation(this.props.showValidationErrors, validationErrors.profit) }
+        children={
+          <InputNumber
+            min={0}
+            precision={2}
+            value={productData.profit}
+            formatter={value => `${new Utils().getCurrencySymbol(this.props.currency)} ${value}`}
+            parser={value => value.replace(`${new Utils().getCurrencySymbol(this.props.currency)}`, '').trim()}
+            onChange={this.setProfit}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Applicable tax'}
         children={
           <TaxComposition
             showValidationErrors={this.props.showValidationErrors}
             tax={productData.tax}
+            taxes={this.props.taxes}
             onChange={this.setTax}
           />
         }

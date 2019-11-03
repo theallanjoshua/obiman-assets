@@ -4,16 +4,6 @@ import { Row, Col, Button } from 'antd';
 import { Product } from 'obiman-data-models';
 
 export default class ProductComposition extends React.Component {
-  componentDidMount() {
-    if(!this.props.composition.length) {
-      this.addEntity();
-    }
-  }
-  componentDidUpdate() {
-    if(!this.props.composition.length) {
-      this.addEntity();
-    }
-  }
   onChange = (incomingEntity, incomingIndex) => {
     const composition = this.props.composition.map((entity, index) => index === incomingIndex ? { ...incomingEntity } : { ...entity })
     this.props.onChange(composition);
@@ -42,11 +32,11 @@ export default class ProductComposition extends React.Component {
           />
         </Col>
         <Col span={2}>
-          {this.props.composition.length > 1 ? <Button
+          <Button
             icon='delete'
             type='danger'
             onClick={() => this.removeEntity(index)}
-          /> : null }
+          />
         </Col>
       </Row>
     })}

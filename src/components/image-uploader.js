@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Upload, Icon, Card, Typography } from 'antd';
+import { Upload, Icon, Card, Typography, Spin } from 'antd';
 import pretty from 'prettysize';
 import Network from '../utils/network';
 import AuditTrail from './audit-trail';
+import imageCompression from 'browser-image-compression';
 
 const { Dragger } = Upload;
 const { Meta } = Card;
@@ -36,49 +37,49 @@ export default class ImageUploader extends React.Component {
       this.fetchUploadedFile(incomingS3Key);
     }
   }
-  beforeUpload = file => {
-    const isJpgOrPng = ['image/jpeg', 'image/png'].includes(file.type);
-    if (!isJpgOrPng) {
-      this.setState({ errorMessage: 'Only .jpg and .png files are allowed' });
-      return false;
-    }
-    const isLt2M = file.size / (1024 * 1024) < 2;
-    if (!isLt2M) {
-      this.setState({ errorMessage: 'File size cannot exceed 2MB' });
-      return false;
-    }
-    return true;
-  }
   onUpload = async ({ file }) => {
+    this.setState({ loading: true, errorMessage: '' });
     try {
-      const s3Key = await Network.uploadFile(file);
-      this.props.onChange(s3Key);
+      if (['image/jpeg', 'image/png'].includes(file.type)) {
+        const options = { maxSizeMB: 1 }
+        const compressedFile = await imageCompression(file, options)
+        const s3Key = await Network.uploadFile(compressedFile);
+        this.setState({ loading: false, errorMessage: '' });
+        this.props.onChange(s3Key);
+      } else {
+        throw 'Only .jpg and .png files are allowed';
+      }
     } catch (errorMessage) {
-      this.setState({ errorMessage })
+      this.setState({ loading: false, errorMessage })
     }
   }
   onRemove = async () => this.props.onChange('');
-  render = () => !this.props.s3Key ? <Dragger
-    accept='image/jpeg,image/png'
-    beforeUpload={this.beforeUpload}
-    customRequest={this.onUpload}
-    listType='picture'
-    showUploadList={{
-      showPreviewIcon: true,
-      showRemoveIcon: false
-    }}
-  >
-    <p className='ant-upload-drag-icon'>
-      <Icon type='inbox' />
-    </p>
-    <p className='ant-upload-text'>Click or drag file to this area to upload</p>
-    <p className='ant-upload-hint'>Only .jpg and .png files are allowed</p>
-    <p className='ant-upload-hint'>File size cannot exceed 2MB</p>
-  </Dragger> :
+  render = () => !this.props.s3Key ? <Spin tip='Compressing and uploading...' spinning={this.state.loading}>
+    <Dragger
+      accept='image/jpeg,image/png'
+      customRequest={this.onUpload}
+      listType='picture'
+      showUploadList={{
+        showPreviewIcon: true,
+        showRemoveIcon: false
+      }}
+    >
+      <p className='ant-upload-drag-icon'>
+        <Icon type='picture' />
+      </p>
+      <p className='ant-upload-text'>Click or drag images to this area to upload</p>
+      <p className='ant-upload-hint'>Only .jpg, .jpeg and .png files are allowed</p>
+      <p className='ant-upload-hint'>Images will be compressed to less than 1MB</p>
+    </Dragger>
+  </Spin> :
   <Card
     loading={this.state.loading}
     cover={<img src={this.state.uploadedFile.url} />}
-    actions={[<Text type='danger' onClick={this.onRemove} children={'Remove'} />]}
+    actions={[<Text
+      type='danger'
+      children={'Remove'}
+      onClick={this.onRemove}
+    />]}
   >
     <Meta
       title={`${this.state.uploadedFile.label} (${pretty(this.state.uploadedFile.size)})`}

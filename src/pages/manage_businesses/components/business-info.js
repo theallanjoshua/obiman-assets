@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select, Collapse } from 'antd';
 import { Business, Utils } from 'obiman-data-models';
 import { Consumer } from '../../../context';
 import Employees from './employees';
 import ImageUploader from '../../../components/image-uploader';
 import Contacts from './contacts';
+import StringArrayEditor from '../../../components/string-array-editor';
 
 const { TextArea } = Input;
+const { Panel } = Collapse;
 
 const formItemLayout = {
   labelCol: {
@@ -39,94 +41,167 @@ export default class BusinessInfo extends React.Component {
   setCoordinates = coordinates => this.set('coordinates', coordinates);
   setCurrency = currency => this.set('currency', currency);
   setEmployees = employees => this.set('employees', employees);
+  setMetadata = (key, value) => {
+    const business = new Business({ ...this.props.business });
+    const { metadata: existingMetadata } = business.get();
+    const metadata = { ...existingMetadata, [key]: value };
+    this.set('metadata', metadata);
+  }
+  setSources = sources => this.setMetadata('sources', sources);
+  setTaxes = taxes => this.setMetadata('taxes', taxes);
+  setIngredientLocations = ingredientLocations => this.setMetadata('ingredientLocations', ingredientLocations);
+  setProductClassifications = productClassifications => this.setMetadata('productClassifications', productClassifications);
   render = () => <Consumer>
   {({ email }) => {
     const business = new Business({ ...this.props.business });
     const businessData = business.get();
     const validationErrors = business.validate();
     return <Form>
-      <Form.Item
-        { ...formItemLayout }
-        label={'Name'}
-        required
-        hasFeedback
-        { ...formValidation(this.props.showValidationErrors, validationErrors.label) }
-        children={
-          <Input
-            placeholder={'Eg: Joe\'s Pizza'}
-            value={businessData.label}
-            onChange={this.setLabel}
+      <Collapse defaultActiveKey='Basic information'>
+        <Panel header='Basic information' key='Basic information'>
+          <Form.Item
+            { ...formItemLayout }
+            label={'Logo'}
+            children={
+              <ImageUploader
+                s3Key={businessData.logo}
+                onChange={this.setLogo}
+              />
+            }
           />
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Logo'}
-        children={
-          <ImageUploader
-            s3Key={businessData.logo}
-            onChange={this.setLogo}
+          <Form.Item
+            { ...formItemLayout }
+            label={'Name'}
+            required
+            hasFeedback
+            { ...formValidation(this.props.showValidationErrors, validationErrors.label) }
+            children={
+              <Input
+                placeholder={'Eg: Joe\'s Pizza'}
+                value={businessData.label}
+                onChange={this.setLabel}
+              />
+            }
           />
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Currency'}
-        required
-        { ...formValidation(this.props.showValidationErrors, [ ...(validationErrors.price || []), ...(validationErrors.currency || []) ]) }
-        children={
-          <Select
-            showSearch
-            allowClear
-            filterOption
-            placeholder={'Eg: INR'}
-            optionFilterProp='children'
-            value={businessData.currency || undefined}
-            onChange={this.setCurrency}
-          >
-            {new Utils().getCurrencyCodes().map(currency => <Select.Option key={currency} value={currency} children={currency}/>)}
-          </Select>
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Contact'}
-        required
-        { ...formValidation(this.props.showValidationErrors, validationErrors.contacts) }
-        children={
-          <Contacts
-            showValidationErrors={this.props.showValidationErrors}
-            contacts={businessData.contacts}
-            onChange={this.setContacts}
+          <Form.Item
+            { ...formItemLayout }
+            label={'Currency'}
+            required
+            { ...formValidation(this.props.showValidationErrors, [ ...(validationErrors.price || []), ...(validationErrors.currency || []) ]) }
+            children={
+              <Select
+                showSearch
+                allowClear
+                filterOption
+                placeholder={'Eg: INR'}
+                optionFilterProp='children'
+                value={businessData.currency || undefined}
+                onChange={this.setCurrency}
+              >
+                {new Utils().getCurrencyCodes().map(currency => <Select.Option key={currency} value={currency} children={currency}/>)}
+              </Select>
+            }
           />
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Address'}
-        children={
-          <TextArea
-            autoSize={{ minRows: 4 }}
-            placeholder={'Eg: 15, Yemen road, Yemen'}
-            value={businessData.address}
-            onChange={this.setAddress}
+          <Form.Item
+            { ...formItemLayout }
+            label={'Address'}
+            children={
+              <TextArea
+                autoSize={{ minRows: 4 }}
+                placeholder={'Eg: 15, Yemen road, Yemen'}
+                value={businessData.address}
+                onChange={this.setAddress}
+              />
+            }
           />
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Employees'}
-        required
-        { ...formValidation(this.props.showValidationErrors, validationErrors.employees) }
-        children={
-          <Employees
-            showValidationErrors={this.props.showValidationErrors}
-            currentUser={email}
-            employees={businessData.employees}
-            onChange={this.setEmployees}
+        </Panel>
+        <Panel header='Contacts' key='Contacts'>
+          <Form.Item
+            { ...formItemLayout }
+            label={'Contact'}
+            { ...formValidation(this.props.showValidationErrors, validationErrors.contacts) }
+            children={
+              <Contacts
+                showValidationErrors={this.props.showValidationErrors}
+                contacts={businessData.contacts}
+                onChange={this.setContacts}
+              />
+            }
           />
-        }
-      />
+        </Panel>
+        <Panel header='Employees' key='Employees'>
+          <Form.Item
+            { ...formItemLayout }
+            label={'Employees'}
+            required
+            { ...formValidation(this.props.showValidationErrors, validationErrors.employees) }
+            children={
+              <Employees
+                showValidationErrors={this.props.showValidationErrors}
+                currentUser={email}
+                employees={businessData.employees}
+                onChange={this.setEmployees}
+              />
+            }
+          />
+        </Panel>
+        <Panel header='Ingredient locations' key='Ingredient locations'>
+          <Form.Item
+            { ...formItemLayout }
+            label={'Ingredient locations'}
+            { ...formValidation(this.props.showValidationErrors, (validationErrors.metadata || {}).ingredientLocations) }
+            children={
+              <StringArrayEditor
+                items={businessData.metadata.ingredientLocations || []}
+                placeholder={'Eg: Freezer'}
+                onChange={this.setIngredientLocations}
+              />
+            }
+          />
+        </Panel>
+        <Panel header='Product classifications' key='Product classifications'>
+          <Form.Item
+            { ...formItemLayout }
+            label={'Product classifications'}
+            { ...formValidation(this.props.showValidationErrors, (validationErrors.metadata || {}).productClassifications) }
+            children={
+              <StringArrayEditor
+                items={businessData.metadata.productClassifications || []}
+                placeholder={'Eg: Salad'}
+                onChange={this.setProductClassifications}
+              />
+            }
+          />
+        </Panel>
+        <Panel header='Tax types' key='Tax types'>
+          <Form.Item
+            { ...formItemLayout }
+            label={'Tax types'}
+            { ...formValidation(this.props.showValidationErrors, (validationErrors.metadata || {}).taxes) }
+            children={
+              <StringArrayEditor
+                items={businessData.metadata.taxes || []}
+                placeholder={'Eg: VAT'}
+                onChange={this.setTaxes}
+              />
+            }
+          />
+        </Panel>
+        <Panel header='Billing sources' key='Billing sources'>
+          <Form.Item
+            { ...formItemLayout }
+            label={'Billing sources'}
+            { ...formValidation(this.props.showValidationErrors, (validationErrors.metadata || {}).sources) }
+            children={
+              <StringArrayEditor
+                items={businessData.metadata.sources || []}
+                placeholder={'Eg: Uber eats'}
+                onChange={this.setSources}
+              />
+            }
+          />
+        </Panel>
+      </Collapse>
     </Form>
   }}
   </Consumer>;

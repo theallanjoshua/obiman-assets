@@ -38,6 +38,7 @@ export default class BillInfo extends React.Component {
   setComposition = composition => this.set('composition', composition.map(item => new BillCompositionEntity(item).get()));
   setCustomer = e => this.set('customer', e.target.value);
   setStatus = status => this.set('status', status);
+  setSource = source => this.set('source', source);
   render = () => {
     const bill = new Bill({ ...this.props.bill });
     const billData = bill
@@ -68,6 +69,26 @@ export default class BillInfo extends React.Component {
             value={billData.customer}
             onChange={this.setCustomer}
           />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Source'}
+        required
+        hasFeedback
+        { ...formValidation(this.props.showValidationErrors, validationErrors.source) }
+        children={
+          <Select
+            showSearch
+            allowClear
+            filterOption
+            placeholder={'Eg: Uber eats'}
+            optionFilterProp='children'
+            value={billData.source || undefined}
+            onChange={this.setSource}
+          >
+            {this.props.sources.map(source => <Select.Option key={source} value={source} children={source}/>)}
+          </Select>
         }
       />
       <Form.Item

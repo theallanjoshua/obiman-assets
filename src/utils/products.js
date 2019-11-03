@@ -31,11 +31,11 @@ export const getEnrichedProducts = (products, ingredients) => products.map(item 
     const maxRepetition = Math.floor(availableQuantity / pceQuantity);
     return { ...productCompositionEntityData, label, quantityGap, maxRepetition, expiryDate };
   });
-  const issues = composition.reduce((acc, { quantityGap, expiryDate, unit, label }) => {
+  const issues = composition.length ? composition.reduce((acc, { quantityGap, expiryDate, unit, label }) => {
     const quantityIssue = quantityGap < 0 ? [`${label} - Need ${quantityGap * -1}${unit} more`] : [];
     const expiryIssue = expiryDate && expiryDate <= Date.now() ? [`${label} - Expired`] : [];
     return [ ...acc, ...quantityIssue, ...expiryIssue ];
-  }, []);
+  }, []) : ['No ingredients added'];
   const maxRepetition = Math.floor(composition.map(({ maxRepetition }) => maxRepetition).sort((prv, nxt) => prv - nxt)[0] || 0);
   return { ...productData, composition, issues, maxRepetition };
 });

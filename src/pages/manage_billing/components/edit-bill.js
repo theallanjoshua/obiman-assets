@@ -121,6 +121,7 @@ export default class EditBill extends React.Component {
     <Spin spinning={this.state.loading}>
       <BillInfo
         currency={this.props.currency}
+        sources={this.props.sources}
         products={this.state.products}
         bill={this.state.billToUpdate}
         showValidationErrors={this.state.showValidationErrors}

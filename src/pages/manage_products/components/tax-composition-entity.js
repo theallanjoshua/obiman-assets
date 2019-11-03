@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Tax } from 'obiman-data-models';
-import { Row, Col, Input, InputNumber, Form } from 'antd';
+import { Row, Col, Input, InputNumber, Form, Select } from 'antd';
 
 const formItemLayout = {
   wrapperCol: { span: 24 }
@@ -15,7 +15,7 @@ const formValidation = (showValidationErrors, validationErrors = []) => ({
 
 export default class TaxCompositionEntity extends React.Component {
   set = (key, value) => this.props.onChange({ ...new Tax({ ...this.props.entity }).get(), [key]: value });
-  setType = e => this.set('type', e.target.value);
+  setType = type => this.set('type', type);
   setPercentage = percentage => this.set('percentage', percentage);
   render = () => {
     const tax = new Tax({ ...this.props.entity });
@@ -30,11 +30,17 @@ export default class TaxCompositionEntity extends React.Component {
           hasFeedback
           { ...formValidation(this.props.showValidationErrors, validationErrors.type) }
           children={
-            <Input
+            <Select
+              showSearch
+              allowClear
+              filterOption
               placeholder={'Eg: VAT'}
-              value={type}
+              optionFilterProp='children'
+              value={type || undefined}
               onChange={this.setType}
-            />
+            >
+              {this.props.taxes.map(taxType => <Select.Option key={taxType} value={taxType} children={taxType}/>)}
+            </Select>
           }
         />
       </Col>

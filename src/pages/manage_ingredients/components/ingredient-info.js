@@ -34,7 +34,7 @@ export default class IngredientInfo extends React.Component {
   setQuantity = quantity => this.set('quantity', quantity);
   setUnit = unit => this.set('unit', unit);
   setExpiryDate = expiryDate => this.set('expiryDate', expiryDate.valueOf());
-  setLocation = e => this.set('location', e.target.value);
+  setLocation = location => this.set('location', location);
   setThresholdQuantity = thresholdQuantity => this.set('thresholdQuantity', thresholdQuantity);
   setThresholdUnit = thresholdUnit => this.set('thresholdUnit', thresholdUnit);
   setCost = cost => this.set('cost', cost);
@@ -110,11 +110,17 @@ export default class IngredientInfo extends React.Component {
         { ...formItemLayout }
         label={'Location'}
         children={
-          <Input
+          <Select
+            showSearch
+            allowClear
+            filterOption
             placeholder={'Eg: Freezer'}
-            value={ingredientData.location}
+            optionFilterProp='children'
+            value={ingredientData.location || undefined}
             onChange={this.setLocation}
-          />
+          >
+            {this.props.locations.map(location => <Select.Option key={location} value={location} children={location}/>)}
+          </Select>
         }
       />
       <Form.Item

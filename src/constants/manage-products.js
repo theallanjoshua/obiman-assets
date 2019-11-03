@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Popconfirm, Button, Tag } from 'antd';
 import { DEFAULT_TABLE_FEATURES } from './app';
 import Timestamp from '../components/timestamp';
+import S3ToImage from '../components/s3-to-image';
 
 export const MANAGE_PRODUCTS_PAGE_TITLE = count => `All products (${count})`;
 export const PRODUCT_DELETED_SUCCESSFULLY_MESSAGE = label => `${label} deleted successfully`;
@@ -16,8 +17,31 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Product',
     dataIndex: 'label',
+    render: (text, product) => <div>
+      <S3ToImage s3Key={product.image} />
+      <div className='vertical-center-align space-between'>
+        {product.label}
+        <div className='right-align'>
+          <Button
+            type='link'
+            icon='edit'
+            onClick={() => product.onEdit(product)}
+          />
+          <Popconfirm
+            title={`Are you sure you want to delete ${product.label} from products?`}
+            okText={'Delete'}
+            onConfirm={() => product.onDelete(product)}
+          >
+            <Button
+              type='link'
+              icon='delete'
+            />
+          </Popconfirm>
+        </div>
+      </div>
+    </div>,
     fixed: 'left',
-    width: 100,
+    width: 200,
     ...DEFAULT_TABLE_FEATURES(({ label }) => label, ({ label }) => label, 'Search products')
   },
   {
@@ -63,29 +87,5 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
     dataIndex: 'updatedDate',
     render: (text, { updatedDate }) => updatedDate ? <Timestamp value={updatedDate} /> : '-',
     ...DEFAULT_TABLE_FEATURES(({ updatedDate }) => updatedDate, ({ updatedDate }) => moment(updatedDate).fromNow(), 'Search last edited on')
-  },
-  {
-    title: 'Actions',
-    dataIndex: 'actions',
-    render: (text, product) => <React.Fragment>
-      <Button
-        type='link'
-        icon='edit'
-        children='Edit'
-        onClick={() => product.onEdit(product)}
-      />
-      <br />
-      <Popconfirm
-        title={`Are you sure you want to delete ${product.label} from products?`}
-        okText={'Delete'}
-        onConfirm={() => product.onDelete(product)}
-      >
-        <Button
-          type='link'
-          icon='delete'
-          children='Delete'
-        />
-      </Popconfirm>
-    </React.Fragment>
   }
 ];

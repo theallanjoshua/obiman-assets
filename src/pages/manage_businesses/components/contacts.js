@@ -2,17 +2,7 @@ import * as React from 'react';
 import Contact from './contact';
 import { Row, Col, Button } from 'antd';
 
-export default class contacts extends React.Component {
-  componentDidMount() {
-    if(!this.props.contacts.length) {
-      this.addContact();
-    }
-  }
-  componentDidUpdate() {
-    if(!this.props.contacts.length) {
-      this.addContact();
-    }
-  }
+export default class Contacts extends React.Component {
   onChange = (incomingContact, incomingIndex) => {
     const contacts = this.props.contacts.map((contact, index) => index === incomingIndex ? { ...incomingContact } : { ...contact })
     this.props.onChange(contacts);

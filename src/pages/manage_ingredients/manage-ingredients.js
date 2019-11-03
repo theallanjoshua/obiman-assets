@@ -103,6 +103,7 @@ class ManageIngredientsComponent extends React.Component {
     />
     <AddIngredient
       currency={this.props.currency}
+      locations={this.props.locations}
       businessId={this.props.businessId}
       visible={this.state.showAddModal}
       hideModal={this.hideModal}
@@ -110,6 +111,7 @@ class ManageIngredientsComponent extends React.Component {
     />
     <EditIngredient
       currency={this.props.currency}
+      locations={this.props.locations}
       businessId={this.props.businessId}
       visible={this.state.showEditModal}
       ingredientToUpdate={this.state.ingredientToUpdate}
@@ -118,6 +120,7 @@ class ManageIngredientsComponent extends React.Component {
     />
     <BulkEditIngredients
       currency={this.props.currency}
+      locations={this.props.locations}
       businessId={this.props.businessId}
       visible={this.state.showBulkEditModal}
       ingredients={this.state.ingredients.filter(ingredient => this.state.selectedIngredientsKeys.includes(ingredient.id))}
@@ -133,6 +136,7 @@ export default class ManageIngredients extends React.Component {
     {({ currentBusiness }) => <ManageIngredientsComponent
       businessId={currentBusiness.id}
       currency={currentBusiness.currency}
+      locations={currentBusiness.metadata.ingredientLocations || []}
     />}
   </Consumer>
 }

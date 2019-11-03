@@ -34,9 +34,9 @@ export default class S3ToImage extends React.Component {
     children={(this.props.alt || '').substr(0,1).toUpperCase()}
     size='small'
     src={this.state.src}
-  /> : <img
+  /> : this.state.src ? <img
     src={this.state.src}
     alt={this.props.alt}
     style={{ maxWidth: '100%' }}
-  />
+  /> :  null;
 }

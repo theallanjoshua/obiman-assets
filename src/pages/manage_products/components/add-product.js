@@ -76,6 +76,8 @@ export default class AddProduct extends React.Component {
     <br />
     <ProductInfo
       currency={this.props.currency}
+      classifications={this.props.classifications}
+      taxes={this.props.taxes}
       ingredients={this.props.ingredients}
       product={this.state.productToCreate}
       showValidationErrors={this.state.showValidationErrors}

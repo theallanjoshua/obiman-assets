@@ -87,6 +87,7 @@ class ManageBillingComponent extends React.Component {
     />
     <AddBill
       currency={this.props.currency}
+      sources={this.props.sources}
       visible={this.state.showAddModal}
       hideModal={this.hideModal}
       businessId={this.props.businessId}
@@ -96,6 +97,7 @@ class ManageBillingComponent extends React.Component {
     />
     <EditBill
       currency={this.props.currency}
+      sources={this.props.sources}
       visible={this.state.showEditModal}
       hideModal={this.hideModal}
       businessId={this.props.businessId}
@@ -118,6 +120,7 @@ export default class ManageBilling extends React.Component {
     {({ currentBusiness }) => <ManageBillingComponent
       businessId={currentBusiness.id}
       currency={currentBusiness.currency}
+      sources={currentBusiness.metadata.sources}
     />}
   </Consumer>
 }

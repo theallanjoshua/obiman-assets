@@ -99,6 +99,7 @@ export default class AddBill extends React.Component {
     <Spin spinning={this.state.loading}>
       <BillInfo
         currency={this.props.currency}
+        sources={this.props.sources}
         ingredients={this.state.ingredients}
         products={this.state.products}
         bill={this.state.billToCreate}

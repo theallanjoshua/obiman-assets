@@ -91,6 +91,8 @@ class ManageProductsComponent extends React.Component {
     />
     <AddProduct
       currency={this.props.currency}
+      classifications={this.props.classifications}
+      taxes={this.props.taxes}
       businessId={this.props.businessId}
       ingredients={this.state.ingredients}
       visible={this.state.showAddModal}
@@ -99,6 +101,8 @@ class ManageProductsComponent extends React.Component {
     />
     <EditProduct
       currency={this.props.currency}
+      classifications={this.props.classifications}
+      taxes={this.props.taxes}
       businessId={this.props.businessId}
       ingredients={this.state.ingredients}
       visible={this.state.showEditModal}
@@ -115,6 +119,8 @@ export default class ManageProducts extends React.Component {
     {({ currentBusiness }) => <ManageProductsComponent
       businessId={currentBusiness.id}
       currency={currentBusiness.currency}
+      classifications={currentBusiness.metadata.productClassifications || []}
+      taxes={currentBusiness.metadata.taxes || []}
     />}
   </Consumer>
 }

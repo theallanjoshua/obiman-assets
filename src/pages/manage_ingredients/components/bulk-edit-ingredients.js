@@ -94,6 +94,7 @@ export default class BulkEditIngredients extends React.Component {
       <IngredientInfo
         key={ingredient.id}
         currency={this.props.currency}
+        locations={this.props.locations}
         ingredient={ingredient}
         showValidationErrors={this.state.showValidationErrors}
         onChange={this.onChange}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Modal, Alert } from 'antd';
+import { Modal, Alert, Typography } from 'antd';
 import IngredientInfo from './ingredient-info';
 import { Ingredient } from 'obiman-data-models';
 import Network from '../../../utils/network';
@@ -9,6 +9,9 @@ import {
   EDIT_MODAL_HEADER
 } from '../../../constants/manage-ingredients';
 import { SAVE_BUTTON_TEXT } from '../../../constants/app';
+import AuditTrail from '../../../components/audit-trail';
+
+const { Text } = Typography;
 
 const INITIAL_STATE = {
   loading: false,
@@ -61,7 +64,26 @@ export default class EditIngredient extends React.Component {
   render = () => <Modal
     destroyOnClose
     maskClosable={false}
-    title={EDIT_MODAL_HEADER}
+    title={<div>
+      {EDIT_MODAL_HEADER}
+      <br />
+      <Text type='secondary' style={{ fontSize: 'x-small' }}>
+        <AuditTrail
+          prefixText={'Created'}
+          date={this.state.ingredientToUpdate.createdDate}
+          user={this.state.ingredientToUpdate.createdBy}
+        />
+      </Text>
+      {this.state.ingredientToUpdate.updatedBy && this.state.ingredientToUpdate.updatedDate ?
+        <Text type='secondary' style={{ fontSize: 'x-small' }}>
+          <AuditTrail
+            prefixText={'Last edited'}
+            date={this.state.ingredientToUpdate.updatedDate}
+            user={this.state.ingredientToUpdate.updatedBy}
+          />
+        </Text>
+      : null}
+    </div>}
     okText={SAVE_BUTTON_TEXT}
     style={{ maxWidth: '90vw' }}
     width={'720px'}
@@ -82,6 +104,7 @@ export default class EditIngredient extends React.Component {
     <br />
     <IngredientInfo
       currency={this.props.currency}
+      locations={this.props.locations}
       ingredient={this.state.ingredientToUpdate}
       showValidationErrors={this.state.showValidationErrors}
       onChange={this.onChange}

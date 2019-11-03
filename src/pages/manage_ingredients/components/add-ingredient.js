@@ -80,6 +80,7 @@ export default class AddIngredient extends React.Component {
     <br />
     <IngredientInfo
       currency={this.props.currency}
+      locations={this.props.locations}
       ingredient={this.state.ingredientToCreate}
       showValidationErrors={this.state.showValidationErrors}
       onChange={this.onChange}

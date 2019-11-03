@@ -4,16 +4,6 @@ import { Row, Col, Button } from 'antd';
 import { Tax } from 'obiman-data-models';
 
 export default class TaxComposition extends React.Component {
-  componentDidMount() {
-    if(!this.props.tax.length) {
-      this.addEntity();
-    }
-  }
-  componentDidUpdate() {
-    if(!this.props.tax.length) {
-      this.addEntity();
-    }
-  }
   onChange = (incomingEntity, incomingIndex) => {
     const tax = this.props.tax.map((entity, index) => index === incomingIndex ? { ...incomingEntity } : { ...entity })
     this.props.onChange(tax);
@@ -32,17 +22,18 @@ export default class TaxComposition extends React.Component {
     {this.props.tax.map((entity, index) => <Row key={index} gutter={8}>
       <Col span={22}>
         <TaxCompositionEntity
+          taxes={this.props.taxes}
           showValidationErrors={this.props.showValidationErrors}
           entity={entity}
           onChange={entity => this.onChange(entity, index)}
         />
       </Col>
       <Col span={2}>
-        {this.props.tax.length > 1 ? <Button
+        <Button
           icon='delete'
           type='danger'
           onClick={() => this.removeEntity(index)}
-        /> : null }
+        />
       </Col>
     </Row>)}
     <Button

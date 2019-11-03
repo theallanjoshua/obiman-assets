@@ -4,6 +4,7 @@ import { Popconfirm, Button } from 'antd';
 import { DEFAULT_TABLE_FEATURES } from './app';
 import Timestamp from '../components/timestamp';
 import moment from 'moment';
+import S3ToImage from '../components/s3-to-image';
 
 export const MANAGE_INGREDIENTS_PAGE_TITLE = count => `All ingredients (${count})`;
 export const INGREDIENT_DELETED_SUCCESSFULLY_MESSAGE = label => `${label} deleted successfully`;
@@ -16,8 +17,31 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Ingredient',
     dataIndex: 'label',
+    render: (text, ingredient) => <div>
+      <S3ToImage s3Key={ingredient.image} />
+      <div className='vertical-center-align space-between'>
+        {ingredient.label}
+        <div className='right-align'>
+          <Button
+            type='link'
+            icon='edit'
+            onClick={() => ingredient.onEdit(ingredient)}
+          />
+          <Popconfirm
+            title={`Are you sure you want to delete ${ingredient.label} from ingredients?`}
+            okText={'Delete'}
+            onConfirm={() => ingredient.onDelete(ingredient)}
+          >
+            <Button
+              type='link'
+              icon='delete'
+            />
+          </Popconfirm>
+        </div>
+      </div>
+    </div>,
     fixed: 'left',
-    width: 100,
+    width: 200,
     ...DEFAULT_TABLE_FEATURES(({ label }) => label, ({ label }) => label, 'Search ingredients')
   },
   {
@@ -68,29 +92,5 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
     dataIndex: 'updatedDate',
     render: (text, { updatedDate }) => updatedDate ? <Timestamp value={updatedDate} /> : '-',
     ...DEFAULT_TABLE_FEATURES(({ updatedDate }) => updatedDate, ({ updatedDate }) => moment(updatedDate).fromNow(), 'Search last edited on')
-  },
-  {
-    title: 'Actions',
-    dataIndex: 'actions',
-    render: (text, ingredient) => <React.Fragment>
-      <Button
-        type='link'
-        icon='edit'
-        children='Edit'
-        onClick={() => ingredient.onEdit(ingredient)}
-      />
-      <br />
-      <Popconfirm
-        title={`Are you sure you want to delete ${ingredient.label} from ingredients?`}
-        okText={'Delete'}
-        onConfirm={() => ingredient.onDelete(ingredient)}
-      >
-        <Button
-          type='link'
-          icon='delete'
-          children='Delete'
-        />
-      </Popconfirm>
-    </React.Fragment>
   }
 ];

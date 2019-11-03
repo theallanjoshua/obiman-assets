@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Modal, Alert } from 'antd';
+import { Modal, Alert, Typography } from 'antd';
 import ProductInfo from './product-info';
 import { Product } from 'obiman-data-models';
 import Network from '../../../utils/network';
@@ -9,6 +9,9 @@ import {
   EDIT_MODAL_HEADER
 } from '../../../constants/manage-products';
 import { SAVE_BUTTON_TEXT } from '../../../constants/app';
+import AuditTrail from '../../../components/audit-trail';
+
+const { Text } = Typography;
 
 const INITIAL_STATE = {
   loading: false,
@@ -57,7 +60,26 @@ export default class EditProduct extends React.Component {
   render = () => <Modal
     destroyOnClose
     maskClosable={false}
-    title={EDIT_MODAL_HEADER}
+    title={<div>
+      {EDIT_MODAL_HEADER}
+      <br />
+      <Text type='secondary' style={{ fontSize: 'x-small' }}>
+        <AuditTrail
+          prefixText={'Created'}
+          date={this.state.productToUpdate.createdDate}
+          user={this.state.productToUpdate.createdBy}
+        />
+      </Text>
+      {this.state.productToUpdate.updatedBy && this.state.productToUpdate.updatedDate ?
+        <Text type='secondary' style={{ fontSize: 'x-small' }}>
+          <AuditTrail
+            prefixText={'Last edited'}
+            date={this.state.productToUpdate.updatedDate}
+            user={this.state.productToUpdate.updatedBy}
+          />
+        </Text>
+      : null}
+    </div>}
     okText={SAVE_BUTTON_TEXT}
     style={{ maxWidth: '90vw' }}
     width={'720px'}
@@ -78,6 +100,8 @@ export default class EditProduct extends React.Component {
     <br />
     <ProductInfo
       currency={this.props.currency}
+      classifications={this.props.classifications}
+      taxes={this.props.taxes}
       ingredients={this.props.ingredients}
       product={this.state.productToUpdate}
       showValidationErrors={this.state.showValidationErrors}
