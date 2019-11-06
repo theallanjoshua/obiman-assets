@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { Bar } from 'react-chartjs-2';
-import rca from 'rainbow-colors-array';
+import { HorizontalBar } from 'react-chartjs-2';
 import { Utils } from 'obiman-data-models';
 
 export default class BarChart extends React.Component {
-  render = () => <Bar
+  render = () => <HorizontalBar
+    height={300}
     data={{
       labels: this.props.labels,
       datasets: [{
         data: this.props.data,
-        borderColor: rca(this.props.labels.length, 'hex').map(({ hex }) => `#${hex}`),
-        backgroundColor: rca(this.props.data.length, 'rgb', true).map(({ r, g, b }) => `rgb(${r}, ${g}, ${b}, 0.5)`),
+        borderColor: '#4a765f',
+        backgroundColor: 'rgb(149, 236, 190, 0.5)',
         borderWidth: 1,
-        hoverBackgroundColor: rca(this.props.data.length, 'rgb', true).map(({ r, g, b }) => `rgb(${r}, ${g}, ${b}, 0.7)`)
+        hoverBackgroundColor: 'rgb(149, 236, 190, 0.7)'
       }]
     }}
     options={{
@@ -25,12 +25,22 @@ export default class BarChart extends React.Component {
         display: false
       },
       scales: {
-        yAxes: [{
+        xAxes: [{
           ticks: {
             min: 0,
             callback: value => this.props.currency ? `${new Utils().getCurrencySymbol(this.props.currency)}${value}` : value
           }
         }]
+      },
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem, data) => {
+            const { datasets } = data;
+            const { index } = tooltipItem;
+            const value = datasets[0].data[index];
+            return this.props.currency ? `${new Utils().getCurrencySymbol(this.props.currency)}${value}` : value;
+          }
+        }
       }
     }}
   />

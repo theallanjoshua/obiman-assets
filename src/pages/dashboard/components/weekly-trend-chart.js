@@ -12,6 +12,7 @@ export default class WeeklyTrendChart extends React.Component {
     const lineAreaColors = this.props.data.length > defaultLineAreaColors.length ? rca(this.props.data.length, 'rgb', true).map(({ r, g, b }) => `rgb(${r}, ${g}, ${b}, 0.5)`) : defaultLineAreaColors;
     const datasets = this.props.data.map((datum, index) => ({ ...datum, borderColor: lineColors[index], backgroundColor: lineAreaColors[index]}));
     return <Line
+    height={300}
     data={{
       labels: this.props.daysOfWeek,
       datasets
@@ -23,7 +24,7 @@ export default class WeeklyTrendChart extends React.Component {
         fontSize: 18
       },
       legend: {
-        position: 'bottom'
+        position: 'right'
       },
       scales: {
         yAxes: [{

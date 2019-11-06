@@ -2,7 +2,7 @@ import * as React from 'react';
 import Page from '../../components/page';
 import 'chart.piecelabel.js';
 import { Consumer } from '../../context';
-import { Row, Col, Card, Descriptions, Typography } from 'antd';
+import { Row, Col, Card, Descriptions } from 'antd';
 import moment from 'moment';
 import Network from '../../utils/network';
 import { BILLS_API_URL } from '../../constants/endpoints';
@@ -12,8 +12,14 @@ import WeeklyTrendChart from './components/weekly-trend-chart';
 import BarChart from './components/bar-chart';
 import { Utils } from 'obiman-data-models';
 
-const { Title } = Typography;
 const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const tripletsLayout = {
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 24 },
+  lg: { span: 12 },
+  xl: { span: 8 }
+};
 
 class DashboardComponent extends React.Component {
   constructor() {
@@ -111,10 +117,10 @@ class DashboardComponent extends React.Component {
         .sort((prv, nxt) => nxt.count - prv.count)
         .filter((item, index) => index < 7);
       const mostSoldProducts = productData
-        .sort((prv, nxt) => nxt.count - prv.count)
+        .sort((prv, nxt) => nxt.sales - prv.sales)
         .filter((item, index) => index < 7)
       const mostProfitableProducts = productData
-        .sort((prv, nxt) => nxt.count - prv.count)
+        .sort((prv, nxt) => nxt.profit - prv.profit)
         .filter((item, index) => index < 7)
       return <Card
         key={dashboard.title}
@@ -124,24 +130,48 @@ class DashboardComponent extends React.Component {
       >
         {bills.length ? <div>
           <Row gutter={8}>
-            <Col span={8}>
+            <Col { ...tripletsLayout }>
               <Descriptions bordered column={1} size='small'>
                 <Descriptions.Item label='Total bills'>{totalCount}</Descriptions.Item>
                 <Descriptions.Item label='Total sales'>{`${new Utils().getCurrencySymbol(this.props.currency)}${totalSalesData}`}</Descriptions.Item>
                 <Descriptions.Item label='Total profit'>{`${new Utils().getCurrencySymbol(this.props.currency)}${totalProfitData}`}</Descriptions.Item>
               </Descriptions>
             </Col>
+            {dashboard.showTrend ? <Col { ...tripletsLayout }>
+              <WeeklyTrendChart
+                title={'Total bill count'}
+                daysOfWeek={daysOfWeek}
+                data={[{
+                  data: totalCountTrendData,
+                  label: 'Count'
+                }]}
+              />
+            </Col> : null}
+            {dashboard.showTrend ? <Col { ...tripletsLayout }>
+              <WeeklyTrendChart
+                title={'Total sales & profit'}
+                currency={this.props.currency}
+                daysOfWeek={daysOfWeek}
+                data={[{
+                  data: totalSalesTrendData,
+                  label: 'Sales'
+                },{
+                  data: totalProfitTrendData,
+                  label: 'Profit'
+                }]}
+              />
+            </Col> : null}
           </Row>
           <br />
           <Row gutter={8}>
-            <Col span={8}>
+            <Col { ...tripletsLayout }>
               <SourcePieChart
                 title={'Bill count'}
                 sources={this.props.sources}
                 data={sourceWiseTotalCount}
               />
             </Col>
-            <Col span={8}>
+            <Col { ...tripletsLayout }>
               <SourcePieChart
                 title={'Sales'}
                 currency={this.props.currency}
@@ -149,7 +179,7 @@ class DashboardComponent extends React.Component {
                 data={sourceWiseSalesData}
               />
             </Col>
-            <Col span={8}>
+            <Col { ...tripletsLayout }>
               <SourcePieChart
                 title={'Profit'}
                 currency={this.props.currency}
@@ -158,11 +188,8 @@ class DashboardComponent extends React.Component {
               />
             </Col>
           </Row>
-          {dashboard.showTrend ? <div>
-            <br />
-            <Title level={4}>Trend</Title>
-            <Row gutter={8}>
-              <Col span={8}>
+          {dashboard.showTrend ? <Row gutter={8}>
+              <Col { ...tripletsLayout }>
                 <WeeklyTrendChart
                   title={'Bill count'}
                   daysOfWeek={daysOfWeek}
@@ -170,7 +197,7 @@ class DashboardComponent extends React.Component {
                   isPastel
                 />
               </Col>
-              <Col span={8}>
+              <Col { ...tripletsLayout }>
                 <WeeklyTrendChart
                   title={'Sales'}
                   currency={this.props.currency}
@@ -179,7 +206,7 @@ class DashboardComponent extends React.Component {
                   isPastel
                 />
               </Col>
-              <Col span={8}>
+              <Col { ...tripletsLayout }>
                 <WeeklyTrendChart
                   title={'Profit'}
                   currency={this.props.currency}
@@ -188,45 +215,17 @@ class DashboardComponent extends React.Component {
                   isPastel
                 />
               </Col>
-            </Row>
-            <br />
-            <Row gutter={8}>
-              <Col span={12}>
-                <WeeklyTrendChart
-                  title={'Total bill count'}
-                  daysOfWeek={daysOfWeek}
-                  data={[{
-                    data: totalCountTrendData,
-                    label: 'Count'
-                  }]}
-                />
-              </Col>
-              <Col span={12}>
-                <WeeklyTrendChart
-                  title={'Total sales & profit'}
-                  currency={this.props.currency}
-                  daysOfWeek={daysOfWeek}
-                  data={[{
-                    data: totalSalesTrendData,
-                    label: 'Sales'
-                  },{
-                    data: totalProfitTrendData,
-                    label: 'Profit'
-                  }]}
-                />
-              </Col>
-            </Row>
-          </div> : null}
+            </Row> : null}
           <br />
           <Row gutter={8}>
-            <Col span={8}>
+            <Col { ...tripletsLayout }>
               <BarChart
                 title={'Top selling products'}
                 labels={mostOrderedProducts.map(({ label }) => label)}
                 data={mostOrderedProducts.map(({ count }) => count)}
               />
             </Col>
-            <Col span={8}>
+            <Col { ...tripletsLayout }>
               <BarChart
                 title={'Top revenue generating products'}
                 currency={this.props.currency}
@@ -234,7 +233,7 @@ class DashboardComponent extends React.Component {
                 data={mostSoldProducts.map(({ sales }) => sales)}
               />
             </Col>
-            <Col span={8}>
+            <Col { ...tripletsLayout }>
               <BarChart
                 title={'Top profitable products'}
                 currency={this.props.currency}
