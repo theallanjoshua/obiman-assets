@@ -29,6 +29,7 @@ export default class ManageBusinesses extends React.Component {
         hideBusinessManagement={hideBusinessManagement}
       />
       <AddBusiness
+        email={email}
         visible={this.state.showAddModal}
         hideModal={this.hideModal}
         fetchUser={fetchUser}

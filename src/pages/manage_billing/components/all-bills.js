@@ -25,7 +25,7 @@ export default class AllBills extends React.Component {
         }}
         title={<div>
           <div className='flex-wrap space-between'>
-            {bill.label}
+            {bill.source}
             <div>
               <Tooltip
                 title={EDIT_BILL_BUTTON_TEXT}

@@ -90,7 +90,7 @@ export default class EditBill extends React.Component {
           user={this.state.billToUpdate.createdBy}
         />
       </Text>
-      {this.state.billToUpdate.updatedBy && this.state.billToUpdate.updatedDate ?
+      {this.state.billToUpdate.updatedDate !== this.state.billToUpdate.createdDate ?
         <Text type='secondary' style={{ fontSize: 'x-small' }}>
           <AuditTrail
             prefixText={'Last edited'}

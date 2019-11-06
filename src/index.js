@@ -13,6 +13,7 @@ import { PAGE_ERROR } from './constants/app';
 import Credentials from './utils/credentials';
 import { TopNavigation, BottomNavigation } from './components/navigation';
 import Home from './pages/home/home';
+import Dashboard from './pages/dashboard/dashboard';
 import NotFound from './pages/not_found/not-found';
 import ManageIngredients from './pages/manage_ingredients/manage-ingredients';
 import ManageProducts from './pages/manage_products/manage-products';
@@ -105,7 +106,7 @@ class App extends React.Component {
               </Header>
               <Content>
                 <Switch>
-                  <Route exact path={HOME} component={Home} />
+                  <Route exact path={HOME} component={Dashboard} />
                   <Route exact path={INGREDIENTS} component={ManageIngredients} />
                   <Route exact path={PRODUCTS} component={ManageProducts} />
                   <Route exact path={BILLING} component={ManageBilling} />

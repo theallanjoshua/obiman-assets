@@ -34,7 +34,6 @@ const formValidation = (showValidationErrors, validationErrors = []) => ({
 
 export default class BillInfo extends React.Component {
   set = (key, value) => this.props.onChange({ ...new Bill({ ...this.props.bill }).get(), [key]: value });
-  setLabel = e => this.set('label', e.target.value);
   setComposition = composition => this.set('composition', composition.map(item => new BillCompositionEntity(item).get()));
   setCustomer = e => this.set('customer', e.target.value);
   setStatus = status => this.set('status', status);
@@ -46,31 +45,6 @@ export default class BillInfo extends React.Component {
       .get();
     const validationErrors = bill.validate();
     return <Form>
-      <Form.Item
-        { ...formItemLayout }
-        label={'Name'}
-        required
-        hasFeedback
-        { ...formValidation(this.props.showValidationErrors, validationErrors.label) }
-        children={
-          <Input
-            placeholder={'Eg: Table 1'}
-            value={billData.label}
-            onChange={this.setLabel}
-          />
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Customer info'}
-        children={
-          <Input
-            placeholder={'Eg: +91-9876543210 or someone@email.com'}
-            value={billData.customer}
-            onChange={this.setCustomer}
-          />
-        }
-      />
       <Form.Item
         { ...formItemLayout }
         label={'Source'}
@@ -89,6 +63,17 @@ export default class BillInfo extends React.Component {
           >
             {this.props.sources.map(source => <Select.Option key={source} value={source} children={source}/>)}
           </Select>
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
+        label={'Customer info'}
+        children={
+          <Input
+            placeholder={'Eg: +91-9876543210 or someone@email.com'}
+            value={billData.customer}
+            onChange={this.setCustomer}
+          />
         }
       />
       <Form.Item

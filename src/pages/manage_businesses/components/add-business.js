@@ -10,6 +10,8 @@ import {
   ADD_BUSINESS_BUTTON_TEXT
 } from '../../../constants/manage-businesses';
 
+const updatePermissionText = new Business().getUpdatePermissionText();
+
 const INITIAL_STATE = {
   loading: false,
   successMessage: '',
@@ -19,17 +21,31 @@ const INITIAL_STATE = {
 }
 
 export default class AddBusiness extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      ...INITIAL_STATE
+      ...INITIAL_STATE,
+      businessToCreate: {
+        employees: [{
+          id: props.email,
+          permissions: [updatePermissionText]
+        }]
+      }
     }
   }
   componentDidUpdate = prevProps => {
     const { visible: prevVisible } = { ...prevProps };
     const { visible } = { ...this.props };
     if (!prevVisible && visible) {
-      this.setState({ ...INITIAL_STATE });
+      this.setState({
+        ...INITIAL_STATE,
+        businessToCreate: {
+          employees: [{
+            id: this.props.email,
+            permissions: [updatePermissionText]
+          }]
+        }
+      });
     }
   }
   onChange = businessToCreate => this.setState({ businessToCreate });

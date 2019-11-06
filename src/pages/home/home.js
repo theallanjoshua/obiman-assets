@@ -8,11 +8,13 @@ import {
   BILLING
 } from '../../constants/pages';
 import rf from 'random-facts';
+import { Pie } from 'react-chartjs-2';
+import { Consumer } from '../../context';
+import rca from 'rainbow-colors-array';
 
 const { Text } = Typography;
 
-export default class Home extends React.Component {
-  componentDidMount = () => document.title = 'Home - Obiman';
+class HomeComponent extends React.Component {
   render = () => <Page>
     <Result
       icon={<Icon type='smile' theme='twoTone' twoToneColor='#52c41a' />}
@@ -45,6 +47,20 @@ export default class Home extends React.Component {
           </Timeline>
         </div>
         <Text type='secondary'>It's that simple!</Text>
+        <Pie
+          data={{
+            labels: this.props.sources,
+            datasets: [{
+              data: this.props.sources.map(source => source.length),
+              backgroundColor: rca(this.props.sources.length, 'hex', true).map(({ hex}) => `#${hex}`)
+            }]
+          }}
+          options={{
+            legend: {
+              position: 'bottom'
+            }
+          }}
+        />
       </div>}
     />
     <Result
@@ -53,4 +69,14 @@ export default class Home extends React.Component {
       subTitle={rf.randomFact()}
     />
   </Page>
+}
+
+export default class Home extends React.Component {
+  componentDidMount = () => document.title = 'Home - Obiman';
+  render = () => <Consumer>
+    {({ currentBusiness }) => <HomeComponent
+      currency={currentBusiness.currency}
+      sources={currentBusiness.metadata.sources || []}
+    />}
+  </Consumer>
 }

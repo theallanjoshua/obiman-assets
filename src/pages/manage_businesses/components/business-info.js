@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Form, Input, Select, Collapse } from 'antd';
 import { Business, Utils } from 'obiman-data-models';
-import { Consumer } from '../../../context';
 import Employees from './employees';
 import ImageUploader from '../../../components/image-uploader';
 import Contacts from './contacts';
@@ -51,8 +50,7 @@ export default class BusinessInfo extends React.Component {
   setTaxes = taxes => this.setMetadata('taxes', taxes);
   setIngredientLocations = ingredientLocations => this.setMetadata('ingredientLocations', ingredientLocations);
   setProductClassifications = productClassifications => this.setMetadata('productClassifications', productClassifications);
-  render = () => <Consumer>
-  {({ email }) => {
+  render = () => {
     const business = new Business({ ...this.props.business });
     const businessData = business.get();
     const validationErrors = business.validate();
@@ -138,7 +136,6 @@ export default class BusinessInfo extends React.Component {
             children={
               <Employees
                 showValidationErrors={this.props.showValidationErrors}
-                currentUser={email}
                 employees={businessData.employees}
                 onChange={this.setEmployees}
               />
@@ -203,6 +200,5 @@ export default class BusinessInfo extends React.Component {
         </Panel>
       </Collapse>
     </Form>
-  }}
-  </Consumer>;
+  };
 }

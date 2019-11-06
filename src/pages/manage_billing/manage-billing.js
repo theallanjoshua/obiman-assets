@@ -52,7 +52,7 @@ class ManageBillingComponent extends React.Component {
       const enrichedProducts = getEnrichedProducts(products, ingredients);
       const response = await Network.get(BILLS_API_URL(businessId, 'status=Open'));
       const bills = response.bills
-        .sort((prevBill, nextBill) => prevBill.label.localeCompare(nextBill.label));
+        .sort((prevBill, nextBill) => prevBill.source.localeCompare(nextBill.source));
       this.setState({ bills, ingredients, products: enrichedProducts });
     } catch (errorMessage) {
       this.setState({ errorMessage });
@@ -120,7 +120,7 @@ export default class ManageBilling extends React.Component {
     {({ currentBusiness }) => <ManageBillingComponent
       businessId={currentBusiness.id}
       currency={currentBusiness.currency}
-      sources={currentBusiness.metadata.sources}
+      sources={currentBusiness.metadata.sources || []}
     />}
   </Consumer>
 }

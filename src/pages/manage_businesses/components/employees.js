@@ -1,21 +1,8 @@
 import * as React from 'react';
 import Employee from './employee';
-import { Business } from 'obiman-data-models';
 import { Row, Col, Button } from 'antd';
 
-const updatePermissionText = new Business().getUpdatePermissionText();
-
 export default class Employees extends React.Component {
-  componentDidMount() {
-    if(!this.props.employees.length) {
-      this.addEmployee(this.props.currentUser, [updatePermissionText]);
-    }
-  }
-  componentDidUpdate() {
-    if(!this.props.employees.length) {
-      this.addEmployee(this.props.currentUser, [updatePermissionText]);
-    }
-  }
   onChange = (incomingEmployee, incomingIndex) => {
     const employees = this.props.employees.map((employee, index) => index === incomingIndex ? { ...incomingEmployee } : { ...employee })
     this.props.onChange(employees);
