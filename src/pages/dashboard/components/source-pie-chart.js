@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Pie } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 import rca from 'rainbow-colors-array';
 import { Utils } from 'obiman-data-models';
 
 export default class SourcePieChart extends React.Component {
-  render = () => <Pie
+  render = () => <Doughnut
     height={300}
     data={{
       labels: this.props.sources,
