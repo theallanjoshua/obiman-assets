@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { HorizontalBar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import { Utils } from 'obiman-data-models';
 
 export default class BarChart extends React.Component {
-  render = () => <HorizontalBar
+  render = () => <Bar
     height={300}
     data={{
       labels: this.props.labels,
@@ -25,7 +25,7 @@ export default class BarChart extends React.Component {
         display: false
       },
       scales: {
-        xAxes: [{
+        yAxes: [{
           ticks: {
             min: 0,
             callback: value => this.props.currency ? `${new Utils().getCurrencySymbol(this.props.currency)}${value}` : value

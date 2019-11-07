@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Page from '../../components/page';
-import 'chart.piecelabel.js';
 import { Consumer } from '../../context';
 import { Row, Col, Card, Descriptions } from 'antd';
 import moment from 'moment';
@@ -139,7 +138,7 @@ class DashboardComponent extends React.Component {
             </Col>
             {dashboard.showTrend ? <Col { ...tripletsLayout }>
               <WeeklyTrendChart
-                title={'Total bill count'}
+                title={'Total count'}
                 daysOfWeek={daysOfWeek}
                 data={[{
                   data: totalCountTrendData,
@@ -166,7 +165,7 @@ class DashboardComponent extends React.Component {
           <Row gutter={8}>
             <Col { ...tripletsLayout }>
               <SourcePieChart
-                title={'Bill count'}
+                title={'Count'}
                 sources={this.props.sources}
                 data={sourceWiseTotalCount}
               />
@@ -191,7 +190,7 @@ class DashboardComponent extends React.Component {
           {dashboard.showTrend ? <Row gutter={8}>
               <Col { ...tripletsLayout }>
                 <WeeklyTrendChart
-                  title={'Bill count'}
+                  title={'Count'}
                   daysOfWeek={daysOfWeek}
                   data={sourceWiseTotalCountTrendData}
                   isPastel

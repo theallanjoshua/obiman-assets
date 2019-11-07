@@ -23,7 +23,6 @@
     "antd": "^3.24.3",
     "browser-image-compression": "^1.0.6",
     "chart.js": "^2.9.2",
-    "chart.piecelabel.js": "^0.15.0",
     "material-color-hash": "^0.1.6",
     "moment": "^2.24.0",
     "obiman-data-models": "^1.0.76",

@@ -33,6 +33,16 @@ export default class WeeklyTrendChart extends React.Component {
               callback: value => this.props.currency ? `${new Utils().getCurrencySymbol(this.props.currency)}${value}` : value
             }
         }]
+      },
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem, data) => {
+            const { datasets } = data;
+            const { value, datasetIndex } = tooltipItem;
+            const label = datasets[datasetIndex].label
+            return `${label}: ${this.props.currency ? `${new Utils().getCurrencySymbol(this.props.currency)}${value}` : value}`
+          }
+        }
       }
     }}
   />
