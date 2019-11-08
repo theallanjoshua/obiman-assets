@@ -29,16 +29,17 @@ export default class Dashboard extends React.Component {
   componentDidMount = () => {
     const { businessId } = this.props;
     if(businessId) {
-      this.fetchBills(businessId)
+      this.fetchBills()
     }
   };
   componentDidUpdate = prevProps => {
     const { businessId } = this.props;
     if(prevProps.businessId !== businessId && businessId) {
-      this.fetchBills(businessId)
+      this.fetchBills()
     }
   };
-  fetchBills = async businessId => {
+  fetchBills = async () => {
+    const { businessId } = this.props;
     this.setState({ loading: true, errorMessage: '' });
     try {
       const { bills } = await Network.get(BILLS_API_URL(businessId, `status=Closed&${this.props.query}`));
