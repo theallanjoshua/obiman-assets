@@ -35,16 +35,17 @@ class ManageBillingComponent extends React.Component {
   componentDidMount = () => {
     const { businessId } = this.props;
     if(businessId) {
-      this.fetchAllBills(businessId)
+      this.fetchAllBills()
     }
   };
   componentDidUpdate = prevProps => {
     const { businessId } = this.props;
     if(prevProps.businessId !== businessId && businessId) {
-      this.fetchAllBills(businessId)
+      this.fetchAllBills()
     }
   };
-  fetchAllBills = async businessId => {
+  fetchAllBills = async () => {
+    const { businessId } = this.props;
     this.setState({ loading: true, errorMessage: '' });
     try {
       const ingredients = await fetchAllIngredients(businessId);
@@ -66,13 +67,19 @@ class ManageBillingComponent extends React.Component {
   render = () => <Page>
     <PageHeader
       title={MANAGE_BILLS_PAGE_TITLE(this.state.bills.length)}
-      extra={<Button
-        style={{ marginRight: '4px' }}
-        type='primary'
-        icon='plus'
-        onClick={this.showAddModal}
-        children={ADD_BILL_TEXT}
-      />}
+      extra={<React.Fragment>
+        <Button
+          style={{ marginRight: '4px' }}
+          type='primary'
+          icon='plus'
+          onClick={this.showAddModal}
+          children={ADD_BILL_TEXT}
+        />
+        <Button
+          icon='reload'
+          onClick={this.fetchAllBills}
+        />
+      </React.Fragment>}
     />
     <br />
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}

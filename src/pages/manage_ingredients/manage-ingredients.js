@@ -33,16 +33,17 @@ class ManageIngredientsComponent extends React.Component {
   componentDidMount = () => {
     const { businessId } = this.props;
     if(businessId) {
-      this.fetchAllIngredients(businessId)
+      this.fetchAllIngredients()
     }
   };
   componentDidUpdate = prevProps => {
     const { businessId } = this.props;
     if(prevProps.businessId !== businessId && businessId) {
-      this.fetchAllIngredients(businessId)
+      this.fetchAllIngredients()
     }
   };
-  fetchAllIngredients = async businessId => {
+  fetchAllIngredients = async () => {
+    const { businessId } = this.props;
     this.setState({ loading: true, errorMessage: '' });
     try {
       const ingredients = await fetchAllIngredients(businessId);
@@ -81,10 +82,15 @@ class ManageIngredientsComponent extends React.Component {
           children={ADD_INGREDIENT_BUTTON_TEXT}
         />
         <Button
+          style={{ marginRight: '4px' }}
           icon='edit'
           disabled={this.state.selectedIngredientsKeys.length < 2}
           onClick={this.showBulkEditModal}
           children={'Bulk edit'}
+        />
+        <Button
+          icon='reload'
+          onClick={this.fetchAllIngredients}
         />
       </React.Fragment>}
     />
