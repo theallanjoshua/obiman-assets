@@ -15,6 +15,7 @@ import EditBill from './components/edit-bill';
 import { fetchAllIngredients } from '../../utils/ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
 import PrintBill from './components/print-bill';
+import SearchBills from './components/search-bills';
 
 class ManageBillingComponent extends React.Component {
   constructor() {
@@ -29,7 +30,8 @@ class ManageBillingComponent extends React.Component {
       showEditModal: false,
       showPrintModal: false,
       billToUpdate: {},
-      billToPrint: {}
+      billToPrint: {},
+      query: 'status=Open'
     }
   }
   componentDidMount = () => {
@@ -51,9 +53,7 @@ class ManageBillingComponent extends React.Component {
       const ingredients = await fetchAllIngredients(businessId);
       const products = await fetchAllProducts(businessId);
       const enrichedProducts = getEnrichedProducts(products, ingredients);
-      const response = await Network.get(BILLS_API_URL(businessId, 'status=Open'));
-      const bills = response.bills
-        .sort((prevBill, nextBill) => prevBill.source.localeCompare(nextBill.source));
+      const { bills } = await Network.get(BILLS_API_URL(businessId, this.state.query));
       this.setState({ bills, ingredients, products: enrichedProducts });
     } catch (errorMessage) {
       this.setState({ errorMessage });
@@ -64,26 +64,29 @@ class ManageBillingComponent extends React.Component {
   showEditModal = billToUpdate => this.setState({ billToUpdate, showEditModal: true });
   showPrintModal = billToPrint => this.setState({ billToPrint, showPrintModal: true });
   hideModal = () => this.setState({ showAddModal: false, showEditModal: false, showPrintModal: false });
+  onSearchChange = async query => {
+    await this.setState({ query });
+    this.fetchAllBills();
+  };
   render = () => <Page>
     <PageHeader
       title={MANAGE_BILLS_PAGE_TITLE(this.state.bills.length)}
-      extra={<React.Fragment>
-        <Button
-          style={{ marginRight: '4px' }}
-          type='primary'
-          icon='plus'
-          onClick={this.showAddModal}
-          children={ADD_BILL_TEXT}
-        />
-        <Button
-          icon='reload'
-          onClick={this.fetchAllBills}
-        />
-      </React.Fragment>}
+      extra={<Button
+        type='primary'
+        icon='plus'
+        onClick={this.showAddModal}
+        children={ADD_BILL_TEXT}
+      />}
     />
     <br />
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
+    <br />
+    <SearchBills
+      sources={this.props.sources}
+      onChange={this.onSearchChange}
+    />
+    <br />
     <br />
     <AllBills
       currency={this.props.currency}

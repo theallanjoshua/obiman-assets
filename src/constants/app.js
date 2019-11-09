@@ -7,6 +7,7 @@ export const PAGE_ERROR = 'Oops! Something went wrong! Try refreshing the page. 
 export const ADD_BUTTON_TEXT = 'Add';
 export const SAVE_BUTTON_TEXT = 'Save';
 export const DATE_TIME_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
+export const DATE_FORMAT = 'MMMM Do YYYY';
 export const OBIMAN_LOGO = <h1
   className='center-align'
   style={{
