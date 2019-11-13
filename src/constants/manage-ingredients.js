@@ -71,26 +71,26 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
     render: (text, { cost, currency, unit }) => cost ? `${new Utils().getCurrencySymbol(currency)}${cost.toLocaleString()}/${unit}` : '-',
     ...DEFAULT_TABLE_FEATURES(({ cost }) => cost, ({ cost, currency, unit }) => cost ? `${new Utils().getCurrencySymbol(currency)}${cost.toLocaleString()}/${unit}` : '-', 'Search cost price')
   },
-  {
-    title: 'Created by',
-    dataIndex: 'createdBy',
-    ...DEFAULT_TABLE_FEATURES(({ createdBy }) => createdBy, ({ createdBy }) => createdBy, 'Search created by')
-  },
-  {
-    title: 'Created on',
-    dataIndex: 'createdDate',
-    render: (text, { createdDate }) => <Timestamp value={createdDate} />,
-    ...DEFAULT_TABLE_FEATURES(({ createdDate }) => createdDate, ({ createdDate }) => moment(createdDate).fromNow(), 'Search created on')
-  },
-  {
-    title: 'Last edited by',
-    dataIndex: 'updatedBy',
-    ...DEFAULT_TABLE_FEATURES(({ updatedBy }) => updatedBy, ({ updatedBy }) => updatedBy, 'Search created by')
-  },
-  {
-    title: 'Last edited on',
-    dataIndex: 'updatedDate',
-    render: (text, { updatedDate }) => updatedDate ? <Timestamp value={updatedDate} /> : '-',
-    ...DEFAULT_TABLE_FEATURES(({ updatedDate }) => updatedDate, ({ updatedDate }) => moment(updatedDate).fromNow(), 'Search last edited on')
-  }
+  // {
+  //   title: 'Created by',
+  //   dataIndex: 'createdBy',
+  //   ...DEFAULT_TABLE_FEATURES(({ createdBy }) => createdBy, ({ createdBy }) => createdBy, 'Search created by')
+  // },
+  // {
+  //   title: 'Created on',
+  //   dataIndex: 'createdDate',
+  //   render: (text, { createdDate }) => <Timestamp value={createdDate} />,
+  //   ...DEFAULT_TABLE_FEATURES(({ createdDate }) => createdDate, ({ createdDate }) => moment(createdDate).fromNow(), 'Search created on')
+  // },
+  // {
+  //   title: 'Last edited by',
+  //   dataIndex: 'updatedBy',
+  //   ...DEFAULT_TABLE_FEATURES(({ updatedBy }) => updatedBy, ({ updatedBy }) => updatedBy, 'Search created by')
+  // },
+  // {
+  //   title: 'Last edited on',
+  //   dataIndex: 'updatedDate',
+  //   render: (text, { updatedDate }) => updatedDate ? <Timestamp value={updatedDate} /> : '-',
+  //   ...DEFAULT_TABLE_FEATURES(({ updatedDate }) => updatedDate, ({ updatedDate }) => moment(updatedDate).fromNow(), 'Search last edited on')
+  // }
 ];

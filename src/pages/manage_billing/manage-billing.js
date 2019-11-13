@@ -1,7 +1,6 @@
 import * as React from 'react';
-import Network from '../../utils/network';
+import { fetchBills } from '../../utils/bills';
 import { Alert, Button } from 'antd';
-import { BILLS_API_URL } from '../../constants/endpoints';
 import {
   MANAGE_BILLS_PAGE_TITLE,
   ADD_BILL_TEXT
@@ -31,7 +30,9 @@ class ManageBillingComponent extends React.Component {
       showPrintModal: false,
       billToUpdate: {},
       billToPrint: {},
-      query: 'status=Open'
+      query: {
+        status: ['Open']
+      }
     }
   }
   componentDidMount = () => {
@@ -53,7 +54,7 @@ class ManageBillingComponent extends React.Component {
       const ingredients = await fetchAllIngredients(businessId);
       const products = await fetchAllProducts(businessId);
       const enrichedProducts = getEnrichedProducts(products, ingredients);
-      const { bills } = await Network.get(BILLS_API_URL(businessId, this.state.query));
+      const bills = await fetchBills(businessId, this.state.query);
       this.setState({ bills, ingredients, products: enrichedProducts });
     } catch (errorMessage) {
       this.setState({ errorMessage });

@@ -22,12 +22,12 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
       <div className='vertical-center-align space-between'>
         {product.label}
         <div className='right-align'>
-          <Button
+          {product.onEdit ? <Button
             type='link'
             icon='edit'
             onClick={() => product.onEdit(product)}
-          />
-          <Popconfirm
+          /> : null}
+          {product.onDelete ? <Popconfirm
             title={`Are you sure you want to delete ${product.label} from products?`}
             okText={'Delete'}
             onConfirm={() => product.onDelete(product)}
@@ -36,7 +36,7 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
               type='link'
               icon='delete'
             />
-          </Popconfirm>
+          </Popconfirm> : null}
         </div>
       </div>
     </div>,
@@ -67,25 +67,31 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
     ...DEFAULT_TABLE_FEATURES(({ price }) => price, ({ price, currency }) => `${new Utils().getCurrencySymbol(currency)}${price.toLocaleString()}`, 'Search selling price')
   },
   {
-    title: 'Created by',
-    dataIndex: 'createdBy',
-    ...DEFAULT_TABLE_FEATURES(({ createdBy }) => createdBy, ({ createdBy }) => createdBy, 'Search created by')
+    title: 'Profit',
+    dataIndex: 'profit',
+    render: (text, { profit, currency }) => `${new Utils().getCurrencySymbol(currency)}${profit.toLocaleString()}`,
+    ...DEFAULT_TABLE_FEATURES(({ profit }) => profit, ({ profit, currency }) => `${new Utils().getCurrencySymbol(currency)}${profit.toLocaleString()}`, 'Search profit')
   },
-  {
-    title: 'Created on',
-    dataIndex: 'createdDate',
-    render: (text, { createdDate }) => <Timestamp value={createdDate} />,
-    ...DEFAULT_TABLE_FEATURES(({ createdDate }) => createdDate, ({ createdDate }) => moment(createdDate).fromNow(), 'Search created on')
-  },
-  {
-    title: 'Last edited by',
-    dataIndex: 'updatedBy',
-    ...DEFAULT_TABLE_FEATURES(({ updatedBy }) => updatedBy, ({ updatedBy }) => updatedBy, 'Search last edited by')
-  },
-  {
-    title: 'Last edited on',
-    dataIndex: 'updatedDate',
-    render: (text, { updatedDate }) => updatedDate ? <Timestamp value={updatedDate} /> : '-',
-    ...DEFAULT_TABLE_FEATURES(({ updatedDate }) => updatedDate, ({ updatedDate }) => moment(updatedDate).fromNow(), 'Search last edited on')
-  }
+  // {
+  //   title: 'Created by',
+  //   dataIndex: 'createdBy',
+  //   ...DEFAULT_TABLE_FEATURES(({ createdBy }) => createdBy, ({ createdBy }) => createdBy, 'Search created by')
+  // },
+  // {
+  //   title: 'Created on',
+  //   dataIndex: 'createdDate',
+  //   render: (text, { createdDate }) => <Timestamp value={createdDate} />,
+  //   ...DEFAULT_TABLE_FEATURES(({ createdDate }) => createdDate, ({ createdDate }) => moment(createdDate).fromNow(), 'Search created on')
+  // },
+  // {
+  //   title: 'Last edited by',
+  //   dataIndex: 'updatedBy',
+  //   ...DEFAULT_TABLE_FEATURES(({ updatedBy }) => updatedBy, ({ updatedBy }) => updatedBy, 'Search last edited by')
+  // },
+  // {
+  //   title: 'Last edited on',
+  //   dataIndex: 'updatedDate',
+  //   render: (text, { updatedDate }) => updatedDate ? <Timestamp value={updatedDate} /> : '-',
+  //   ...DEFAULT_TABLE_FEATURES(({ updatedDate }) => updatedDate, ({ updatedDate }) => moment(updatedDate).fromNow(), 'Search last edited on')
+  // }
 ];

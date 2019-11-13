@@ -1,100 +1,81 @@
 import * as React from 'react';
-import { Tabs, DatePicker, Empty } from 'antd';
 import Page from '../../components/page';
 import { Consumer } from '../../context';
 import { DASHBOARDS } from '../../constants/console-home';
-import BillsDashboard from './components/bills-dashboard';
-import ProductsDashboard from './components/products-dashboard';
-import { DATE_FORMAT } from '../../constants/app';
+import Dashboard from './components/dashboard';
 import moment from 'moment';
-
-const { TabPane } = Tabs;
+import DateRange from '../../components/date-range';
+import { fetchAllIngredients } from '../../utils/ingredients';
+import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
 
 class ConsoleHomeComponent extends React.Component {
   constructor() {
     super();
     this.state = {
+      ingredients: [],
+      products: [],
       activeKey: 'bills',
-      customStartRange: moment().subtract(1, 'weeks').startOf('week'),
-      customEndRange: moment().subtract(1, 'weeks').endOf('week')
+      query: {
+        status: ['Closed'],
+        updatedDateFrom: moment().subtract(1, 'weeks').startOf('week'),
+        updatedDateTo: moment().subtract(1, 'weeks').endOf('week')
+      }
     };
   }
-  onTabChange = activeKey => this.setState({ activeKey });
-  onCustomStartRangeChange = customStartRange => this.setState({ customStartRange: customStartRange.startOf('day') });
-  onCustomEndRangeChange = customEndRange => this.setState({ customEndRange: customEndRange.endOf('day')  });
+  componentDidMount = () => {
+    if (this.props.businessId) {
+      this.fetchAllIngredientsAndProducts();
+    }
+  };
+  componentDidUpdate = prevProps => {
+    const { businessId } = this.props;
+    if(businessId && prevProps.businessId !== businessId) {
+      this.fetchAllIngredientsAndProducts();
+    }
+  };
+  fetchAllIngredientsAndProducts = async () => {
+    const { businessId } = this.props;
+    this.setState({ loading: true, errorMessage: '' });
+    try {
+      const ingredients = await fetchAllIngredients(businessId);
+      const products = await fetchAllProducts(businessId);
+      const enrichedProducts = getEnrichedProducts(products, ingredients);
+      this.setState({ ingredients, products: enrichedProducts });
+    } catch (errorMessage) {
+      this.setState({ errorMessage });
+    }
+    this.setState({ loading: false });
+  }
+  onUpdateDateChange = ({ from, to }) => {
+    const { query } = this.state;
+    this.setState({ query: { ...query, updatedDateFrom: from, updatedDateTo: to || moment() } });
+  }
   render = () => <Page>
-    <Tabs
-      activeKey={this.state.activeKey}
-      onChange={this.onTabChange}
-    >
-      <TabPane tab='Bills' key='bills'>
-        {DASHBOARDS.map(dashboard => <BillsDashboard
-          key={dashboard.title}
-          title={dashboard.title}
-          query={dashboard.query}
-          empty={dashboard.emptyBills}
-          showTrend={dashboard.showTrend}
-          businessId={this.props.businessId}
-          currency={this.props.currency}
-          sources={this.props.sources}
-        />)}
-        <BillsDashboard
-          title={<div className='flex-wrap'>
-            <DatePicker
-              showTime
-              value={this.state.customStartRange}
-              format={DATE_FORMAT}
-              onChange={this.onCustomStartRangeChange}
-            />
-            <span style={{ padding: '0px 10px' }}>to: </span>
-            <DatePicker
-              showTime
-              value={this.state.customEndRange}
-              format={DATE_FORMAT}
-              onChange={this.onCustomEndRangeChange}
-            />
-          </div>}
-          query={this.state.customStartRange && this.state.customEndRange ? `updatedDateFrom=${this.state.customStartRange.valueOf()}&updatedDateTo=${this.state.customStartRange.valueOf()}` : ''}
-          empty={!this.state.customStartRange || !this.state.customEndRange ? 'Select a time period to see your data' : <Empty description={'No bills closed in this time period!'} /> }
-          businessId={this.props.businessId}
-          currency={this.props.currency}
-          sources={this.props.sources}
-        />
-      </TabPane>
-      <TabPane tab='Products' key='products'>
-        {DASHBOARDS.map(dashboard => <ProductsDashboard
-          key={dashboard.title}
-          title={dashboard.title}
-          query={dashboard.query}
-          empty={dashboard.emptyProducts}
-          businessId={this.props.businessId}
-          currency={this.props.currency}
-          sources={this.props.sources}
-        />)}
-        <ProductsDashboard
-          title={<div className='flex-wrap'>
-            <DatePicker
-              showTime
-              value={this.state.customStartRange}
-              format={DATE_FORMAT}
-              onChange={this.onCustomStartRangeChange}
-            />
-            <span style={{ padding: '0px 10px' }}>to: </span>
-            <DatePicker
-              showTime
-              value={this.state.customEndRange}
-              format={DATE_FORMAT}
-              onChange={this.onCustomEndRangeChange}
-            />
-          </div>}
-          query={this.state.customStartRange && this.state.customEndRange ? `updatedDateFrom=${this.state.customStartRange.valueOf()}&updatedDateTo=${this.state.customStartRange.valueOf()}` : ''}
-          empty={!this.state.customStartRange || !this.state.customEndRange ? 'Select a time period to see your data' : <Empty description={'No products sold in this time period!'} /> }
-          businessId={this.props.businessId}
-          currency={this.props.currency}
-          sources={this.props.sources}
-        />
-      </TabPane>
-    </Tabs>
+    {DASHBOARDS.map(dashboard => <Dashboard
+      key={dashboard.title}
+      title={dashboard.title}
+      query={dashboard.query}
+      businessId={this.props.businessId}
+      currency={this.props.currency}
+      sources={this.props.sources}
+      loading={this.state.loading}
+      ingredients={this.state.ingredients}
+      products={this.state.products}
+    />)}
+    <Dashboard
+      title={<DateRange
+        from={this.state.query.updatedDateFrom}
+        to={this.state.query.updatedDateTo}
+        onChange={this.onUpdateDateChange}
+      />}
+      query={this.state.query}
+      businessId={this.props.businessId}
+      currency={this.props.currency}
+      sources={this.props.sources}
+      loading={this.state.loading}
+      ingredients={this.state.ingredients}
+      products={this.state.products}
+    />
   </Page>
 }
 

@@ -66,8 +66,9 @@ class ManageProductsComponent extends React.Component {
       setTimeout(() => this.setState({ successMessage: '' }), 2000);
       this.fetchAllProducts(businessId);
     } catch (errorMessage) {
-      this.setState({ errorMessage, loading: false });
+      this.setState({ errorMessage });
     }
+    this.setState({ loading: false });
   }
   render = () => <Page>
     <PageHeader

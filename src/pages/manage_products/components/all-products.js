@@ -11,7 +11,7 @@ export default class AllProducts extends React.Component {
       key: product.id,
       currency: this.props.currency,
       onEdit: this.props.showEditModal,
-      onDelete: this.props.onDeleteProduct
+      onDelete: this.props.deleteProduct
     }))}
     scroll={{ x: true }}
     locale={{

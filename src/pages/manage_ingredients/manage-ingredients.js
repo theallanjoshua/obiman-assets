@@ -66,8 +66,9 @@ class ManageIngredientsComponent extends React.Component {
       setTimeout(() => this.setState({ successMessage: '' }), 2000);
       this.fetchAllIngredients(businessId);
     } catch (errorMessage) {
-      this.setState({ errorMessage, loading: false });
+      this.setState({ errorMessage });
     }
+    this.setState({ loading: false });
   }
   onSelectionChange = selectedIngredientsKeys => this.setState({ selectedIngredientsKeys });
   render = () => <Page>

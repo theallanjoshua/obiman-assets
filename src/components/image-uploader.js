@@ -23,10 +23,11 @@ export default class ImageUploader extends React.Component {
       this.setState({ loading: true, errorMessage: '' });
       try {
         const uploadedFile = await Network.getFile(s3Key);
-        this.setState({ uploadedFile, loading: false });
+        this.setState({ uploadedFile });
       } catch (errorMessage) {
-        this.setState({ errorMessage, loading: false });
+        this.setState({ errorMessage });
       }
+      this.setState({ loading: false });
     }
   }
   componentDidMount = () => this.fetchUploadedFile(this.props.s3Key);

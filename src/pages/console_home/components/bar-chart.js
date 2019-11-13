@@ -26,7 +26,10 @@ export default class BarChart extends React.Component {
           fontSize: 18
         },
         legend: {
-          position: 'right'
+          position: 'right',
+          labels: {
+            boxWidth: 10
+          }
         },
         scales: {
           yAxes: [{

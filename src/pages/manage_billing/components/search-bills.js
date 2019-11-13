@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Button, Form, Select, DatePicker } from 'antd';
+import { Button, Form, Select } from 'antd';
 import { Bill } from 'obiman-data-models';
-import { DATE_TIME_FORMAT } from '../../../constants/app';
+import DateRange from '../../../components/date-range';
 
 const bill = new Bill();
 
@@ -17,32 +17,8 @@ export default class SearchBills extends React.Component {
   }
   setSource = source => this.setState({ source });
   setStatus = status => this.setState({ status });
-  setUpdatedDateFrom = updatedDateFrom => this.setState({ updatedDateFrom });
-  setUpdatedDateTo = updatedDateTo => this.setState({ updatedDateTo });
-  onSubmit = () => {
-    const { status, source, updatedDateFrom, updatedDateTo } = this.state;
-    const query = Object.keys(this.state).reduce((acc, key) => {
-      switch(key) {
-        case 'status': {
-          return status.length ? [ ...acc, `status=${status.join(',')}` ]: [ ...acc ];
-        };
-        case 'source': {
-          return source.length ? [ ...acc, `source=${source.join(',')}` ]: [ ...acc ];
-        };
-        case 'updatedDateFrom': {
-          return updatedDateFrom ? [ ...acc, `updatedDateFrom=${updatedDateFrom.valueOf()}`] : [ ...acc ];
-        };
-        case 'updatedDateTo': {
-          return updatedDateTo ? [ ...acc, `updatedDateTo=${updatedDateTo.valueOf()}`] : [ ...acc ];
-        }
-        default: {
-          return [ ...acc ];
-        }
-      }
-    }, []);
-    console.log(query);
-    this.props.onChange(query.join('&'));
-  }
+  onUpdateDateChange = ({ from, to }) => this.setState({ updatedDateFrom: from, updatedDateTo: to });
+  onSubmit = () => this.props.onChange(this.state);
   render = () => <Form
     layout='inline'
     className='center-align flex-wrap'
@@ -84,23 +60,11 @@ export default class SearchBills extends React.Component {
       }
     />
     <Form.Item
-      label={'From'}
-      children={<DatePicker
-        style={{ width: '100%' }}
-        showTime
-        value={this.state.updatedDateFrom}
-        format={DATE_TIME_FORMAT}
-        onChange={this.setUpdatedDateFrom}
-      />}
-    />
-    <Form.Item
-      label={'To'}
-      children={<DatePicker
-        style={{ width: '100%' }}
-        showTime
-        value={this.state.updatedDateTo}
-        format={DATE_TIME_FORMAT}
-        onChange={this.setUpdatedDateTo}
+      label={'Date'}
+      children={<DateRange
+        from={this.state.updatedDateFrom}
+        to={this.state.updatedDateTo}
+        onChange={this.onUpdateDateChange}
       />}
     />
     <Form.Item
