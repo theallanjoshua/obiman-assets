@@ -47,8 +47,10 @@ export default class AddIngredient extends React.Component {
       try {
         await Network.post(INGREDIENTS_API_URL(businessId), ingredientData);
         this.setState({ errorMessage: '', successMessage: INGREDIENT_ADDED_SUCCESSFULLY_MESSAGE(ingredientData.label) });
-        this.props.fetchAllIngredients(businessId);
-        setTimeout(this.props.hideModal, 2000);
+        setTimeout(() => {
+          this.props.fetchAllIngredients(businessId);
+          this.props.hideModal();
+        }, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });
       }
@@ -75,9 +77,6 @@ export default class AddIngredient extends React.Component {
       disabled: this.state.loading
     }}
   >
-    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
-    {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
-    <br />
     <IngredientInfo
       currency={this.props.currency}
       locations={this.props.locations}
@@ -85,5 +84,7 @@ export default class AddIngredient extends React.Component {
       showValidationErrors={this.state.showValidationErrors}
       onChange={this.onChange}
     />
+    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
   </Modal>;
 }

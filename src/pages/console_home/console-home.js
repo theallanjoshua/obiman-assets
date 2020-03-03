@@ -58,9 +58,12 @@ class ConsoleHomeComponent extends React.Component {
       businessId={this.props.businessId}
       currency={this.props.currency}
       sources={this.props.sources}
+      classifications={this.props.classifications}
+      taxes={this.props.taxes}
       loading={this.state.loading}
       ingredients={this.state.ingredients}
       products={this.state.products}
+      fetchAllIngredientsAndProducts={this.fetchAllIngredientsAndProducts}
     />)}
     <Dashboard
       title={<DateRange
@@ -72,9 +75,12 @@ class ConsoleHomeComponent extends React.Component {
       businessId={this.props.businessId}
       currency={this.props.currency}
       sources={this.props.sources}
+      classifications={this.props.classifications}
+      taxes={this.props.taxes}
       loading={this.state.loading}
       ingredients={this.state.ingredients}
       products={this.state.products}
+      fetchAllIngredientsAndProducts={this.fetchAllIngredientsAndProducts}
     />
   </Page>
 }
@@ -86,6 +92,8 @@ export default class ConsoleHome extends React.Component {
       businessId={currentBusiness.id}
       currency={currentBusiness.currency}
       sources={currentBusiness.metadata.sources || []}
+      classifications={currentBusiness.metadata.productClassifications || []}
+      taxes={currentBusiness.metadata.taxes || []}
     />}
   </Consumer>
 }

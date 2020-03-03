@@ -66,42 +66,44 @@ export default class Dashboard extends React.Component {
     const totalBillComposition = bills.reduce((acc, bill) => [ ...acc, ...(bill.composition || []) ], []);
     const productData = this.props.products.map(product => ({
       ...product,
-      ...totalBillComposition
+      aggregatedData: {
+        ...totalBillComposition
         .filter(({ id }) => id === product.id)
         .reduce((acc, composition) => ({
           count: acc.count + composition.quantity,
           sales: acc.sales + (composition.price * composition.quantity),
           profit: acc.profit + (composition.profit * composition.quantity)
         }), { count: 0, sales: 0, profit: 0 })
+      }
     }));
     const mostOrderedProducts = productData
       .sort((prv, nxt) => nxt.count - prv.count)
       .filter((item, index) => index < 5)
-      .map(({ label, count }) => ({ label, data: count }));
+      .map(({ label, aggregatedData: { count } }) => ({ label, data: count }));
     const mostSoldProducts = productData
       .sort((prv, nxt) => nxt.sales - prv.sales)
       .filter((item, index) => index < 5)
-      .map(({ label, sales }) => ({ label, data: sales }));
+      .map(({ label, aggregatedData: { sales } }) => ({ label, data: sales }));
     const mostProfitableProducts = productData
       .sort((prv, nxt) => nxt.profit - prv.profit)
       .filter((item, index) => index < 5)
-      .map(({ label, profit }) => ({ label, data: profit }));
+      .map(({ label, aggregatedData: { profit } }) => ({ label, data: profit }));
     const leastOrderedProducts = productData
       .sort((prv, nxt) => prv.count - nxt.count)
-      .filter(({ label, count }) => count > 0 && !mostOrderedProducts.map(({ label }) => label).includes(label))
+      .filter(({ label, aggregatedData: { count } }) => count > 0 && !mostOrderedProducts.map(({ label }) => label).includes(label))
       .filter((item, index) => index < 5)
-      .map(({ label, count }) => ({ label, data: count }));
+      .map(({ label, aggregatedData: { count } }) => ({ label, data: count }));
     const leastSoldProducts = productData
       .sort((prv, nxt) => prv.sales - nxt.sales)
-      .filter(({ label, sales }) => sales > 0 && !mostSoldProducts.map(({ label }) => label).includes(label))
+      .filter(({ label, aggregatedData: { sales } }) => sales > 0 && !mostSoldProducts.map(({ label }) => label).includes(label))
       .filter((item, index) => index < 5)
-      .map(({ label, sales }) => ({ label, data: sales }));
+      .map(({ label, aggregatedData: { sales } }) => ({ label, data: sales }));
     const leastProfitableProducts = productData
       .sort((prv, nxt) => prv.profit - nxt.profit)
-      .filter(({ label, profit }) => profit > 0 && !mostProfitableProducts.map(({ label }) => label).includes(label))
+      .filter(({ label, aggregatedData: { profit } }) => profit > 0 && !mostProfitableProducts.map(({ label }) => label).includes(label))
       .filter((item, index) => index < 5)
-      .map(({ label, profit }) => ({ label, data: profit }));
-    const productsWithoutASale = productData.filter(({ count }) => count === 0);
+      .map(({ label, aggregatedData: { profit } }) => ({ label, data: profit }));
+    const productsWithoutASale = productData.filter(({ aggregatedData: { count } }) => count === 0);
     return <Card
       key={this.props.title}
       title={this.props.title}
@@ -122,10 +124,10 @@ export default class Dashboard extends React.Component {
       onTabChange={this.onTabChange}
     >
       {this.state.activeKey === 'bills' ?
-        bills.length ? <Collapse defaultActiveKey={'overall'}>
+        bills.length ? <Collapse defaultActiveKey={'first'}>
           <Panel
             header='Overall'
-            key='overall'
+            key='first'
           >
             <Row gutter={32}>
               <Col { ...tripletsLayout }>
@@ -199,7 +201,7 @@ export default class Dashboard extends React.Component {
           </Panel>
           <Panel
             header='By source'
-            key='source'
+            key='second'
           >
             <Row gutter={8}>
               <Col { ...tripletsLayout }>
@@ -268,10 +270,10 @@ export default class Dashboard extends React.Component {
         </Collapse> :
         <Empty /> :
       this.state.activeKey === 'products' ?
-        productData.length ? <Collapse defaultActiveKey={'topProducts'}>
+        productData.length ? <Collapse defaultActiveKey={'first'}>
           <Panel
             header='Top 5 products'
-            key='topProducts'
+            key='first'
           >
             <Row gutter={8}>
               <Col { ...tripletsLayout }>
@@ -298,7 +300,7 @@ export default class Dashboard extends React.Component {
           </Panel>
           <Panel
             header='Bottom 5 products'
-            key='bottomProducts'
+            key='second'
           >
             <Row gutter={8}>
               <Col { ...tripletsLayout }>
@@ -325,12 +327,17 @@ export default class Dashboard extends React.Component {
           </Panel>
           <Panel
             header='Products without a sale'
-            key='pwas'
+            key='third'
           >
             <AllProducts
               currency={this.props.currency}
               loading={this.state.loading || this.props.loading}
+              ingredients={this.props.ingredients}
               products={productsWithoutASale}
+              classifications={this.props.classifications}
+              taxes={this.props.taxes}
+              businessId={this.props.businessId}
+              fetchAllProducts={this.props.fetchAllIngredientsAndProducts}
             />
           </Panel>
         </Collapse> :

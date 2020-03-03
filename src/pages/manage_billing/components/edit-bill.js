@@ -115,9 +115,6 @@ export default class EditBill extends React.Component {
       disabled: this.state.loading
     }}
   >
-    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
-    {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
-    <br />
     <Spin spinning={this.state.loading}>
       <BillInfo
         currency={this.props.currency}
@@ -128,5 +125,7 @@ export default class EditBill extends React.Component {
         onChange={this.onChange}
       />
     </Spin>
+    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
   </Modal>;
 }

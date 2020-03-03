@@ -55,8 +55,10 @@ export default class BulkEditIngredients extends React.Component {
       try {
         await Network.put(INGREDIENTS_API_URL(businessId), ingredients);
         this.setState({ errorMessage: '', successMessage: 'Ingredients updated successfully' });
-        this.props.fetchAllIngredients(businessId);
-        setTimeout(this.props.hideModal, 2000);
+        setTimeout(() => {
+          this.props.fetchAllIngredients(businessId);
+          this.props.hideModal();
+        }, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });
       }
@@ -83,23 +85,23 @@ export default class BulkEditIngredients extends React.Component {
       loading: this.state.loading
     }}
   >
+    <Collapse>
+      {this.state.ingredients.map(ingredient => <Panel
+        key={ingredient.id}
+        header={ingredient.label}
+      >
+        <IngredientInfo
+          key={ingredient.id}
+          currency={this.props.currency}
+          locations={this.props.locations}
+          ingredient={ingredient}
+          showValidationErrors={this.state.showValidationErrors}
+          onChange={this.onChange}
+        />
+      </Panel>)}
+    </Collapse>
+    <br />
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
-    <br />
-    <Collapse>
-    {this.state.ingredients.map(ingredient => <Panel
-      key={ingredient.id}
-      header={ingredient.label}
-    >
-      <IngredientInfo
-        key={ingredient.id}
-        currency={this.props.currency}
-        locations={this.props.locations}
-        ingredient={ingredient}
-        showValidationErrors={this.state.showValidationErrors}
-        onChange={this.onChange}
-      />
-    </Panel>)}
-    </Collapse>
   </Modal>;
 }

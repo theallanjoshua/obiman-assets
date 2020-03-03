@@ -1,13 +1,9 @@
 import * as React from 'react';
 import AllIngredients from './components/all-ingredients';
-import Network from '../../utils/network';
 import { Button, Alert } from 'antd';
 import AddIngredient from './components/add-ingredient';
-import EditIngredient from './components/edit-ingredient';
 import BulkEditIngredients from './components/bulk-edit-ingredients';
-import { INGREDIENTS_API_URL } from '../../constants/endpoints';
 import {
-  INGREDIENT_DELETED_SUCCESSFULLY_MESSAGE,
   MANAGE_INGREDIENTS_PAGE_TITLE,
   ADD_INGREDIENT_BUTTON_TEXT
 } from '../../constants/manage-ingredients';
@@ -22,10 +18,9 @@ class ManageIngredientsComponent extends React.Component {
     this.state = {
       loading: false,
       errorMessage: '',
+      successMessage: '',
       ingredients: [],
-      ingredientToUpdate: {},
       showAddModal: false,
-      showEditModal: false,
       selectedIngredientsKeys: [],
       showBulkEditModal: false
     }
@@ -54,22 +49,8 @@ class ManageIngredientsComponent extends React.Component {
     this.setState({ loading: false });
   }
   showAddModal = () => this.setState({ showAddModal: true });
-  showEditModal = ingredientToUpdate => this.setState({ ingredientToUpdate, showEditModal: true });
   showBulkEditModal = () => this.setState({ showBulkEditModal: true });
-  hideModal = () => this.setState({ showAddModal: false, showEditModal: false, showBulkEditModal: false });
-  deleteIngredient = async ({ id, label }) => {
-    const { businessId } = this.props;
-    this.setState({ loading: true, errorMessage: '', successMessage: '' });
-    try {
-      await Network.delete(`${INGREDIENTS_API_URL(businessId)}/${id}`);
-      this.setState({ errorMessage: '', successMessage: INGREDIENT_DELETED_SUCCESSFULLY_MESSAGE(label) });
-      setTimeout(() => this.setState({ successMessage: '' }), 2000);
-      this.fetchAllIngredients(businessId);
-    } catch (errorMessage) {
-      this.setState({ errorMessage });
-    }
-    this.setState({ loading: false });
-  }
+  hideModal = () => this.setState({ showAddModal: false, showBulkEditModal: false });
   onSelectionChange = selectedIngredientsKeys => this.setState({ selectedIngredientsKeys });
   render = () => <Page>
     <PageHeader
@@ -95,33 +76,23 @@ class ManageIngredientsComponent extends React.Component {
         />
       </React.Fragment>}
     />
-    <br />
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
-    <br />
     <AllIngredients
       currency={this.props.currency}
+      locations={this.props.locations}
+      businessId={this.props.businessId}
       loading={this.state.loading}
       ingredients={this.state.ingredients}
-      showEditModal={this.showEditModal}
-      onDeleteIngredient={this.deleteIngredient}
       selectedIngredientsKeys={this.selectedIngredientsKeys}
       onSelectionChange={this.onSelectionChange}
+      fetchAllIngredients={this.fetchAllIngredients}
     />
     <AddIngredient
       currency={this.props.currency}
       locations={this.props.locations}
       businessId={this.props.businessId}
       visible={this.state.showAddModal}
-      hideModal={this.hideModal}
-      fetchAllIngredients={this.fetchAllIngredients}
-    />
-    <EditIngredient
-      currency={this.props.currency}
-      locations={this.props.locations}
-      businessId={this.props.businessId}
-      visible={this.state.showEditModal}
-      ingredientToUpdate={this.state.ingredientToUpdate}
       hideModal={this.hideModal}
       fetchAllIngredients={this.fetchAllIngredients}
     />
