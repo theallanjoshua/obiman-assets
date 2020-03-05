@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom'
 import { Consumer } from '../context';
-import { Row, Col, Menu, Avatar, Icon } from 'antd';
+import { Row, Col, Menu, Avatar, Icon, Affix } from 'antd';
 import { OBIMAN_LOGO } from '../constants/app';
 import Credentials from '../utils/credentials';
 import toMaterialStyle from 'material-color-hash';
@@ -94,52 +94,56 @@ const NavItems = ({ isBottom }) => <Consumer>
   </Menu>}
 </Consumer>
 
-export class TopNav extends React.Component {
-  render = () => <Row
-    className='center-align'
-    style={{ padding: '0px 26px' }}
-  >
-    <Col
-      xs={24}
-      sm={24}
-      md={6}
-      lg={6}
-      xl={3}
-      xxl={3}
+class TopNav extends React.Component {
+  render = () => <Affix>
+    <Row
+      className='center-align'
+      style={{ padding: '0px 26px', background: '#001529' }}
     >
-      <Link
-        style={{ color: '#ddd' }}
-        to={HOME}
+      <Col
+        xs={24}
+        sm={24}
+        md={6}
+        lg={6}
+        xl={3}
+        xxl={3}
       >
-          {OBIMAN_LOGO}
-      </Link>
-    </Col>
-    <Col
-      xs={0}
-      sm={0}
-      md={18}
-      lg={18}
-      xl={21}
-      xxl={21}
-    >
-      <NavItems />
-    </Col>
-  </Row>
+        <Link
+          style={{ color: '#ddd' }}
+          to={HOME}
+        >
+            {OBIMAN_LOGO}
+        </Link>
+      </Col>
+      <Col
+        xs={0}
+        sm={0}
+        md={18}
+        lg={18}
+        xl={21}
+        xxl={21}
+      >
+        <NavItems />
+      </Col>
+    </Row>
+  </Affix>
 }
 
-export class BottomNav extends React.Component {
-  render = () => <Row className='center-align'>
-    <Col
-      xs={24}
-      sm={24}
-      md={0}
-      lg={0}
-      xl={0}
-      xxl={0}
-    >
-      <NavItems isBottom />
-    </Col>
-  </Row>
+class BottomNav extends React.Component {
+  render = () => <Affix offsetBottom={0}>
+    <Row className='center-align'>
+      <Col
+        xs={24}
+        sm={24}
+        md={0}
+        lg={0}
+        xl={0}
+        xxl={0}
+      >
+        <NavItems isBottom />
+      </Col>
+    </Row>
+  </Affix>
 }
 
 export const TopNavigation = withRouter(TopNav);

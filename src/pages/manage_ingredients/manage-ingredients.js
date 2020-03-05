@@ -9,7 +9,6 @@ import {
 } from '../../constants/manage-ingredients';
 import { fetchAllIngredients } from '../../utils/ingredients';
 import PageHeader from '../../components/page-header';
-import Page from '../../components/page';
 import { Consumer } from '../../context';
 
 class ManageIngredientsComponent extends React.Component {
@@ -52,7 +51,7 @@ class ManageIngredientsComponent extends React.Component {
   showBulkEditModal = () => this.setState({ showBulkEditModal: true });
   hideModal = () => this.setState({ showAddModal: false, showBulkEditModal: false });
   onSelectionChange = selectedIngredientsKeys => this.setState({ selectedIngredientsKeys });
-  render = () => <Page>
+  render = () => <>
     <PageHeader
       title={MANAGE_INGREDIENTS_PAGE_TITLE(this.state.ingredients.length)}
       extra={<React.Fragment>
@@ -76,6 +75,7 @@ class ManageIngredientsComponent extends React.Component {
         />
       </React.Fragment>}
     />
+    <br />
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <AllIngredients
@@ -105,7 +105,7 @@ class ManageIngredientsComponent extends React.Component {
       hideModal={this.hideModal}
       fetchAllIngredients={this.fetchAllIngredients}
     />
-  </Page>;
+  </>;
 }
 
 export default class ManageIngredients extends React.Component {

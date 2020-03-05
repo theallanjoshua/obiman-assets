@@ -42,7 +42,7 @@ export default class ImageUploader extends React.Component {
     this.setState({ loading: true, errorMessage: '' });
     try {
       if (['image/jpeg', 'image/png'].includes(file.type)) {
-        const options = { maxSizeMB: 1 }
+        const options = { maxSizeMB: 1, maxWidthOrHeight: 240 }
         const compressedFile = await imageCompression(file, options)
         const s3Key = await Network.uploadFile(compressedFile);
         this.setState({ loading: false, errorMessage: '' });
@@ -75,7 +75,13 @@ export default class ImageUploader extends React.Component {
   </Spin> :
   <Card
     loading={this.state.loading}
-    cover={<img src={this.state.uploadedFile.url} />}
+    cover={<img
+      style={{
+        width: 240,
+        height: 160
+      }}
+      src={this.state.uploadedFile.url}
+    />}
     actions={[<Text
       type='danger'
       children={'Remove'}

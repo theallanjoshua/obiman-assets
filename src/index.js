@@ -12,7 +12,7 @@ import {
 import { PAGE_ERROR } from './constants/app';
 import Credentials from './utils/credentials';
 import { TopNavigation, BottomNavigation } from './components/navigation';
-import Home from './pages/home/home';
+import BreadcrumbBar from './components/breadcrumb-bar';
 import ConsoleHome from './pages/console_home/console-home';
 import NotFound from './pages/not_found/not-found';
 import ManageIngredients from './pages/manage_ingredients/manage-ingredients';
@@ -23,7 +23,7 @@ import { fetchUser } from './utils/user';
 import 'antd/dist/antd.less';
 import './index.less';
 
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 
 class App extends React.Component {
   constructor() {
@@ -98,14 +98,11 @@ class App extends React.Component {
       enableEdit
     /> : <Spin spinning={this.state.loading}>
           <Router>
-            <Layout style={{ height: '100vh' }}>
-              <Header style={{
-                padding: 0,
-                height: 'initial',
-              }}>
-                <TopNavigation />
-              </Header>
+            <TopNavigation />
+            <Layout style={{ minHeight: '100vh', padding: '30px' }}>
               <Content>
+                <BreadcrumbBar />
+                <br />
                 <Switch>
                   <Route exact path={HOME} component={ConsoleHome} />
                   <Route exact path={INGREDIENTS} component={ManageIngredients} />
@@ -114,10 +111,8 @@ class App extends React.Component {
                   <Route component={NotFound} />
                 </Switch>
               </Content>
-              <Footer style={{ padding: '0px' }}>
-                <BottomNavigation />
-              </Footer>
             </Layout>
+            <BottomNavigation />
         </Router>
     </Spin>}
   </Provider>;

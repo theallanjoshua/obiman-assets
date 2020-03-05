@@ -9,7 +9,6 @@ import {
 import { fetchAllIngredients } from '../../utils/ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
 import PageHeader from '../../components/page-header';
-import Page from '../../components/page';
 import { Consumer } from '../../context';
 
 class ManageProductsComponent extends React.Component {
@@ -52,7 +51,7 @@ class ManageProductsComponent extends React.Component {
   }
   showAddModal = () => this.setState({ showAddModal: true });
   hideModal = () => this.setState({ showAddModal: false });
-  render = () => <Page>
+  render = () => <>
     <PageHeader
       title={MANAGE_PRODUCTS_PAGE_TITLE(this.state.products.length)}
       extra={<React.Fragment>
@@ -69,6 +68,7 @@ class ManageProductsComponent extends React.Component {
         />
       </React.Fragment>}
     />
+    <br />
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <AllProducts
@@ -91,7 +91,7 @@ class ManageProductsComponent extends React.Component {
       hideModal={this.hideModal}
       fetchAllProducts={this.fetchAllProducts}
     />
-  </Page>;
+  </>;
 }
 
 export default class ManageProducts extends React.Component {

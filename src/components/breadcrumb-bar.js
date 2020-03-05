@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Breadcrumb, Icon } from 'antd';
 import { Link } from 'react-router-dom'
 import { BREADCRUMB_MAP, PAGE_URL_TITLE_MAP } from '../constants/pages';
+import { withRouter } from 'react-router';
 
 const getBreadcrumbValue = () => BREADCRUMB_MAP[window.location.hash.replace('#','')] || [];
 
@@ -14,4 +15,4 @@ const BreadcrumbBar = () => <Breadcrumb>
   </Breadcrumb.Item>)}
 </Breadcrumb>;
 
-export default BreadcrumbBar;
+export default withRouter(BreadcrumbBar);

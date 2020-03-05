@@ -7,56 +7,69 @@ import {
 import BillTotal from './bill-total';
 import BillCompositionReadonly from './bill-composition-readonly';
 
+const Frills = ({ isBottom }) => <div style={{ paddingLeft: '10px' }}>
+  {[ ...new Array(10) ].map((item, index) => <span
+    key={index}
+    style={{
+      width: 0,
+      height: 0,
+      borderLeft: '15px solid transparent',
+      borderRight: '15px solid transparent',
+      [isBottom ? 'borderTop' : 'borderBottom']: '15px solid white'
+    }}
+  />)}
+</div>
+
 export default class AllBills extends React.Component {
   render = () => <Spin spinning={this.props.loading}>
   {this.props.bills.length ?
     <div className='flex-wrap'>
-      {this.props.bills.map(bill => <Card
-        key={bill.id}
-        className='flex-column'
-        style={{
-          maxWidth: '90vw',
-          width: '300px',
-          margin: '5px'
-        }}
-        bodyStyle={{
-          flexGrow: 1,
-          padding: '0px'
-        }}
-        title={<div>
-          <div className='flex-wrap space-between'>
-            {bill.source}
-            <div>
-              <Tooltip
-                title={EDIT_BILL_BUTTON_TEXT}
-                children={<Button
-                  type='link'
-                  icon='edit'
-                  onClick={() => this.props.showEditModal(bill)}
-                />}
-              />
-              <Tooltip
-                title={PRINT_BILL_BUTTON_TEXT}
-                children={<Button
-                  type='link'
-                  icon='printer'
-                  onClick={() => this.props.showPrintModal(bill)}
-                />}
-              />
+      {this.props.bills.map(bill => <div key={bill.id} >
+        <Frills />
+        <Card
+          bordered={false}
+          style={{
+            maxWidth: '90vw',
+            width: '300px',
+            margin: '0px 20px 20px 0px'
+          }}
+          bodyStyle={{ padding: '0px' }}
+          title={<div>
+            <div className='flex-wrap space-between'>
+              {bill.source}
+              <div>
+                <Tooltip
+                  title={EDIT_BILL_BUTTON_TEXT}
+                  children={<Button
+                    type='link'
+                    icon='edit'
+                    onClick={() => this.props.showEditModal(bill)}
+                  />}
+                />
+                <Tooltip
+                  title={PRINT_BILL_BUTTON_TEXT}
+                  children={<Button
+                    type='link'
+                    icon='printer'
+                    onClick={() => this.props.showPrintModal(bill)}
+                  />}
+                />
+              </div>
             </div>
-          </div>
-        </div>}
-        children={<div className='space-between flex-column' style={{ height: '100%' }}>
-          <BillCompositionReadonly
-            composition={bill.composition}
-            currency={this.props.currency}
-          />
-          <BillTotal
-            bill={bill}
-            currency={this.props.currency}
-          />
-        </div>}
-      />)}
+          </div>}
+          children={<>
+            <BillCompositionReadonly
+              composition={bill.composition}
+              currency={this.props.currency}
+            />
+            <BillTotal
+              bill={bill}
+              currency={this.props.currency}
+            />
+          </>}
+        />
+        <Frills isBottom />
+      </div>)}
     </div> :
   <Empty description='No bills available' />}
 </Spin>

@@ -6,7 +6,6 @@ import {
   ADD_BILL_TEXT
 } from '../../constants/manage-billing';
 import PageHeader from '../../components/page-header';
-import Page from '../../components/page';
 import { Consumer } from '../../context';
 import AllBills from './components/all-bills';
 import AddBill from './components/add-bill';
@@ -69,7 +68,7 @@ class ManageBillingComponent extends React.Component {
     await this.setState({ query });
     this.fetchAllBills();
   };
-  render = () => <Page>
+  render = () => <>
     <PageHeader
       title={MANAGE_BILLS_PAGE_TITLE(this.state.bills.length)}
       extra={<Button
@@ -122,7 +121,7 @@ class ManageBillingComponent extends React.Component {
       hideModal={this.hideModal}
       billToPrint={this.state.billToPrint}
     />
-  </Page>;
+  </>;
 }
 
 export default class ManageBilling extends React.Component {

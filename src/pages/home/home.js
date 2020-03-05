@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Page from '../../components/page';
 import { Result, Icon, Typography, Timeline } from 'antd';
 import { Link } from 'react-router-dom'
 import {
@@ -15,7 +14,7 @@ import rca from 'rainbow-colors-array';
 const { Text } = Typography;
 
 class HomeComponent extends React.Component {
-  render = () => <Page>
+  render = () => <>
     <Result
       icon={<Icon type='smile' theme='twoTone' twoToneColor='#52c41a' />}
       title='Welcome to Obiman!'
@@ -68,7 +67,7 @@ class HomeComponent extends React.Component {
       title='Did you know?'
       subTitle={rf.randomFact()}
     />
-  </Page>
+  </>
 }
 
 export default class Home extends React.Component {

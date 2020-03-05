@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Page from '../../components/page';
 import { Consumer } from '../../context';
 import { DASHBOARDS } from '../../constants/console-home';
 import Dashboard from './components/dashboard';
@@ -50,7 +49,7 @@ class ConsoleHomeComponent extends React.Component {
     const { query } = this.state;
     this.setState({ query: { ...query, updatedDateFrom: from, updatedDateTo: to || moment() } });
   }
-  render = () => <Page>
+  render = () => <>
     {DASHBOARDS.map(dashboard => <Dashboard
       key={dashboard.title}
       title={dashboard.title}
@@ -82,7 +81,7 @@ class ConsoleHomeComponent extends React.Component {
       products={this.state.products}
       fetchAllIngredientsAndProducts={this.fetchAllIngredientsAndProducts}
     />
-  </Page>
+  </>
 }
 
 export default class ConsoleHome extends React.Component {

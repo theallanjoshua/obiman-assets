@@ -13,6 +13,7 @@ export const OBIMAN_LOGO = <h1
     fontFamily: 'Megrim',
     fontSize: 'xx-large',
     color: 'inherit',
+    background: 'inherit',
     marginBottom: 0,
     width: 'max-content',
     lineHeight: 'initial',
