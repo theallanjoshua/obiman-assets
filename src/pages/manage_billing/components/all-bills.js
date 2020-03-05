@@ -31,7 +31,7 @@ export default class AllBills extends React.Component {
           style={{
             maxWidth: '90vw',
             width: '300px',
-            margin: '0px 20px 20px 0px'
+            margin: '10px'
           }}
           bodyStyle={{ padding: '0px' }}
           title={<div>
