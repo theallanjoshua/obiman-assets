@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Form, Input, Select, Row, Col } from 'antd';
 import { Bill, BillCompositionEntity } from 'obiman-data-models';
+import BillCompositionReadonly from './bill-composition-readonly';
 import BillComposition from './bill-composition';
 import BillTotal from './bill-total';
 
@@ -25,6 +26,7 @@ const billTotalLayout = {
   md: { span: 24 },
   lg: { span: 19, offset: 4 }
 }
+
 const formValidation = (showValidationErrors, validationErrors = []) => ({
   validateStatus: showValidationErrors ? validationErrors.length ? 'error' : 'success' : '',
   help: showValidationErrors ? validationErrors.length > 1 ? <ul>
@@ -38,10 +40,11 @@ export default class BillInfo extends React.Component {
   setCustomer = e => this.set('customer', e.target.value);
   setStatus = status => this.set('status', status);
   setSource = source => this.set('source', source);
+  setSourceId = e => this.set('sourceId', e.target.value);
   render = () => {
     const bill = new Bill({ ...this.props.bill });
     const billData = bill
-      .enrich(this.props.products)
+      .enrich(this.props.products, this.props.orders)
       .get();
     const validationErrors = bill.validate();
     return <Form>
@@ -67,6 +70,20 @@ export default class BillInfo extends React.Component {
       />
       <Form.Item
         { ...formItemLayout }
+        label={'Source ID'}
+        required
+        hasFeedback
+        { ...formValidation(this.props.showValidationErrors, validationErrors.sourceId) }
+        children={
+          <Input
+            placeholder={'Eg: 12444666666'}
+            value={billData.sourceId}
+            onChange={this.setSourceId}
+          />
+        }
+      />
+      <Form.Item
+        { ...formItemLayout }
         label={'Customer info'}
         children={
           <Input
@@ -80,15 +97,22 @@ export default class BillInfo extends React.Component {
         { ...formItemLayout }
         label={'Items'}
         required
-        children={
+        children={<>
+          <BillCompositionReadonly
+            composition={bill.getGroupedComposition(({ orderId }) => orderId)}
+            currency={this.props.currency}
+          />
           <BillComposition
             currency={this.props.currency}
             showValidationErrors={this.props.showValidationErrors}
             products={this.props.products}
-            composition={billData.composition}
-            onChange={this.setComposition}
+            composition={bill.getGroupedComposition(({ orderId }) => !orderId)}
+            onChange={composition => this.setComposition([
+              ...billData.composition.filter(({ orderId }) => orderId),
+              ...composition
+            ])}
           />
-        }
+        </>}
       />
       <Row>
         <Col { ...billTotalLayout }>
@@ -114,7 +138,7 @@ export default class BillInfo extends React.Component {
             value={billData.status || undefined}
             onChange={this.setStatus}
           >
-            {[ bill.getStartState(), ...bill.getOtherStates(), bill.getEndState() ].map(state => <Select.Option key={state} value={state} children={state}/>)}
+            {bill.getStates().map(state => <Select.Option key={state} value={state} children={state}/>)}
           </Select>
         }
       />

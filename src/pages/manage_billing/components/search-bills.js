@@ -37,7 +37,7 @@ export default class SearchBills extends React.Component {
           value={this.state.status || undefined}
           onChange={this.setStatus}
         >
-          {[ bill.getStartState(), ...bill.getOtherStates(), bill.getEndState() ].map(state => <Select.Option key={state} value={state} children={state}/>)}
+          {bill.getStates().map(state => <Select.Option key={state} value={state} children={state}/>)}
         </Select>
       }
     />

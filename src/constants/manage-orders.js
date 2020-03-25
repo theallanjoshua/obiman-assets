@@ -1,0 +1,1 @@
+export const MANAGE_ORDERS_PAGE_TITLE = count => `All ongoing orders (${count})`;

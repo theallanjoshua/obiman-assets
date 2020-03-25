@@ -114,7 +114,7 @@ export default class ManageIngredients extends React.Component {
     {({ currentBusiness }) => <ManageIngredientsComponent
       businessId={currentBusiness.id}
       currency={currentBusiness.currency}
-      locations={currentBusiness.metadata.ingredientLocations || []}
+      locations={currentBusiness.ingredientLocations || []}
     />}
   </Consumer>
 }

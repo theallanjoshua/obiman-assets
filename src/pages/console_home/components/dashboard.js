@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Row, Col, Card, Button, Empty, Statistic, Collapse, Icon } from 'antd';
+import { Row, Col, Card, Button, Empty, Statistic, Collapse } from 'antd';
 import { fetchBills } from '../../../utils/bills';
 import PieChart from './pie-chart';
 import TrendChart from './trend-chart';
@@ -70,36 +70,36 @@ export default class Dashboard extends React.Component {
         ...totalBillComposition
         .filter(({ id }) => id === product.id)
         .reduce((acc, composition) => ({
-          count: acc.count + composition.quantity,
-          sales: acc.sales + (composition.price * composition.quantity),
-          profit: acc.profit + (composition.profit * composition.quantity)
+          count: acc.count + 1,
+          sales: acc.sales + composition.price,
+          profit: acc.profit + composition.profit
         }), { count: 0, sales: 0, profit: 0 })
       }
     }));
     const mostOrderedProducts = productData
-      .sort((prv, nxt) => nxt.count - prv.count)
+      .sort((prv, nxt) => nxt.aggregatedData.count - prv.aggregatedData.count)
       .filter((item, index) => index < 5)
       .map(({ label, aggregatedData: { count } }) => ({ label, data: count }));
     const mostSoldProducts = productData
-      .sort((prv, nxt) => nxt.sales - prv.sales)
+      .sort((prv, nxt) => nxt.aggregatedData.sales - prv.aggregatedData.sales)
       .filter((item, index) => index < 5)
       .map(({ label, aggregatedData: { sales } }) => ({ label, data: sales }));
     const mostProfitableProducts = productData
-      .sort((prv, nxt) => nxt.profit - prv.profit)
+      .sort((prv, nxt) => nxt.aggregatedData.profit - prv.aggregatedData.profit)
       .filter((item, index) => index < 5)
       .map(({ label, aggregatedData: { profit } }) => ({ label, data: profit }));
     const leastOrderedProducts = productData
-      .sort((prv, nxt) => prv.count - nxt.count)
+      .sort((prv, nxt) => prv.aggregatedData.count - nxt.aggregatedData.count)
       .filter(({ label, aggregatedData: { count } }) => count > 0 && !mostOrderedProducts.map(({ label }) => label).includes(label))
       .filter((item, index) => index < 5)
       .map(({ label, aggregatedData: { count } }) => ({ label, data: count }));
     const leastSoldProducts = productData
-      .sort((prv, nxt) => prv.sales - nxt.sales)
+      .sort((prv, nxt) => prv.aggregatedData.sales - nxt.aggregatedData.sales)
       .filter(({ label, aggregatedData: { sales } }) => sales > 0 && !mostSoldProducts.map(({ label }) => label).includes(label))
       .filter((item, index) => index < 5)
       .map(({ label, aggregatedData: { sales } }) => ({ label, data: sales }));
     const leastProfitableProducts = productData
-      .sort((prv, nxt) => prv.profit - nxt.profit)
+      .sort((prv, nxt) => prv.aggregatedData.profit - nxt.aggregatedData.profit)
       .filter(({ label, aggregatedData: { profit } }) => profit > 0 && !mostProfitableProducts.map(({ label }) => label).includes(label))
       .filter((item, index) => index < 5)
       .map(({ label, aggregatedData: { profit } }) => ({ label, data: profit }));

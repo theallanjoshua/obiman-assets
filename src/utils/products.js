@@ -5,8 +5,7 @@ import { Product, ProductCompositionEntity, Ingredient, Utils } from 'obiman-dat
 export const fetchAllProducts = async businessId => {
   try {
     const { products } = await Network.get(PRODUCTS_API_URL(businessId));
-    return products
-      .sort((prv, nxt) => prv.label.localeCompare(nxt.label));;
+    return products.sort((prv, nxt) => prv.label.localeCompare(nxt.label));;
   } catch (errorMessage) {
     throw errorMessage
   }

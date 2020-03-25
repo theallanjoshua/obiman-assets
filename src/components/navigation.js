@@ -10,6 +10,7 @@ import {
   INGREDIENTS,
   PRODUCTS,
   BILLING,
+  ORDERS,
   PAGE_URL_TITLE_MAP
 } from '../constants/pages';
 import S3ToImage from './s3-to-image';
@@ -48,6 +49,15 @@ const NavItems = ({ isBottom }) => <Consumer>
         <span>
           <Icon type='calculator' />
           {PAGE_URL_TITLE_MAP[BILLING]}
+        </span>}
+      </Link>
+    </Item>
+    <Item key={ORDERS}>
+      <Link to={ORDERS}>
+      {isBottom ? <Icon type='shopping' style={{ marginRight: '0px' }} /> :
+        <span>
+          <Icon type='shopping' />
+          {PAGE_URL_TITLE_MAP[ORDERS]}
         </span>}
       </Link>
     </Item>

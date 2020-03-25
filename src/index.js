@@ -7,7 +7,8 @@ import {
   HOME,
   INGREDIENTS,
   PRODUCTS,
-  BILLING
+  BILLING,
+  ORDERS
 } from './constants/pages';
 import { PAGE_ERROR } from './constants/app';
 import Credentials from './utils/credentials';
@@ -19,6 +20,7 @@ import ManageIngredients from './pages/manage_ingredients/manage-ingredients';
 import ManageProducts from './pages/manage_products/manage-products';
 import ManageBusinesses from './pages/manage_businesses/manage-businesses';
 import ManageBilling from './pages/manage_billing/manage-billing';
+import ManageOrders from './pages/manage_orders/manage-orders';
 import { fetchUser } from './utils/user';
 import 'antd/dist/antd.less';
 import './index.less';
@@ -108,6 +110,7 @@ class App extends React.Component {
                   <Route exact path={INGREDIENTS} component={ManageIngredients} />
                   <Route exact path={PRODUCTS} component={ManageProducts} />
                   <Route exact path={BILLING} component={ManageBilling} />
+                  <Route exact path={ORDERS} component={ManageOrders} />
                   <Route component={NotFound} />
                 </Switch>
               </Content>

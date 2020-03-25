@@ -6,6 +6,7 @@ import moment from 'moment';
 import DateRange from '../../components/date-range';
 import { fetchAllIngredients } from '../../utils/ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
+import { Bill } from 'obiman-data-models';
 
 class ConsoleHomeComponent extends React.Component {
   constructor() {
@@ -15,7 +16,7 @@ class ConsoleHomeComponent extends React.Component {
       products: [],
       activeKey: 'bills',
       query: {
-        status: ['Closed'],
+        status: [ new Bill().getPositiveEndState() ],
         updatedDateFrom: moment().subtract(1, 'weeks').startOf('week'),
         updatedDateTo: moment().subtract(1, 'weeks').endOf('week')
       }
@@ -90,9 +91,9 @@ export default class ConsoleHome extends React.Component {
     {({ currentBusiness }) => <ConsoleHomeComponent
       businessId={currentBusiness.id}
       currency={currentBusiness.currency}
-      sources={currentBusiness.metadata.sources || []}
-      classifications={currentBusiness.metadata.productClassifications || []}
-      taxes={currentBusiness.metadata.taxes || []}
+      sources={currentBusiness.billSources || []}
+      classifications={currentBusiness.productClassifications || []}
+      taxes={currentBusiness.productTaxesTypes || []}
     />}
   </Consumer>
 }

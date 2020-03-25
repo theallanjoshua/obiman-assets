@@ -1,5 +1,6 @@
 import Network from './network';
 import { BILLS_API_URL } from '../constants/endpoints';
+import { Bill } from 'obiman-data-models';
 
 export const fetchBills = async (businessId, query) => {
   try {
@@ -29,3 +30,5 @@ export const fetchBills = async (businessId, query) => {
     throw errorMessage;
   }
 }
+
+export const getEnrichedBills = (bills, products, orders) => bills.map(item => new Bill(item).enrich(products, orders).get());

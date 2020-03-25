@@ -7,25 +7,28 @@ export default class BillCompositionReadonly extends React.Component {
     size='small'
     columns={[
       {
-        title: 'Product',
-        dataIndex: 'label'
-      },
-      {
         title: 'Qty',
         dataIndex: 'quantity'
       },
       {
+        title: 'Product',
+        dataIndex: 'label'
+      },
+      {
         title: 'Price',
-        render: (text, { price }) => `${new Utils().getCurrencySymbol(this.props.currency)}${price.toFixed(2)}`,
+        render: (text, { price, quantity = 1 }) => `${new Utils().getCurrencySymbol(this.props.currency)}${price * quantity}`,
         align: 'right'
       },
       {
-        title: 'Amt',
-        render: (text, { price, quantity }) => `${new Utils().getCurrencySymbol(this.props.currency)}${(price * quantity).toFixed(2)}`,
-        align: 'right'
-      }
+        title: 'Status',
+        dataIndex: 'status'
+      },
   ]}
-    dataSource={this.props.composition.map(entity => ({ ...entity, key: entity.id }))}
+    dataSource={this.props.composition.map(entity => ({
+      ...entity,
+      key: entity.id,
+      children: entity.children.map(child => ({ ...child, key: child.orderId }))
+    }))}
     pagination={false}
   />
 }

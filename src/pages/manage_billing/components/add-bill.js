@@ -39,20 +39,27 @@ export default class AddBill extends React.Component {
       this.setState({ ...INITIAL_STATE, ingredients, products });
     }
   }
-  onChange = billToCreate => {
-    const { previousBill, ingredients, products } = this.state;
-    const { composition: existingBillComposition } = new Bill(previousBill).get();
-    const { composition: incomingBillComposition } = new Bill(billToCreate).get();
-    const validIncomingBillComposition = incomingBillComposition.filter(({ id, quantity }) => id && quantity);
-    const validExistingBillComposition = existingBillComposition.filter(({ id, quantity }) => id && quantity);
-    const ingredientsToUpdate = new Utils().getIngredientsToUpdate(ingredients, products, validIncomingBillComposition, validExistingBillComposition);
-    const updatedIngredients = ingredients.map(existingIngredient => {
-      const updatedIngredient = ingredientsToUpdate.filter(({ id }) => existingIngredient.id === id)[0];
-      return updatedIngredient || existingIngredient;
-    });
-    const updatedProducts = getEnrichedProducts(products, updatedIngredients);
-    this.setState({ billToCreate, previousBill: billToCreate, ingredients: updatedIngredients, products: updatedProducts });
-  };
+  getIngredients = () => {
+    const { billToCreate, ingredients, products } = this.state;
+    const { composition = [] } = billToCreate;
+    const newComposition = composition
+      .filter(({ orderId }) => !orderId)
+      .reduce((acc, { id: productId }) => {
+        const { composition = [] } = products.filter(({ id }) => id === productId)[0] || {};
+        return [ ...acc, ...composition ];
+      }, []);
+    const ingredientsToUpdate = new Utils().getIngredientsToUpdate(ingredients, newComposition);
+    return ingredients.map(ingredient => {
+      const ingredientToUpdate = ingredientsToUpdate.filter(({ id }) => id === ingredient.id)[0];
+      return { ...(ingredientToUpdate || ingredient) }
+    })
+  }
+  getProducts = () => {
+    const { products } = this.state;
+    return getEnrichedProducts(products, this.getIngredients());
+  }
+
+  onChange = billToCreate => this.setState({ billToCreate });
   addBill = async () => {
     const { businessId } = this.props;
     const bill = new Bill(this.state.billToCreate);
@@ -60,7 +67,7 @@ export default class AddBill extends React.Component {
       this.setState({ showValidationErrors: true });
     } else {
       const billData = bill
-        .enrich(this.props.products)
+        .enrich(this.props.products, this.props.orders)
         .get();
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
@@ -97,8 +104,9 @@ export default class AddBill extends React.Component {
       <BillInfo
         currency={this.props.currency}
         sources={this.props.sources}
-        ingredients={this.state.ingredients}
-        products={this.state.products}
+        ingredients={this.getIngredients()}
+        products={this.getProducts()}
+        orders={this.props.orders}
         bill={this.state.billToCreate}
         showValidationErrors={this.state.showValidationErrors}
         onChange={this.onChange}

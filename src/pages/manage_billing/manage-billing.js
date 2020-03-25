@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { fetchBills } from '../../utils/bills';
 import { Alert, Button } from 'antd';
 import {
   MANAGE_BILLS_PAGE_TITLE,
@@ -12,6 +11,8 @@ import AddBill from './components/add-bill';
 import EditBill from './components/edit-bill';
 import { fetchAllIngredients } from '../../utils/ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
+import { fetchBills, getEnrichedBills } from '../../utils/bills';
+import { fetchOrders } from '../../utils/orders';
 import PrintBill from './components/print-bill';
 import SearchBills from './components/search-bills';
 
@@ -24,6 +25,7 @@ class ManageBillingComponent extends React.Component {
       ingredients: [],
       products: [],
       bills: [],
+      orders: [],
       showAddModal: false,
       showEditModal: false,
       showPrintModal: false,
@@ -39,13 +41,13 @@ class ManageBillingComponent extends React.Component {
     if(businessId) {
       this.fetchAllBills()
     }
-  };
+  }
   componentDidUpdate = prevProps => {
     const { businessId } = this.props;
     if(prevProps.businessId !== businessId && businessId) {
       this.fetchAllBills()
     }
-  };
+  }
   fetchAllBills = async () => {
     const { businessId } = this.props;
     this.setState({ loading: true, errorMessage: '' });
@@ -54,7 +56,10 @@ class ManageBillingComponent extends React.Component {
       const products = await fetchAllProducts(businessId);
       const enrichedProducts = getEnrichedProducts(products, ingredients);
       const bills = await fetchBills(businessId, this.state.query);
-      this.setState({ bills, ingredients, products: enrichedProducts });
+      const orderIds = bills.reduce((acc, { composition }) => [ ...acc, ...composition.filter(({ orderId }) => orderId).map(({ orderId }) => orderId) ], []);
+      const orders = await fetchOrders(businessId, orderIds);
+      const enrichedBills = getEnrichedBills(bills, products, orders);
+      this.setState({ ingredients, products: enrichedProducts, bills: enrichedBills, orders });
     } catch (errorMessage) {
       this.setState({ errorMessage });
     }
@@ -67,7 +72,7 @@ class ManageBillingComponent extends React.Component {
   onSearchChange = async query => {
     await this.setState({ query });
     this.fetchAllBills();
-  };
+  }
   render = () => <>
     <PageHeader
       title={MANAGE_BILLS_PAGE_TITLE(this.state.bills.length)}
@@ -91,6 +96,7 @@ class ManageBillingComponent extends React.Component {
     <AllBills
       currency={this.props.currency}
       loading={this.state.loading}
+      products={this.state.products}
       bills={this.state.bills}
       showEditModal={this.showEditModal}
       showPrintModal={this.showPrintModal}
@@ -103,6 +109,7 @@ class ManageBillingComponent extends React.Component {
       businessId={this.props.businessId}
       ingredients={this.state.ingredients}
       products={this.state.products}
+      orders={this.state.orders}
       fetchAllBills={this.fetchAllBills}
     />
     <EditBill
@@ -113,12 +120,14 @@ class ManageBillingComponent extends React.Component {
       businessId={this.props.businessId}
       ingredients={this.state.ingredients}
       products={this.state.products}
+      orders={this.state.orders}
       billToUpdate={this.state.billToUpdate}
       fetchAllBills={this.fetchAllBills}
     />
     <PrintBill
       visible={this.state.showPrintModal}
       hideModal={this.hideModal}
+      products={this.state.products}
       billToPrint={this.state.billToPrint}
     />
   </>;
@@ -130,7 +139,7 @@ export default class ManageBilling extends React.Component {
     {({ currentBusiness }) => <ManageBillingComponent
       businessId={currentBusiness.id}
       currency={currentBusiness.currency}
-      sources={currentBusiness.metadata.sources || []}
+      sources={currentBusiness.billSources || []}
     />}
   </Consumer>
 }

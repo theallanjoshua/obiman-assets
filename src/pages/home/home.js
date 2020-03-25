@@ -75,7 +75,7 @@ export default class Home extends React.Component {
   render = () => <Consumer>
     {({ currentBusiness }) => <HomeComponent
       currency={currentBusiness.currency}
-      sources={currentBusiness.metadata.sources || []}
+      sources={currentBusiness.billSources || []}
     />}
   </Consumer>
 }

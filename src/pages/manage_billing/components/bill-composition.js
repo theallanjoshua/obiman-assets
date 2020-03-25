@@ -3,31 +3,32 @@ import BillCompositionEntity from './bill-composition-entity';
 import { Row, Col, Button } from 'antd';
 
 export default class BillComposition extends React.Component {
-  componentDidMount() {
-    if(!this.props.composition.length) {
-      this.addEntity();
-    }
-  }
-  componentDidUpdate() {
-    if(!this.props.composition.length) {
-      this.addEntity();
-    }
+  updateComposition = composition => {
+    const updatedComposition = composition.reduce((acc, compositionEntity) => [
+      ...acc,
+      ...compositionEntity.quantity > 1 ? [
+        ...new Array(compositionEntity.quantity)
+      ].map(() => ({ ...compositionEntity, quantity: 1 })) : [{
+        ...compositionEntity
+      }]
+    ], []);
+    this.props.onChange(updatedComposition);
   }
   onChange = (incomingEntity, incomingIndex) => {
     const composition = this.props.composition.map((entity, index) => index === incomingIndex ? { ...incomingEntity } : { ...entity })
-    this.props.onChange(composition);
+    this.updateComposition(composition);
   }
-  addEntity = () => this.props.onChange([ ...this.props.composition, { id: '', quantity: '' } ]);
-  removeEntity = indexToRemove => this.props.onChange([ ...this.props.composition.filter((item, index) => index !== indexToRemove) ]);
+  addEntity = () => this.updateComposition([ ...this.props.composition, { id: '', quantity: 1 } ]);
+  removeEntity = indexToRemove => this.updateComposition([ ...this.props.composition.filter((item, index) => index !== indexToRemove) ]);
   render = () => <React.Fragment>
     <Row gutter={8}>
       <Col span={22}>
         <Row gutter={8}>
-          <Col span={10}>
-            <label>Product</label>
-          </Col>
           <Col span={4}>
             <label>Qty</label>
+          </Col>
+          <Col span={10}>
+            <label>Product</label>
           </Col>
           <Col span={5}>
             <label>Price</label>
@@ -38,8 +39,8 @@ export default class BillComposition extends React.Component {
         </Row>
       </Col>
     </Row>
-    {this.props.composition.map((entity, index) => {
-      const usedProducts = this.props.composition.filter(({ id }) => entity.id !== id).map(({ id }) => id);
+    {this.props.composition.map((entity, index, array) => {
+      const usedProducts = array.filter(({ id }) => entity.id !== id).map(({ id }) => id);
       const availableProducts = this.props.products.filter(({ id }) => !usedProducts.includes(id));
       return <Row key={index} gutter={8}>
         <Col span={22}>
@@ -52,7 +53,7 @@ export default class BillComposition extends React.Component {
           />
         </Col>
         <Col span={2}>
-          {this.props.composition.length > 1 ? <Button
+          {array.length > 1 ? <Button
             icon='delete'
             type='danger'
             onClick={() => this.removeEntity(index)}

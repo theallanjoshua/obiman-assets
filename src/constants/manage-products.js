@@ -14,7 +14,11 @@ export const PRODUCT_ADDED_SUCCESSFULLY_MESSAGE = label => `${label} added to pr
 export const EDIT_MODAL_HEADER = 'Edit product';
 export const PRODUCT_EDITED_SUCCESSFULLY_MESSAGE = label => `${label} edited successfully`;
 
-export const ProductImage = ({ product }) => <S3ToImage s3Key={product.image} />;
+export const ProductImage = ({ product, width, height }) => <S3ToImage
+  s3Key={product.image}
+  width={width}
+  height={height}
+/>;
 export const ProductLabel = ({ product }) => product.label;
 export const ProductEdit = ({ product }) => <Button
   type='link'

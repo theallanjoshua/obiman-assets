@@ -100,8 +100,8 @@ export default class ManageProducts extends React.Component {
     {({ currentBusiness }) => <ManageProductsComponent
       businessId={currentBusiness.id}
       currency={currentBusiness.currency}
-      classifications={currentBusiness.metadata.productClassifications || []}
-      taxes={currentBusiness.metadata.taxes || []}
+      classifications={currentBusiness.productClassifications || []}
+      taxes={currentBusiness.productTaxesTypes || []}
     />}
   </Consumer>
 }

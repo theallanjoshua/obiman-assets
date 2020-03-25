@@ -6,14 +6,18 @@ export const PRODUCTS_MENU_ITEM_TITLE = 'Products';
 export const PRODUCTS = `/products`;
 export const BILLING_MENU_ITEM_TITLE = 'Billing';
 export const BILLING = '/billing';
+export const ORDERS_MENU_ITEM_TITLE = 'Orders';
+export const ORDERS = '/orders';
 export const PAGE_URL_TITLE_MAP = {
   [HOME]: HOME_MENU_ITEM_TITLE,
   [INGREDIENTS]: INGREDIENTS_MENU_ITEM_TITLE,
   [PRODUCTS]: PRODUCTS_MENU_ITEM_TITLE,
   [BILLING]: BILLING_MENU_ITEM_TITLE,
+  [ORDERS]: ORDERS_MENU_ITEM_TITLE
 }
 export const BREADCRUMB_MAP = {
   [INGREDIENTS]: [INGREDIENTS],
   [PRODUCTS]: [PRODUCTS],
-  [BILLING]: [BILLING]
+  [BILLING]: [BILLING],
+  [ORDERS]: [ORDERS]
 };

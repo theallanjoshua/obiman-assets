@@ -14,7 +14,11 @@ export const INGREDIENT_ADDED_SUCCESSFULLY_MESSAGE = label => `${label} added to
 export const EDIT_MODAL_HEADER = 'Edit ingredient';
 export const INGREDIENT_EDITED_SUCCESSFULLY_MESSAGE = label => `${label} edited successfully`;
 
-export const IngredientImage = ({ ingredient }) => <S3ToImage s3Key={ingredient.image} />;
+export const IngredientImage = ({ ingredient, width, height }) => <S3ToImage
+  s3Key={ingredient.image}
+  width={width}
+  height={height}
+/>;
 export const IngredientLabel = ({ ingredient }) => ingredient.label;
 export const IngredientEdit = ({ ingredient }) => <Button
   type='link'

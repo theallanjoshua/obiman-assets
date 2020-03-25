@@ -40,16 +40,11 @@ export default class BusinessInfo extends React.Component {
   setCoordinates = coordinates => this.set('coordinates', coordinates);
   setCurrency = currency => this.set('currency', currency);
   setEmployees = employees => this.set('employees', employees);
-  setMetadata = (key, value) => {
-    const business = new Business({ ...this.props.business });
-    const { metadata: existingMetadata } = business.get();
-    const metadata = { ...existingMetadata, [key]: value };
-    this.set('metadata', metadata);
-  }
-  setSources = sources => this.setMetadata('sources', sources);
-  setTaxes = taxes => this.setMetadata('taxes', taxes);
-  setIngredientLocations = ingredientLocations => this.setMetadata('ingredientLocations', ingredientLocations);
-  setProductClassifications = productClassifications => this.setMetadata('productClassifications', productClassifications);
+  setIngredientLocations = ingredientLocations => this.set('ingredientLocations', ingredientLocations);
+  setProductClassifications = productClassifications => this.set('productClassifications', productClassifications);
+  setProductTaxTypes = productTaxesTypes => this.set('productTaxesTypes', productTaxesTypes);
+  setBillSources = billSources => this.set('billSources', billSources);
+  setTables = tables => this.set('tables', tables);
   render = () => {
     const business = new Business({ ...this.props.business });
     const businessData = business.get();
@@ -146,10 +141,10 @@ export default class BusinessInfo extends React.Component {
           <Form.Item
             { ...formItemLayout }
             label={'Ingredient locations'}
-            { ...formValidation(this.props.showValidationErrors, (validationErrors.metadata || {}).ingredientLocations) }
+            { ...formValidation(this.props.showValidationErrors, validationErrors.ingredientLocations) }
             children={
               <StringArrayEditor
-                items={businessData.metadata.ingredientLocations || []}
+                items={businessData.ingredientLocations || []}
                 placeholder={'Eg: Freezer'}
                 onChange={this.setIngredientLocations}
               />
@@ -160,10 +155,10 @@ export default class BusinessInfo extends React.Component {
           <Form.Item
             { ...formItemLayout }
             label={'Product classifications'}
-            { ...formValidation(this.props.showValidationErrors, (validationErrors.metadata || {}).productClassifications) }
+            { ...formValidation(this.props.showValidationErrors, validationErrors.productClassifications) }
             children={
               <StringArrayEditor
-                items={businessData.metadata.productClassifications || []}
+                items={businessData.productClassifications || []}
                 placeholder={'Eg: Salad'}
                 onChange={this.setProductClassifications}
               />
@@ -174,12 +169,12 @@ export default class BusinessInfo extends React.Component {
           <Form.Item
             { ...formItemLayout }
             label={'Tax types'}
-            { ...formValidation(this.props.showValidationErrors, (validationErrors.metadata || {}).taxes) }
+            { ...formValidation(this.props.showValidationErrors, validationErrors.productTaxesTypes) }
             children={
               <StringArrayEditor
-                items={businessData.metadata.taxes || []}
+                items={businessData.productTaxesTypes || []}
                 placeholder={'Eg: VAT'}
-                onChange={this.setTaxes}
+                onChange={this.setProductTaxTypes}
               />
             }
           />
@@ -188,12 +183,12 @@ export default class BusinessInfo extends React.Component {
           <Form.Item
             { ...formItemLayout }
             label={'Billing sources'}
-            { ...formValidation(this.props.showValidationErrors, (validationErrors.metadata || {}).sources) }
+            { ...formValidation(this.props.showValidationErrors, validationErrors.billSources) }
             children={
               <StringArrayEditor
-                items={businessData.metadata.sources || []}
+                items={businessData.billSources || []}
                 placeholder={'Eg: Uber eats'}
-                onChange={this.setSources}
+                onChange={this.setbillSources}
               />
             }
           />

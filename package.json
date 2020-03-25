@@ -25,7 +25,7 @@
     "chart.js": "^2.9.2",
     "material-color-hash": "^0.1.6",
     "moment": "^2.24.0",
-    "obiman-data-models": "^1.0.80",
+    "obiman-data-models": "^1.0.95",
     "prettysize": "^2.0.0",
     "rainbow-colors-array": "0.0.31",
     "random-facts": "^1.0.6",
