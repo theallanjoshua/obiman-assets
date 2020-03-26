@@ -2,6 +2,11 @@ import * as React from 'react';
 import { Table } from 'antd';
 import { Utils, Order } from 'obiman-data-models';
 
+const getBusinessStatusShortLabel = status => (new Order()
+  .getStates()
+  .filter(({ id }) => id === status)[0] || { business: { shortLabel: '' } }
+).business.shortLabel;
+
 export default class BillCompositionReadonly extends React.Component {
   render = () => <Table
     size='small'
@@ -23,9 +28,17 @@ export default class BillCompositionReadonly extends React.Component {
       {
         title: 'Status',
         dataIndex: 'status',
-        render: (text, { status }) => (new Order().getStates().filter(({ id }) => id === status)[0] || { business: { shortLabel: '' } }).business.shortLabel
+        render: (text, { status, children = [], quantity }) => {
+          const orderPositiveEndState = new Order().getPositiveEndState();
+          if(status) {
+            return getBusinessStatusShortLabel(status);
+          } else {
+            const positiveEndStateOrdersCount = children.filter(({ status }) => status === orderPositiveEndState).length;
+            return positiveEndStateOrdersCount === quantity ? getBusinessStatusShortLabel(orderPositiveEndState) : `${positiveEndStateOrdersCount}/${quantity} ${getBusinessStatusShortLabel(orderPositiveEndState)}`;
+          }
+        }
       },
-  ]}
+    ]}
     dataSource={this.props.composition.map(entity => ({
       ...entity,
       key: entity.id,

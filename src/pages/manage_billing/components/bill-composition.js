@@ -3,16 +3,6 @@ import BillCompositionEntity from './bill-composition-entity';
 import { Row, Col, Button } from 'antd';
 
 export default class BillComposition extends React.Component {
-  componentDidMount() {
-    if(!this.props.composition.length) {
-      this.addEntity();
-    }
-  }
-  componentDidUpdate() {
-    if(!this.props.composition.length) {
-      this.addEntity();
-    }
-  }
   updateComposition = composition => {
     const updatedComposition = composition.reduce((acc, compositionEntity) => [
       ...acc,
@@ -63,11 +53,11 @@ export default class BillComposition extends React.Component {
           />
         </Col>
         <Col span={2}>
-          {array.length > 1 ? <Button
+          <Button
             icon='delete'
             type='danger'
             onClick={() => this.removeEntity(index)}
-          /> : null }
+          />
         </Col>
       </Row>
     })}

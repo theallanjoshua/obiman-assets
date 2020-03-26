@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { Tabs, Button, Table, Alert } from 'antd';
+import { Tabs, Button, Alert, Tree, Spin } from 'antd';
 import { Order } from 'obiman-data-models';
 import { ORDERS_API_URL } from '../../../constants/endpoints';
 import Network from '../../../utils/network';
+
+const { TreeNode } = Tree;
+const { TabPane } = Tabs;
 
 class OrdersByState extends React.Component {
   constructor() {
@@ -35,44 +38,49 @@ class OrdersByState extends React.Component {
   }
   render = () => {
     const order = new Order();
+    const groupedOrders = this.props.orders.reduce((acc, { id, source, sourceId, productLabel }) => {
+      const { products = [] } = acc.filter(item => item.source === source && item.sourceId === sourceId)[0] || {};
+      return [ ...acc.filter(item => item.source !== source || item.sourceId !== sourceId), {
+        source,
+        sourceId,
+        products: [ ...products, {
+          key: id,
+          title: productLabel
+        }]
+      }];
+    }, []);
     return <>
       {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
       {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
       <br />
-      <div className='right-align'>
+      {groupedOrders.length ? <Tree
+        checkable
+        selectable={false}
+        defaultExpandAll
+        onCheck={this.onSelectionChange}
+      >
+        {groupedOrders.map(({ source, sourceId, products }) => <TreeNode
+          disableCheckbox
+          key={`${source}${sourceId}`}
+          title={`${source} ${sourceId}`}
+        >
+          {products.map(({ key, title }) => <TreeNode
+            key={key}
+            title={title}
+          />)}
+        </TreeNode>)}
+      </Tree> : null}
+      <br />
+      <div className='flex-wrap'>
         {this.props.nextStates.map(nextState => <Button
           key={nextState}
           style={{ marginLeft: '10px' }}
           children={nextState}
           type={(order.getStates().filter(({ id, isNegative }) => id === nextState && isNegative).length ? 'danger' : 'primary')}
-          disabled={!this.state.selectedOrderIds.length || this.props.loading}
+          disabled={!this.state.selectedOrderIds.length || this.state.loading}
           onClick={() => this.editOrders(nextState)}
         />)}
       </div>
-      <br />
-      <Table
-        // size='small'
-        columns={[
-          {
-            title: 'Product',
-            dataIndex: 'productLabel',
-            render: (text, { productLabel }) => <a>{productLabel}</a>
-          },
-          {
-            title: 'Source',
-            dataIndex: 'source'
-          },
-          {
-            title: 'Source ID',
-            dataIndex: 'sourceId'
-          }
-        ]}
-        scroll={{ y: '45vh' }}
-        pagination={false}
-        loading={this.props.loading}
-        dataSource={this.props.orders.map(entity => ({...entity, key: entity.id }))}
-        rowSelection={{ onChange: this.onSelectionChange }}
-      />
     </>
   }
 }
@@ -83,18 +91,20 @@ const AllOrders = ({ loading, orders, fetchOngoingOrders, businessId }) => {
       .getStates()
       .map(({ id, business: { shortLabel, nextStates } }) => {
         const ordersByState = orders.filter(({ status }) => status === id);
-        return <Tabs.TabPane
+        return <TabPane
           key={id}
           tab={`${shortLabel} (${ordersByState.length})`}
         >
-          <OrdersByState
-            loading={loading}
-            nextStates={nextStates}
-            orders={ordersByState}
-            fetchOngoingOrders={fetchOngoingOrders}
-            businessId={businessId}
-          />
-        </Tabs.TabPane>
+          <Spin spinning={loading}>
+            <OrdersByState
+              loading={loading}
+              nextStates={nextStates}
+              orders={ordersByState}
+              fetchOngoingOrders={fetchOngoingOrders}
+              businessId={businessId}
+            />
+          </Spin>
+        </TabPane>
       })}
   </Tabs>
 }
