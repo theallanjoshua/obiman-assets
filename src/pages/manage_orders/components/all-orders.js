@@ -45,7 +45,7 @@ class OrdersByState extends React.Component {
           style={{ marginLeft: '10px' }}
           children={nextState}
           type={(order.getStates().filter(({ id, isNegative }) => id === nextState && isNegative).length ? 'danger' : 'primary')}
-          disabled={!this.state.selectedOrderIds.length}
+          disabled={!this.state.selectedOrderIds.length || this.props.loading}
           onClick={() => this.editOrders(nextState)}
         />)}
       </div>

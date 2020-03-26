@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Network from '../utils/network';
-import { Avatar, Icon, Empty } from 'antd';
+import { Avatar, Icon } from 'antd';
 import toMaterialStyle from 'material-color-hash';
 
 export default class S3ToImage extends React.Component {
@@ -42,9 +42,7 @@ export default class S3ToImage extends React.Component {
     src={this.state.src}
     alt={this.props.alt}
   /> :  <Icon
-    style={{
-      fontSize: '160px'
-    }}
+    style={{ fontSize: `${this.props.height || 160}px` }}
     theme='filled'
     type='picture'
   />;

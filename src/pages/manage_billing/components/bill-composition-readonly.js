@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Table } from 'antd';
-import { Utils } from 'obiman-data-models';
+import { Utils, Order } from 'obiman-data-models';
 
 export default class BillCompositionReadonly extends React.Component {
   render = () => <Table
@@ -8,7 +8,8 @@ export default class BillCompositionReadonly extends React.Component {
     columns={[
       {
         title: 'Qty',
-        dataIndex: 'quantity'
+        dataIndex: 'quantity',
+        width: '50px'
       },
       {
         title: 'Product',
@@ -21,7 +22,8 @@ export default class BillCompositionReadonly extends React.Component {
       },
       {
         title: 'Status',
-        dataIndex: 'status'
+        dataIndex: 'status',
+        render: (text, { status }) => (new Order().getStates().filter(({ id }) => id === status)[0] || { business: { shortLabel: '' } }).business.shortLabel
       },
   ]}
     dataSource={this.props.composition.map(entity => ({

@@ -3,6 +3,16 @@ import BillCompositionEntity from './bill-composition-entity';
 import { Row, Col, Button } from 'antd';
 
 export default class BillComposition extends React.Component {
+  componentDidMount() {
+    if(!this.props.composition.length) {
+      this.addEntity();
+    }
+  }
+  componentDidUpdate() {
+    if(!this.props.composition.length) {
+      this.addEntity();
+    }
+  }
   updateComposition = composition => {
     const updatedComposition = composition.reduce((acc, compositionEntity) => [
       ...acc,
