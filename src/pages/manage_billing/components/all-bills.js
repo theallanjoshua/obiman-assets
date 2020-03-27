@@ -57,14 +57,14 @@ export default class AllBills extends React.Component {
                 {billData.source}
                 {` ${billData.sourceId}`}
                 <div>
-                  {!this.props.disableEdit ? <Tooltip
+                  {this.props.isCustomerView && [ bill.getPositiveEndState(), bill.getNegativeEndState() ].includes(billData.status) ? null : <Tooltip
                     title={EDIT_BILL_BUTTON_TEXT}
                     children={<Button
                       type='link'
                       icon='edit'
                       onClick={() => this.showEditModal(bill)}
                     />}
-                  /> : null}
+                  />}
                   <Tooltip
                     title={PRINT_BILL_BUTTON_TEXT}
                     children={<Button
@@ -92,7 +92,7 @@ export default class AllBills extends React.Component {
       })}
     </div> :
   <Empty description='No bills available' />}
-  {!this.props.disableEdit ? <EditBill
+  <EditBill
     visible={this.state.showEditModal}
     billToUpdate={this.state.billToUpdate}
     hideModal={this.hideModal}
@@ -103,7 +103,7 @@ export default class AllBills extends React.Component {
     sources={this.props.sources || []}
     businessId={this.props.businessId}
     onSuccess={this.props.onSuccess}
-  /> : null}
+  />
   <PrintBill
     visible={this.state.showPrintModal}
     billToPrint={this.state.billToPrint}

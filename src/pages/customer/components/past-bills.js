@@ -36,7 +36,7 @@ export default class PastBills extends React.Component {
     <AllBills
       loading={this.state.loading}
       bills={this.state.bills}
-      disableEdit
+      isCustomerView
     />
   </>;
 }

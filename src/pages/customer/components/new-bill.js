@@ -20,7 +20,8 @@ export default class NewBill extends React.Component {
       ingredients: [],
       products: [],
       showAddModal: false,
-      billToCreate: {}
+      billToCreate: {},
+      addSuccessful: false
     }
   }
   componentDidUpdate = (prevProps, prevState) => {
@@ -60,17 +61,19 @@ export default class NewBill extends React.Component {
         }
       }
     } catch (errorMessage) {
-      this.setState({ errorMessage })
+      this.setState({ errorMessage });
     }
     this.setState({ loading: false });
   }
   hideModal = () => {
     this.setState({
       showAddModal: false,
-      successMessage: 'Your order has been created successfully. You can now view, edit & manage them in the "Ongoing orders" tab.'
+      successMessage: this.state.addSuccessful ? 'Your order has been created successfully. You can now view, edit & manage them in the "Ongoing orders" tab.' : '',
+      addSuccessful: false
     });
     setTimeout(() => this.setState({ successMessage: '' }), 5000);
-  };
+  }
+  onSuccess = () => this.setState({ addSuccessful: true });
   onError = errorMessage => this.setState({ errorMessage });
   onScan = data => {
     if(data && data !== this.state.data) {
@@ -95,7 +98,7 @@ export default class NewBill extends React.Component {
       products={this.state.products}
       bill={this.state.billToCreate}
       hideModal={this.hideModal}
-      onSuccess={() => {}}
+      onSuccess={this.onSuccess}
     />
   </Spin>
 }

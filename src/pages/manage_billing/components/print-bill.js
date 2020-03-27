@@ -43,7 +43,7 @@ export default class PrintBill extends React.Component {
               alt={currentBusiness.label}
               s3Key={currentBusiness.logo}
             /> : null}
-            <Title>{currentBusiness.label}</Title>
+            <Title>{currentBusiness.label || billData.businessLabel}</Title>
             {currentBusiness.address ? <div className='baseline-align'>
               <Icon type='home' style={{ paddingRight: '8px' }} />
               <Paragraph>{currentBusiness.address}</Paragraph>
@@ -81,11 +81,11 @@ export default class PrintBill extends React.Component {
           <br />
           <BillCompositionReadonly
             composition={bill.getGroupedComposition()}
-            currency={currentBusiness.currency}
+            currency={currentBusiness.currency || billData.currency}
           />
           <BillTotal
             bill={billData}
-            currency={currentBusiness.currency}
+            currency={currentBusiness.currency || billData.currency}
           />
         </div>
       </Modal>}
