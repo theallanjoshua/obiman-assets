@@ -9,7 +9,7 @@ export default class Employees extends React.Component {
   }
   addEmployee = (id = '', permissions = []) => this.props.onChange([ ...this.props.employees, { id, permissions } ]);
   removeEmployee = indexToRemove => this.props.onChange([ ...this.props.employees.filter((item, index) => index !== indexToRemove) ]);
-  render = () => <React.Fragment>
+  render = () => <>
     <Row gutter={8}>
       <Col span={11}>
         <label>Email</label>
@@ -39,5 +39,5 @@ export default class Employees extends React.Component {
       children='Add'
       onClick={() => this.addEmployee()}
     />
-  </React.Fragment>
+  </>
 };

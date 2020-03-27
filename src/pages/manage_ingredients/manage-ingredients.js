@@ -54,7 +54,7 @@ class ManageIngredientsComponent extends React.Component {
   render = () => <>
     <PageHeader
       title={MANAGE_INGREDIENTS_PAGE_TITLE(this.state.ingredients.length)}
-      extra={<React.Fragment>
+      extra={<>
         <Button
           style={{ marginRight: '4px' }}
           type='primary'
@@ -73,7 +73,7 @@ class ManageIngredientsComponent extends React.Component {
           icon='reload'
           onClick={this.fetchAllIngredients}
         />
-      </React.Fragment>}
+      </>}
     />
     <br />
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}

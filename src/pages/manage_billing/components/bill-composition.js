@@ -20,7 +20,7 @@ export default class BillComposition extends React.Component {
   }
   addEntity = () => this.updateComposition([ ...this.props.composition, { id: '', quantity: 1 } ]);
   removeEntity = indexToRemove => this.updateComposition([ ...this.props.composition.filter((item, index) => index !== indexToRemove) ]);
-  render = () => <React.Fragment>
+  render = () => <>
     <Row gutter={8}>
       <Col span={22}>
         <Row gutter={8}>
@@ -66,5 +66,5 @@ export default class BillComposition extends React.Component {
       children='Add'
       onClick={this.addEntity}
     />
-  </React.Fragment>
+  </>
 };

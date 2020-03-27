@@ -54,7 +54,7 @@ class ManageProductsComponent extends React.Component {
   render = () => <>
     <PageHeader
       title={MANAGE_PRODUCTS_PAGE_TITLE(this.state.products.length)}
-      extra={<React.Fragment>
+      extra={<>
         <Button
           style={{ marginRight: '4px' }}
           type='primary'
@@ -66,7 +66,7 @@ class ManageProductsComponent extends React.Component {
           icon='reload'
           onClick={this.fetchAllProducts}
         />
-      </React.Fragment>}
+      </>}
     />
     <br />
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}

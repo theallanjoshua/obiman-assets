@@ -9,7 +9,7 @@ export default class Contacts extends React.Component {
   }
   addContact = (type = '', info = '') => this.props.onChange([ ...this.props.contacts, { type, info } ]);
   removeContact = indexToRemove => this.props.onChange([ ...this.props.contacts.filter((item, index) => index !== indexToRemove) ]);
-  render = () => <React.Fragment>
+  render = () => <>
     {this.props.contacts.map((contact, index) => <Row key={index} gutter={8}>
         <Col span={22}>
           <Contact
@@ -31,5 +31,5 @@ export default class Contacts extends React.Component {
       children='Add'
       onClick={() => this.addContact()}
     />
-  </React.Fragment>
+  </>
 };

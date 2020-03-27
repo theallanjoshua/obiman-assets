@@ -18,7 +18,6 @@ const INITIAL_STATE = {
   ingredients: [],
   products: [],
   billToCreate: {},
-  previousBill: {},
   showValidationErrors: false
 }
 
@@ -34,9 +33,9 @@ export default class AddBill extends React.Component {
   }
   componentDidUpdate = prevProps => {
     const { visible: prevVisible } = prevProps;
-    const { visible, ingredients, products } = this.props;
+    const { visible, ingredients, products, bill } = this.props;
     if (!prevVisible && visible) {
-      this.setState({ ...INITIAL_STATE, ingredients, products });
+      this.setState({ ...INITIAL_STATE, ingredients, products, billToCreate: bill || {} });
     }
   }
   getIngredients = () => {
@@ -67,13 +66,13 @@ export default class AddBill extends React.Component {
       this.setState({ showValidationErrors: true });
     } else {
       const billData = bill
-        .enrich(this.props.products, this.props.orders)
+        .enrich(this.props.products, [])
         .get();
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
         await Network.post(BILLS_API_URL(businessId), billData);
         this.setState({ errorMessage: '', successMessage: BILL_ADDED_SUCCESSFULLY_MESSAGE });
-        this.props.fetchAllBills(businessId);
+        this.props.onSuccess(businessId);
         setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });
@@ -106,7 +105,7 @@ export default class AddBill extends React.Component {
         sources={this.props.sources}
         ingredients={this.getIngredients()}
         products={this.getProducts()}
-        orders={this.props.orders}
+        orders={[]}
         bill={this.state.billToCreate}
         showValidationErrors={this.state.showValidationErrors}
         onChange={this.onChange}

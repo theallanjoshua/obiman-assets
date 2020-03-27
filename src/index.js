@@ -8,7 +8,8 @@ import {
   INGREDIENTS,
   PRODUCTS,
   BILLING,
-  ORDERS
+  ORDERS,
+  CUSTOMER
 } from './constants/pages';
 import { PAGE_ERROR } from './constants/app';
 import Credentials from './utils/credentials';
@@ -21,11 +22,17 @@ import ManageProducts from './pages/manage_products/manage-products';
 import ManageBusinesses from './pages/manage_businesses/manage-businesses';
 import ManageBilling from './pages/manage_billing/manage-billing';
 import ManageOrders from './pages/manage_orders/manage-orders';
+import Customer from './pages/customer/customer';
 import { fetchUser } from './utils/user';
 import 'antd/dist/antd.less';
 import './index.less';
 
 const { Content } = Layout;
+const ObimanLayout = ({ content }) => <Layout style={{ minHeight: '100vh', padding: '30px' }}>
+  <Content>
+    {content}
+  </Content>
+</Layout>;
 
 class App extends React.Component {
   constructor() {
@@ -69,8 +76,7 @@ class App extends React.Component {
     try {
       const user = await fetchUser(this.state.email);;
       const { businesses } = user;
-      const currentBusiness = businesses.length === 1 ? businesses[0] : {};
-      this.setState({ businesses, currentBusiness });
+      this.setState({ businesses });
     } catch (errorMessage) {
       this.setState({ errorMessage });
     }
@@ -95,28 +101,27 @@ class App extends React.Component {
         marginRight: 'auto',
         marginTop: '20px'
       }}
-    /> : !this.state.currentBusiness.id ? <ManageBusinesses
-    /> : this.state.showBusinessManagement ? <ManageBusinesses
-      enableEdit
-    /> : <Spin spinning={this.state.loading}>
-          <Router>
-            <TopNavigation />
-            <Layout style={{ minHeight: '100vh', padding: '30px' }}>
-              <Content>
-                <BreadcrumbBar />
-                <br />
-                <Switch>
-                  <Route exact path={HOME} component={ConsoleHome} />
-                  <Route exact path={INGREDIENTS} component={ManageIngredients} />
-                  <Route exact path={PRODUCTS} component={ManageProducts} />
-                  <Route exact path={BILLING} component={ManageBilling} />
-                  <Route exact path={ORDERS} component={ManageOrders} />
-                  <Route component={NotFound} />
-                </Switch>
-              </Content>
-            </Layout>
-            <BottomNavigation />
-        </Router>
+    /> : window.location.href.includes(CUSTOMER) ? <ObimanLayout content={<Customer email={this.state.email} />} /> :
+    !this.state.currentBusiness.id ? <ManageBusinesses/> :
+    this.state.showBusinessManagement ? <ManageBusinesses enableEdit /> :
+    <Spin spinning={this.state.loading}>
+      <Router>
+        <TopNavigation />
+        <ObimanLayout content={<>
+          <BreadcrumbBar />
+          <br />
+          <Switch>
+            <Route exact path={HOME} component={ConsoleHome} />
+            <Route exact path={INGREDIENTS} component={ManageIngredients} />
+            <Route exact path={PRODUCTS} component={ManageProducts} />
+            <Route exact path={BILLING} component={ManageBilling} />
+            <Route exact path={ORDERS} component={ManageOrders} />
+            <Route component={NotFound} />
+          </Switch>
+        </>}
+        />
+        <BottomNavigation />
+      </Router>
     </Spin>}
   </Provider>;
 }

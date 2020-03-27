@@ -7,6 +7,8 @@ import {
 import BillTotal from './bill-total';
 import BillCompositionReadonly from './bill-composition-readonly';
 import { Bill } from 'obiman-data-models';
+import EditBill from './edit-bill';
+import PrintBill from './print-bill';
 
 const Frills = ({ isBottom }) => <div style={{ paddingLeft: '10px' }}>
   {[ ...new Array(10) ].map((item, index) => <span
@@ -22,6 +24,18 @@ const Frills = ({ isBottom }) => <div style={{ paddingLeft: '10px' }}>
 </div>
 
 export default class AllBills extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      showEditModal: false,
+      showPrintModal: false,
+      billToUpdate: {},
+      billToPrint: {}
+    }
+  }
+  showEditModal = billToUpdate => this.setState({ billToUpdate, showEditModal: true });
+  showPrintModal = billToPrint => this.setState({ billToPrint, showPrintModal: true });
+  hideModal = () => this.setState({ showEditModal: false, showPrintModal: false });
   render = () => <Spin spinning={this.props.loading}>
   {this.props.bills.length ?
     <div className='flex-wrap'>
@@ -43,20 +57,20 @@ export default class AllBills extends React.Component {
                 {billData.source}
                 {` ${billData.sourceId}`}
                 <div>
-                  <Tooltip
+                  {!this.props.disableEdit ? <Tooltip
                     title={EDIT_BILL_BUTTON_TEXT}
                     children={<Button
                       type='link'
                       icon='edit'
-                      onClick={() => this.props.showEditModal(bill)}
+                      onClick={() => this.showEditModal(bill)}
                     />}
-                  />
+                  /> : null}
                   <Tooltip
                     title={PRINT_BILL_BUTTON_TEXT}
                     children={<Button
                       type='link'
                       icon='printer'
-                      onClick={() => this.props.showPrintModal(bill)}
+                      onClick={() => this.showPrintModal(bill)}
                     />}
                   />
                 </div>
@@ -65,11 +79,11 @@ export default class AllBills extends React.Component {
             children={<>
               <BillCompositionReadonly
                 composition={bill.getGroupedComposition()}
-                currency={this.props.currency}
+                currency={this.props.currency || billData.currency}
               />
               <BillTotal
                 bill={billData}
-                currency={this.props.currency}
+                currency={this.props.currency || billData.currency}
               />
             </>}
           />
@@ -78,5 +92,22 @@ export default class AllBills extends React.Component {
       })}
     </div> :
   <Empty description='No bills available' />}
+  {!this.props.disableEdit ? <EditBill
+    visible={this.state.showEditModal}
+    billToUpdate={this.state.billToUpdate}
+    hideModal={this.hideModal}
+    ingredients={this.props.ingredients || []}
+    products={this.props.products || []}
+    orders={this.props.orders || []}
+    currency={this.props.currency}
+    sources={this.props.sources || []}
+    businessId={this.props.businessId}
+    onSuccess={this.props.onSuccess}
+  /> : null}
+  <PrintBill
+    visible={this.state.showPrintModal}
+    billToPrint={this.state.billToPrint}
+    hideModal={this.hideModal}
+  />
 </Spin>
 }

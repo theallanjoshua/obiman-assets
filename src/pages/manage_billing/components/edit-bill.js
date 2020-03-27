@@ -76,7 +76,7 @@ export default class EditBill extends React.Component {
       try {
         await Network.put(BILLS_API_URL(businessId), billData);
         this.setState({ errorMessage: '', successMessage: BILL_EDITED_SUCCESSFULLY_MESSAGE });
-        this.props.fetchAllBills(businessId);
+        this.props.onSuccess(businessId);
         setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });

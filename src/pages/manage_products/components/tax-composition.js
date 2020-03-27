@@ -10,7 +10,7 @@ export default class TaxComposition extends React.Component {
   }
   addEntity = () => this.props.onChange([ ...this.props.tax, new Tax().get() ]);
   removeEntity = indexToRemove => this.props.onChange([ ...this.props.tax.filter((item, index) => index !== indexToRemove) ]);
-  render = () => <React.Fragment>
+  render = () => <>
     <Row gutter={8}>
       <Col span={11}>
         <label>Type</label>
@@ -41,5 +41,5 @@ export default class TaxComposition extends React.Component {
       children='Add'
       onClick={this.addEntity}
     />
-  </React.Fragment>
+  </>
 };

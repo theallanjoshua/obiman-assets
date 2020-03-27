@@ -100,8 +100,7 @@ export default class BillInfo extends React.Component {
       />
       <Form.Item
         { ...formItemLayout }
-        label={'Items'}
-        required
+        label={'Products'}
         children={<>
           <BillCompositionReadonly
             composition={bill.getGroupedComposition(({ orderId }) => orderId)}

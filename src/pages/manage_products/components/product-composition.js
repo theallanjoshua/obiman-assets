@@ -10,7 +10,7 @@ export default class ProductComposition extends React.Component {
   }
   addEntity = () => this.props.onChange([ ...this.props.composition, new Product().get() ]);
   removeEntity = indexToRemove => this.props.onChange([ ...this.props.composition.filter((item, index) => index !== indexToRemove) ]);
-  render = () => <React.Fragment>
+  render = () => <>
     <Row gutter={8}>
       <Col span={11}>
         <label>Ingredient</label>
@@ -45,5 +45,5 @@ export default class ProductComposition extends React.Component {
       children='Add'
       onClick={this.addEntity}
     />
-  </React.Fragment>
+  </>
 };

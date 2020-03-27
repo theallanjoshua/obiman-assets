@@ -8,7 +8,7 @@ export default class StringArrayEditor extends React.Component {
   }
   addItem = (item = '') => this.props.onChange([ ...this.props.items, item ]);
   removeItem = indexToRemove => this.props.onChange([ ...this.props.items.filter((item, index) => index !== indexToRemove) ]);
-  render = () => <React.Fragment>
+  render = () => <>
     {this.props.items.map((item, index) => <Row key={index} gutter={8}>
         <Col span={22}>
           <Input
@@ -30,5 +30,5 @@ export default class StringArrayEditor extends React.Component {
       children='Add'
       onClick={() => this.addItem()}
     />
-  </React.Fragment>
+  </>
 };

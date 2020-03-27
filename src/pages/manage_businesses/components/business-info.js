@@ -188,7 +188,7 @@ export default class BusinessInfo extends React.Component {
               <StringArrayEditor
                 items={businessData.billSources || []}
                 placeholder={'Eg: Uber eats'}
-                onChange={this.setbillSources}
+                onChange={this.setBillSources}
               />
             }
           />

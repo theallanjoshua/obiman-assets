@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Modal, Alert } from 'antd';
+import { Modal, Alert, Spin } from 'antd';
 import BusinessInfo from './business-info';
 import { Business } from 'obiman-data-models';
 import Network from '../../../utils/network';
@@ -71,13 +71,15 @@ export default class EditBusiness extends React.Component {
       disabled: this.state.loading
     }}
   >
+    <Spin spinning={this.state.loading}>
+      <BusinessInfo
+        business={this.state.businessToUpdate}
+        showValidationErrors={this.state.showValidationErrors}
+        onChange={this.onChange}
+      />
+    </Spin>
+    <br />
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
-    <br />
-    <BusinessInfo
-      business={this.state.businessToUpdate}
-      showValidationErrors={this.state.showValidationErrors}
-      onChange={this.onChange}
-    />
   </Modal>;
 }

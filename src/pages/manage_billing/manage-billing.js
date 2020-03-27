@@ -8,13 +8,12 @@ import PageHeader from '../../components/page-header';
 import { Consumer } from '../../context';
 import AllBills from './components/all-bills';
 import AddBill from './components/add-bill';
-import EditBill from './components/edit-bill';
 import { fetchAllIngredients } from '../../utils/ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../utils/products';
 import { fetchBills, getEnrichedBills } from '../../utils/bills';
 import { fetchOrders } from '../../utils/orders';
-import PrintBill from './components/print-bill';
 import SearchBills from './components/search-bills';
+import GenerateBillQrCode from './components/generate-bill-qr-code';
 
 class ManageBillingComponent extends React.Component {
   constructor() {
@@ -27,13 +26,8 @@ class ManageBillingComponent extends React.Component {
       bills: [],
       orders: [],
       showAddModal: false,
-      showEditModal: false,
-      showPrintModal: false,
-      billToUpdate: {},
-      billToPrint: {},
-      query: {
-        status: ['Open']
-      }
+      showGenerateQrCodeModal: false,
+      query: { status: ['Open'] }
     }
   }
   componentDidMount = () => {
@@ -66,9 +60,8 @@ class ManageBillingComponent extends React.Component {
     this.setState({ loading: false });
   }
   showAddModal = () => this.setState({ showAddModal: true });
-  showEditModal = billToUpdate => this.setState({ billToUpdate, showEditModal: true });
-  showPrintModal = billToPrint => this.setState({ billToPrint, showPrintModal: true });
-  hideModal = () => this.setState({ showAddModal: false, showEditModal: false, showPrintModal: false });
+  showGenerateQrCodeModal = () => this.setState({ showGenerateQrCodeModal: true });
+  hideModal = () => this.setState({ showAddModal: false, showGenerateQrCodeModal: false });
   onSearchChange = async query => {
     await this.setState({ query });
     this.fetchAllBills();
@@ -76,59 +69,58 @@ class ManageBillingComponent extends React.Component {
   render = () => <>
     <PageHeader
       title={MANAGE_BILLS_PAGE_TITLE(this.state.bills.length)}
-      extra={<Button
-        type='primary'
-        icon='plus'
-        onClick={this.showAddModal}
-        children={ADD_BILL_TEXT}
-      />}
+      extra={<>
+        <Button
+          style={{ marginRight: '4px' }}
+          type='primary'
+          icon='plus'
+          onClick={this.showAddModal}
+          children={ADD_BILL_TEXT}
+        />
+        <Button
+          style={{ marginRight: '4px' }}
+          icon='qrcode'
+          children='Generate QR Code'
+          onClick={this.showGenerateQrCodeModal}
+        />
+      </>}
     />
     <br />
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
     <SearchBills
-      sources={this.props.sources}
       onChange={this.onSearchChange}
+      sources={this.props.sources}
     />
     <br />
     <br />
     <AllBills
-      currency={this.props.currency}
       loading={this.state.loading}
+      ingredients={this.state.ingredients}
       products={this.state.products}
+      orders={this.state.orders}
       bills={this.state.bills}
-      showEditModal={this.showEditModal}
-      showPrintModal={this.showPrintModal}
+      onSuccess={this.fetchAllBills}
+      currency={this.props.currency}
+      sources={this.props.sources}
+      businessId={this.props.businessId}
     />
     <AddBill
-      currency={this.props.currency}
-      sources={this.props.sources}
       visible={this.state.showAddModal}
-      hideModal={this.hideModal}
-      businessId={this.props.businessId}
       ingredients={this.state.ingredients}
       products={this.state.products}
-      orders={this.state.orders}
-      fetchAllBills={this.fetchAllBills}
-    />
-    <EditBill
+      hideModal={this.hideModal}
+      onSuccess={this.fetchAllBills}
       currency={this.props.currency}
       sources={this.props.sources}
-      visible={this.state.showEditModal}
-      hideModal={this.hideModal}
       businessId={this.props.businessId}
-      ingredients={this.state.ingredients}
-      products={this.state.products}
-      orders={this.state.orders}
-      billToUpdate={this.state.billToUpdate}
-      fetchAllBills={this.fetchAllBills}
     />
-    <PrintBill
-      visible={this.state.showPrintModal}
+    <GenerateBillQrCode
+      visible={this.state.showGenerateQrCodeModal}
       hideModal={this.hideModal}
-      products={this.state.products}
-      billToPrint={this.state.billToPrint}
+      sources={this.props.sources}
+      businessId={this.props.businessId}
     />
   </>;
 }

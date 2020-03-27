@@ -32,7 +32,6 @@ export default class PrintBill extends React.Component {
               type='primary'
               icon='printer'
               children={'Print'}
-              onClick={() => this.props.showPrintModal(bill)}
             />}
             content={() => this.billRef}
           />
