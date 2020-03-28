@@ -90,6 +90,7 @@ export default class NewBill extends React.Component {
       onScan={this.onScan}
     />
     <AddBill
+      isCustomerView
       visible={this.state.showAddModal}
       currency={this.state.business.currency}
       sources={this.state.business.billSources}

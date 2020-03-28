@@ -101,14 +101,15 @@ export default class AddBill extends React.Component {
   >
     <Spin spinning={this.state.loading}>
       <BillInfo
-        currency={this.props.currency}
-        sources={this.props.sources}
+        showValidationErrors={this.state.showValidationErrors}
+        bill={this.state.billToCreate}
         ingredients={this.getIngredients()}
         products={this.getProducts()}
-        orders={[]}
-        bill={this.state.billToCreate}
-        showValidationErrors={this.state.showValidationErrors}
         onChange={this.onChange}
+        currency={this.props.currency}
+        sources={this.props.sources || []}
+        orders={[]}
+        isCustomerView={this.props.isCustomerView}
       />
     </Spin>
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
