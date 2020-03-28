@@ -6,6 +6,7 @@ import {
   PAGE_URL_TITLE_MAP,
   BUSINESS_SPECIFIC_URL_MAP
 } from '../../constants/pages';
+import { getCurrentBusinessId } from '../../utils/businesses';
 
 export default class NotFound extends React.Component {
   componentDidMount = () => document.title = '404 - Obiman';
@@ -13,7 +14,7 @@ export default class NotFound extends React.Component {
     status='404'
     title='404'
     subTitle='Sorry, the page you visited does not exist.'
-    extra={<Link to={BUSINESS_SPECIFIC_URL_MAP[HOME]}>
+    extra={<Link to={getCurrentBusinessId() ? BUSINESS_SPECIFIC_URL_MAP[HOME] : HOME}>
       <Button
         type='primary'
         children={`Back ${PAGE_URL_TITLE_MAP[HOME]}`}

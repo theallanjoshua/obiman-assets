@@ -11,5 +11,5 @@ export const fetchBusinesses = async (businessIds = []) => {
   }
 }
 
-export const getBusinessIdFromPath = path => path.replace(BUSINESS, '').split('/')[1] || '';
+export const getBusinessIdFromPath = path => path.includes(BUSINESS) ? path.replace(BUSINESS, '').split('/')[1] || '' : '';
 export const getCurrentBusinessId = () => getBusinessIdFromPath(window.location.hash.replace('#', ''));

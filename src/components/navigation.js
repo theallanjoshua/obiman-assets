@@ -126,6 +126,7 @@ class TopNav extends React.Component {
             theme='dark'
             mode='horizontal'
             className='center-align'
+            selectedKeys={[]}
           >
             <SubMenu
               title={<Avatar

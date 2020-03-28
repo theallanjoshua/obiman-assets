@@ -95,13 +95,14 @@ class App extends React.Component {
             <Route exact path={HOME} component={Customer} />
             <Route exact path={BUSINESS} component={ManageBusinesses} />
             <Route exact path={BUSINESS_EDIT} render={() => <ManageBusinesses enableEdit />} />
-            <Route path={BUSINESS_RESOURCE} render={({ match: { path } }) => <>
+            <Route path={BUSINESS_RESOURCE} render={({ match: { path } }) => <Switch>
               <Route exact path={`${path}${HOME}`} component={ConsoleHome} />
               <Route exact path={`${path}${ORDERS}`} component={ManageOrders} />
               <Route exact path={`${path}${BILLS}`} component={ManageBilling} />
               <Route exact path={`${path}${INGREDIENTS}`} component={ManageIngredients} />
               <Route exact path={`${path}${PRODUCTS}`} component={ManageProducts} />
-            </>} />
+              <Route component={NotFound} />
+            </Switch>} />
             <Route component={NotFound} />
           </Switch>
           </Content>
