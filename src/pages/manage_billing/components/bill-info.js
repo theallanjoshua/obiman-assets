@@ -53,57 +53,60 @@ export default class BillInfo extends React.Component {
       .get();
     const validationErrors = bill.validate();
     return <Form>
-      <Form.Item
-        { ...formItemLayout }
-        label={'Source'}
-        required
-        hasFeedback
-        { ...formValidation(this.props.showValidationErrors, validationErrors.source) }
-        children={
-          <Select
-            showSearch
-            allowClear
-            filterOption
-            placeholder={'Eg: Uber eats'}
-            optionFilterProp='children'
-            value={billData.source || undefined}
-            onChange={this.setSource}
-          >
-            {this.props.sources.map(source => <Select.Option key={source} value={source} children={source}/>)}
-          </Select>
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Source ID'}
-        required
-        hasFeedback
-        { ...formValidation(this.props.showValidationErrors, validationErrors.sourceId) }
-        children={
-          <Input
-            placeholder={'Eg: 12444666666'}
-            value={billData.sourceId}
-            onChange={this.setSourceId}
-          />
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        label={'Customer info'}
-        children={
-          <Input
-            placeholder={'Eg: +91-9876543210 or someone@email.com'}
-            value={billData.customer}
-            onChange={this.setCustomer}
-          />
-        }
-      />
+      {!this.props.isCustomerView ? <>
+        <Form.Item
+          { ...formItemLayout }
+          label={'Source'}
+          required
+          hasFeedback
+          { ...formValidation(this.props.showValidationErrors, validationErrors.source) }
+          children={
+            <Select
+              showSearch
+              allowClear
+              filterOption
+              placeholder={'Eg: Uber eats'}
+              optionFilterProp='children'
+              value={billData.source || undefined}
+              onChange={this.setSource}
+            >
+              {this.props.sources.map(source => <Select.Option key={source} value={source} children={source}/>)}
+            </Select>
+          }
+        />
+        <Form.Item
+          { ...formItemLayout }
+          label={'Source ID'}
+          required
+          hasFeedback
+          { ...formValidation(this.props.showValidationErrors, validationErrors.sourceId) }
+          children={
+            <Input
+              placeholder={'Eg: 12444666666'}
+              value={billData.sourceId}
+              onChange={this.setSourceId}
+            />
+          }
+        />
+        <Form.Item
+          { ...formItemLayout }
+          label={'Customer info'}
+          children={
+            <Input
+              placeholder={'Eg: +91-9876543210 or someone@email.com'}
+              value={billData.customer}
+              onChange={this.setCustomer}
+            />
+          }
+        />
+      </> : null}
       <Form.Item
         { ...formItemLayout }
         label={'Products'}
         children={<>
           <BillCompositionReadonly
             composition={bill.getGroupedComposition(({ orderId }) => orderId)}
+            isCustomerView={this.props.isCustomerView}
             currency={this.props.currency}
           />
           <BillComposition
@@ -126,7 +129,7 @@ export default class BillInfo extends React.Component {
         />
         </Col>
       </Row>
-      <Form.Item
+      {!this.props.isCustomerView ? <Form.Item
         { ...formItemLayout }
         label={'Status'}
         required
@@ -145,7 +148,7 @@ export default class BillInfo extends React.Component {
             {bill.getStates().map(state => <Select.Option key={state} value={state} children={state}/>)}
           </Select>
         }
-      />
+      /> : null}
     </Form>
   };
 }

@@ -38,14 +38,15 @@ class OrdersByState extends React.Component {
   }
   render = () => {
     const order = new Order();
-    const groupedOrders = this.props.orders.reduce((acc, { id, source, sourceId, productLabel }) => {
-      const { products = [] } = acc.filter(item => item.source === source && item.sourceId === sourceId)[0] || {};
+    const groupedOrders = this.props.orders.reduce((acc, { source, sourceId, orderedBy, id: key, productLabel: title }) => {
+      const { customers = [] } = acc.filter(item => item.source === source && item.sourceId === sourceId)[0] || {};
+      const { products = [] } = customers.filter(item => item.customer === orderedBy)[0] || {};
       return [ ...acc.filter(item => item.source !== source || item.sourceId !== sourceId), {
         source,
         sourceId,
-        products: [ ...products, {
-          key: id,
-          title: productLabel
+        customers: [ ...customers.filter(item => item.customer !== orderedBy), {
+          customer: orderedBy,
+          products: [ ...products, { key, title } ]
         }]
       }];
     }, []);
@@ -59,15 +60,21 @@ class OrdersByState extends React.Component {
         defaultExpandAll
         onCheck={this.onSelectionChange}
       >
-        {groupedOrders.map(({ source, sourceId, products }) => <TreeNode
+        {groupedOrders.map(({ source, sourceId, customers }) => <TreeNode
           disableCheckbox
           key={`${source}${sourceId}`}
-          title={`${source} ${sourceId}`}
+          title={`${source} ${sourceId} (${customers.reduce((acc, { products = [] }) => acc + products.length, 0)})`}
         >
-          {products.map(({ key, title }) => <TreeNode
-            key={key}
-            title={title}
-          />)}
+          {customers.map(({ customer, products = [] }) => <TreeNode
+            disableCheckbox
+            key={customer}
+            title={`${customer} (${products.length})`}
+          >
+            {products.map(({ key, title }) => <TreeNode
+              key={key}
+              title={title}
+            />)}
+          </TreeNode>)}
         </TreeNode>)}
       </Tree> : null}
       <br />

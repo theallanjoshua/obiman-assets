@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert } from 'antd';
+import { Alert, Button } from 'antd';
 import { MANAGE_ORDERS_PAGE_TITLE } from '../../constants/manage-orders';
 import PageHeader from '../../components/page-header';
 import { Consumer } from '../../context';
@@ -47,7 +47,13 @@ class ManageOrdersComponent extends React.Component {
     this.setState({ loading: false });
   }
   render = () => <>
-    <PageHeader title={MANAGE_ORDERS_PAGE_TITLE(this.state.orders.length)} />
+    <PageHeader
+      title={MANAGE_ORDERS_PAGE_TITLE(this.state.orders.length)}
+      extra={<Button
+        icon='reload'
+        onClick={this.fetchOngoingOrders}
+      />}
+    />
     <br />
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}

@@ -54,8 +54,7 @@ export default class AllBills extends React.Component {
             bodyStyle={{ padding: '0px' }}
             title={<div>
               <div className='flex-wrap space-between'>
-                {billData.source}
-                {` ${billData.sourceId}`}
+                {this.props.isCustomerView ? billData.businessLabel : `${billData.source} ${billData.sourceId}`}
                 <div>
                   {this.props.isCustomerView && [ bill.getPositiveEndState(), bill.getNegativeEndState() ].includes(billData.status) ? null : <Tooltip
                     title={EDIT_BILL_BUTTON_TEXT}
@@ -80,6 +79,7 @@ export default class AllBills extends React.Component {
               <BillCompositionReadonly
                 composition={bill.getGroupedComposition()}
                 currency={this.props.currency || billData.currency}
+                isCustomerView={this.props.isCustomerView}
               />
               <BillTotal
                 bill={billData}
@@ -95,14 +95,15 @@ export default class AllBills extends React.Component {
   <EditBill
     visible={this.state.showEditModal}
     billToUpdate={this.state.billToUpdate}
+    businessId={this.state.billToUpdate.businessId}
     hideModal={this.hideModal}
-    ingredients={this.props.ingredients || []}
-    products={this.props.products || []}
-    orders={this.props.orders || []}
-    currency={this.props.currency}
+    ingredients={(this.props.ingredients || []).filter(({ businessId }) => businessId === this.state.billToUpdate.businessId)}
+    products={(this.props.products || []).filter(({ businessId }) => businessId === this.state.billToUpdate.businessId)}
+    orders={(this.props.orders || []).filter(({ businessId }) => businessId === this.state.billToUpdate.businessId)}
+    currency={this.props.currency || this.state.billToUpdate.currency}
     sources={this.props.sources || []}
-    businessId={this.props.businessId}
     onSuccess={this.props.onSuccess}
+    isCustomerView={this.props.isCustomerView}
   />
   <PrintBill
     visible={this.state.showPrintModal}

@@ -48,12 +48,17 @@ class ManageBillingComponent extends React.Component {
     try {
       const ingredients = await fetchAllIngredients(businessId);
       const products = await fetchAllProducts(businessId);
-      const enrichedProducts = getEnrichedProducts(products, ingredients);
+      const enrichedProducts = getEnrichedProducts(products, ingredients).map(item => ({ ...item, businessId }));
       const bills = await fetchBills(businessId, this.state.query);
       const orderIds = bills.reduce((acc, { composition }) => [ ...acc, ...composition.filter(({ orderId }) => orderId).map(({ orderId }) => orderId) ], []);
       const orders = await fetchOrders(businessId, orderIds);
       const enrichedBills = getEnrichedBills(bills, products, orders);
-      this.setState({ ingredients, products: enrichedProducts, bills: enrichedBills, orders });
+      this.setState({
+        ingredients: ingredients.map(item => ({ ...item, businessId })),
+        products: enrichedProducts,
+        bills: enrichedBills,
+        orders: orders.map(item => ({ ...item, businessId }))
+      });
     } catch (errorMessage) {
       this.setState({ errorMessage });
     }
@@ -104,7 +109,6 @@ class ManageBillingComponent extends React.Component {
       onSuccess={this.fetchAllBills}
       currency={this.props.currency}
       sources={this.props.sources}
-      businessId={this.props.businessId}
     />
     <AddBill
       visible={this.state.showAddModal}
