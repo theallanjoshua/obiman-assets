@@ -5,34 +5,32 @@ import { Provider } from './context';
 import { Layout, Spin, Alert } from 'antd';
 import {
   HOME,
+  BUSINESS,
+  BUSINESS_EDIT,
+  BUSINESS_RESOURCE,
   INGREDIENTS,
   PRODUCTS,
-  BILLING,
+  BILLS,
   ORDERS,
-  CUSTOMER
 } from './constants/pages';
 import { PAGE_ERROR } from './constants/app';
 import Credentials from './utils/credentials';
+import { CurrentBusiness } from './components/current-business';
 import { TopNavigation, BottomNavigation } from './components/navigation';
 import BreadcrumbBar from './components/breadcrumb-bar';
+import Customer from './pages/customer/customer';
+import ManageBusinesses from './pages/manage_businesses/manage-businesses';
 import ConsoleHome from './pages/console_home/console-home';
-import NotFound from './pages/not_found/not-found';
+import ManageOrders from './pages/manage_orders/manage-orders';
+import ManageBilling from './pages/manage_billing/manage-billing';
 import ManageIngredients from './pages/manage_ingredients/manage-ingredients';
 import ManageProducts from './pages/manage_products/manage-products';
-import ManageBusinesses from './pages/manage_businesses/manage-businesses';
-import ManageBilling from './pages/manage_billing/manage-billing';
-import ManageOrders from './pages/manage_orders/manage-orders';
-import Customer from './pages/customer/customer';
-import { fetchUser } from './utils/user';
+import NotFound from './pages/not_found/not-found';
+import { Business } from 'obiman-data-models';
 import 'antd/dist/antd.less';
 import './index.less';
 
 const { Content } = Layout;
-const ObimanLayout = ({ content }) => <Layout style={{ minHeight: '100vh', padding: '30px' }}>
-  <Content>
-    {content}
-  </Content>
-</Layout>;
 
 class App extends React.Component {
   constructor() {
@@ -43,17 +41,11 @@ class App extends React.Component {
       name: '',
       email: '',
       avatar: '',
-      businesses: [],
-      currentBusiness: {},
-      showBusinessManagement: false
+      showBusinessManagement: false,
+      currentBusiness: new Business().get()
     };
   }
   componentDidMount = () => this.authenticate();
-  componentDidUpdate = (prevProps, prevState) => {
-    if(prevState.email !== this.state.email && this.state.email) {
-      this.fetchUser();
-    }
-  }
   authenticate = async () => {
     this.setState({ loading: true });
     try {
@@ -71,25 +63,14 @@ class App extends React.Component {
       }
     }
   }
-  fetchUser = async () => {
-    this.setState({ loading: true, errorMessage: '' });
-    try {
-      const user = await fetchUser(this.state.email);;
-      const { businesses } = user;
-      this.setState({ businesses });
-    } catch (errorMessage) {
-      this.setState({ errorMessage });
-    }
-    this.setState({ loading: false });
-  }
-  onBusinessChange = currentBusiness => this.setState({ currentBusiness, showBusinessManagement: false });
-  showBusinessManagement = () => this.setState({ showBusinessManagement: true });
-  hideBusinessManagement = () => this.setState({ showBusinessManagement: false });
-  render = () => <Provider value={{ ...this.state,
-    fetchUser: this.fetchUser,
-    onBusinessChange: this.onBusinessChange,
-    showBusinessManagement: this.showBusinessManagement,
-    hideBusinessManagement: this.hideBusinessManagement
+  setPageLoading = loading => this.setState({ loading });
+  setPageErrorMessage = errorMessage => this.setState({ errorMessage });
+  setCurrentBusiness = currentBusiness => this.setState({ currentBusiness: new Business(currentBusiness).get() });
+  render = () => <Provider value={{
+    ...this.state,
+    setPageLoading: this.setPageLoading,
+    setPageErrorMessage: this.setPageErrorMessage,
+    setCurrentBusiness: this.setCurrentBusiness
   }}>
     {this.state.errorMessage ? <Alert
       type='error'
@@ -101,25 +82,30 @@ class App extends React.Component {
         marginRight: 'auto',
         marginTop: '20px'
       }}
-    /> : window.location.href.includes(CUSTOMER) ? <ObimanLayout content={<Customer email={this.state.email} />} /> :
-    !this.state.currentBusiness.id ? <ManageBusinesses/> :
-    this.state.showBusinessManagement ? <ManageBusinesses enableEdit /> :
+    /> :
     <Spin spinning={this.state.loading}>
       <Router>
+        <CurrentBusiness />
         <TopNavigation />
-        <ObimanLayout content={<>
+        <Layout style={{ minHeight: '100vh', padding: '30px' }}>
+          <Content>
           <BreadcrumbBar />
           <br />
           <Switch>
-            <Route exact path={HOME} component={ConsoleHome} />
-            <Route exact path={INGREDIENTS} component={ManageIngredients} />
-            <Route exact path={PRODUCTS} component={ManageProducts} />
-            <Route exact path={BILLING} component={ManageBilling} />
-            <Route exact path={ORDERS} component={ManageOrders} />
+            <Route exact path={HOME} component={Customer} />
+            <Route exact path={BUSINESS} component={ManageBusinesses} />
+            <Route exact path={BUSINESS_EDIT} render={() => <ManageBusinesses enableEdit />} />
+            <Route path={BUSINESS_RESOURCE} render={({ match: { path } }) => <>
+              <Route exact path={`${path}${HOME}`} component={ConsoleHome} />
+              <Route exact path={`${path}${ORDERS}`} component={ManageOrders} />
+              <Route exact path={`${path}${BILLS}`} component={ManageBilling} />
+              <Route exact path={`${path}${INGREDIENTS}`} component={ManageIngredients} />
+              <Route exact path={`${path}${PRODUCTS}`} component={ManageProducts} />
+            </>} />
             <Route component={NotFound} />
           </Switch>
-        </>}
-        />
+          </Content>
+        </Layout>
         <BottomNavigation />
       </Router>
     </Spin>}

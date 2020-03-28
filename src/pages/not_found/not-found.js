@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom'
 import { Result, Button } from 'antd';
-import { HOME, PAGE_URL_TITLE_MAP } from '../../constants/pages';
+import {
+  HOME,
+  PAGE_URL_TITLE_MAP,
+  BUSINESS_SPECIFIC_URL_MAP
+} from '../../constants/pages';
 
 export default class NotFound extends React.Component {
   componentDidMount = () => document.title = '404 - Obiman';
@@ -9,7 +13,7 @@ export default class NotFound extends React.Component {
     status='404'
     title='404'
     subTitle='Sorry, the page you visited does not exist.'
-    extra={<Link to={HOME}>
+    extra={<Link to={BUSINESS_SPECIFIC_URL_MAP[HOME]}>
       <Button
         type='primary'
         children={`Back ${PAGE_URL_TITLE_MAP[HOME]}`}

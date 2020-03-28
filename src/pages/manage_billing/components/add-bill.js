@@ -107,7 +107,7 @@ export default class AddBill extends React.Component {
         products={this.getProducts()}
         onChange={this.onChange}
         currency={this.props.currency}
-        sources={this.props.sources || []}
+        sources={this.props.sources}
         orders={[]}
         isCustomerView={this.props.isCustomerView}
       />

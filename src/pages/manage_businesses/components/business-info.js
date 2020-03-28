@@ -32,7 +32,7 @@ const formValidation = (showValidationErrors, validationErrors = []) => ({
 })
 
 export default class BusinessInfo extends React.Component {
-  set = (key, value) => this.props.onChange({ ...new Business({ ...this.props.business }).get(), [key]: value });
+  set = (key, value) => this.props.onChange({ ...new Business(this.props.business).get(), [key]: value });
   setLabel = e => this.set('label', e.target.value);
   setLogo = logo => this.set('logo', logo);
   setAddress = e => this.set('address', e.target.value);
@@ -46,7 +46,7 @@ export default class BusinessInfo extends React.Component {
   setBillSources = billSources => this.set('billSources', billSources);
   setTables = tables => this.set('tables', tables);
   render = () => {
-    const business = new Business({ ...this.props.business });
+    const business = new Business(this.props.business);
     const businessData = business.get();
     const validationErrors = business.validate();
     return <Form>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import QrReader from 'react-qr-reader'
 import { Spin, Alert } from 'antd';
-import { fetchBillsByCustomer } from '../../../utils/bills';
+import { fetchBills } from '../../../utils/bills';
 import { fetchAllIngredients } from '../../../utils/ingredients';
 import { fetchAllProducts, getEnrichedProducts } from '../../../utils/products';
 import { fetchBusinesses } from '../../../utils/businesses';
@@ -32,34 +32,35 @@ export default class NewBill extends React.Component {
   initializeAddBill = async data => {
     const bill = new Bill;
     const { source, sourceId, businessId } = JSON.parse(decodeURI(data));
-    const query = {
-      source: [source],
-      sourceId: [sourceId],
-      status: bill.getStates().filter(state => state !== bill.getPositiveEndState() && state !== bill.getNegativeEndState())
-    }
     this.setState({ loading: true, errorMessage: '' });
     try {
-      const bills = await fetchBillsByCustomer(this.props.email, query);
-      if(bills.length) {
-        this.setState({ errorMessage: 'Oops! Looks like there is already an ongoing order for this. You can view that in the "Ongoing orders" tab.' })
-      } else {
-        const businesses = await fetchBusinesses([businessId]);
-        if(businesses && businesses.length === 1) {
-          const business = businesses[0]
-          const ingredients = await fetchAllIngredients(business.id);
-          const products = await fetchAllProducts(business.id);
-          const enrichedProducts = getEnrichedProducts(products, ingredients);
-          this.setState({
-            business,
-            ingredients,
-            products: enrichedProducts,
-            showAddModal: true,
-            billToCreate: { source, sourceId, customer: this.props.email }
-          });
-        } else {
-          this.setState({ errorMessage: 'Oops! The QR code seems to be invalid.' })
-        }
+      const businesses = await fetchBusinesses(businessId ? [businessId] : []);
+      if(!businesses || !businesses.length || businesses.length > 1) {
+        this.setState({ loading: false, errorMessage: 'Oops! The QR code seems to be invalid.' });
+        return;
       }
+      const business = businesses[0];
+      const query = {
+        source: [source],
+        sourceId: [sourceId],
+        status: bill.getStates().filter(state => state !== bill.getPositiveEndState() && state !== bill.getNegativeEndState()),
+        customer: [this.props.email]
+      }
+      const bills = await fetchBills(business.id, query);
+      if(bills.length) {
+        this.setState({ loading: false, errorMessage: 'Oops! Looks like there is already an ongoing order for this. You can view that in the "Ongoing orders" tab.' });
+        return;
+      }
+      const ingredients = await fetchAllIngredients(business.id);
+      const products = await fetchAllProducts(business.id);
+      const enrichedProducts = getEnrichedProducts(products, ingredients);
+      this.setState({
+        business,
+        ingredients,
+        products: enrichedProducts,
+        showAddModal: true,
+        billToCreate: { source, sourceId, customer: this.props.email }
+      });
     } catch (errorMessage) {
       this.setState({ errorMessage });
     }

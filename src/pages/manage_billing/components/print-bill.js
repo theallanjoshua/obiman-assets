@@ -3,7 +3,6 @@ import { Modal, Button, Typography, Icon } from 'antd';
 import BillCompositionReadonly from './bill-composition-readonly';
 import BillTotal from './bill-total';
 import ReactToPrint from 'react-to-print';
-import { Consumer } from '../../../context';
 import S3ToImage from '../../../components/s3-to-image';
 import moment from 'moment';
 import { DATE_TIME_FORMAT } from '../../../constants/app';
@@ -15,8 +14,7 @@ export default class PrintBill extends React.Component {
   render = () => {
     const bill = new Bill(this.props.billToPrint);
     const billData = bill.get();
-    return <Consumer>
-      {({ currentBusiness }) => <Modal
+    return <Modal
         destroyOnClose
         style={{ maxWidth: '90vw' }}
         width={'720px'}
@@ -39,17 +37,17 @@ export default class PrintBill extends React.Component {
       >
         <div ref={billRef => this.billRef = billRef}>
           <div  className='flex-column center-align'>
-            {currentBusiness.logo ? <S3ToImage
-              alt={currentBusiness.label}
-              s3Key={currentBusiness.logo}
+            {this.props.currentBusiness.logo ? <S3ToImage
+              alt={this.props.currentBusiness.label}
+              s3Key={this.props.currentBusiness.logo}
             /> : null}
-            <Title>{currentBusiness.label || billData.businessLabel}</Title>
-            {currentBusiness.address ? <div className='baseline-align'>
+            <Title>{this.props.currentBusiness.label || billData.businessLabel}</Title>
+            {this.props.currentBusiness.address ? <div className='baseline-align'>
               <Icon type='home' style={{ paddingRight: '8px' }} />
-              <Paragraph>{currentBusiness.address}</Paragraph>
+              <Paragraph>{this.props.currentBusiness.address}</Paragraph>
             </div> : null}
             <div className='space-between flex-wrap'>
-              {(currentBusiness.contacts || []).map(({ type, info }) => <div key={type}>
+              {(this.props.currentBusiness.contacts || []).map(({ type, info }) => <div key={type}>
                 <Icon type={type} style={{ paddingRight: '8px' }} />
                 <Text style={{ paddingRight: '20px' }}>{info}</Text>
               </div>)}
@@ -81,14 +79,13 @@ export default class PrintBill extends React.Component {
           <br />
           <BillCompositionReadonly
             composition={bill.getGroupedComposition()}
-            currency={currentBusiness.currency || billData.currency}
+            currency={this.props.currentBusiness.currency || billData.currency}
           />
           <BillTotal
             bill={billData}
-            currency={currentBusiness.currency || billData.currency}
+            currency={this.props.currentBusiness.currency || billData.currency}
           />
         </div>
-      </Modal>}
-    </Consumer>
+      </Modal>
   };
 }

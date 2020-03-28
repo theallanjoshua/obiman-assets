@@ -57,7 +57,6 @@ class OrdersByState extends React.Component {
       {groupedOrders.length ? <Tree
         checkable
         selectable={false}
-        defaultExpandAll
         onCheck={this.onSelectionChange}
       >
         {groupedOrders.map(({ source, sourceId, customers }) => <TreeNode

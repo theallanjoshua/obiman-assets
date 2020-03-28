@@ -1,5 +1,6 @@
 import Network from './network';
 import { BUSINESSES_API_URL } from '../constants/endpoints';
+import { BUSINESS } from '../constants/pages';
 
 export const fetchBusinesses = async (businessIds = []) => {
   try {
@@ -9,3 +10,6 @@ export const fetchBusinesses = async (businessIds = []) => {
     throw errorMessage
   }
 }
+
+export const getBusinessIdFromPath = path => path.replace(BUSINESS, '').split('/')[1] || '';
+export const getCurrentBusinessId = () => getBusinessIdFromPath(window.location.hash.replace('#', ''));

@@ -91,9 +91,9 @@ export default class ConsoleHome extends React.Component {
     {({ currentBusiness }) => <ConsoleHomeComponent
       businessId={currentBusiness.id}
       currency={currentBusiness.currency}
-      sources={currentBusiness.billSources || []}
-      classifications={currentBusiness.productClassifications || []}
-      taxes={currentBusiness.productTaxesTypes || []}
+      sources={currentBusiness.billSources}
+      classifications={currentBusiness.productClassifications}
+      taxes={currentBusiness.productTaxesTypes}
     />}
   </Consumer>
 }

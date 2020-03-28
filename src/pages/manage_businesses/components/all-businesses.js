@@ -1,14 +1,15 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom'
 import { List, Button, Empty, Typography } from 'antd';
-import { OBIMAN_LOGO } from '../../../constants/app';
+import { BUSINESS } from '../../../constants/pages';
 import Credentials from '../../../utils/credentials';
-import { Business } from 'obiman-data-models';
 import S3ToImage from '../../../components/s3-to-image';
 
 const { Text } = Typography;
+const getLinkedListItem = (listItem, linkTo) => linkTo ? <Link to={linkTo}>{listItem}</Link> : listItem;
 
 export default class AllBusinesses extends React.Component {
-  render = () => <div className='center-align' style={{ height: '100vh' }}>
+  render = () => <div className='center-align'>
     <div style={{ width: 'min-content' }}>
       <List
         style={{
@@ -19,19 +20,13 @@ export default class AllBusinesses extends React.Component {
         }}
         loading={this.props.loading}
         itemLayout='horizontal'
-        header={<div className='center-align'>
-          <div>
-            {OBIMAN_LOGO}
-          </div>
-        </div>}
         locale={{
           emptyText: <Empty description='No businesses' />
         }}
         dataSource={this.props.businesses}
-        renderItem={business =>  <List.Item
-          className={`business-list-item${this.props.enableEdit ? `` : ` clickable`}`}
+        renderItem={business =>  getLinkedListItem(<List.Item
+          className={'business-list-item'}
           style={{ padding: 0 }}
-          onClick={this.props.enableEdit ? () => {} : () => this.props.onBusinessChange(business)}
         >
           <div className='center-align'>
             <List.Item.Meta
@@ -42,14 +37,14 @@ export default class AllBusinesses extends React.Component {
               />}
               title={business.label}
             />
-            {this.props.enableEdit && business.employees.filter(employee => employee.id === this.props.email && employee.permissions.includes(new Business().getUpdatePermissionText())).length ? <Button
+            {this.props.enableEdit && business.employees.length ? <Button
               type='link'
               icon='edit'
               children='Edit'
               onClick={() => this.props.showEditModal(business)}
             /> : null}
           </div>
-        </List.Item>}
+        </List.Item>, this.props.enableEdit ? '' : `${BUSINESS}/${business.id}`)}
         footer={!this.props.loading ? <Button
           type='link'
           children='Create a new business'
@@ -63,11 +58,12 @@ export default class AllBusinesses extends React.Component {
           marginTop: '40px'
         }}
       >
-        <Button
-          type='primary'
-          children={'Done'}
-          onClick={this.props.hideBusinessManagement}
-        />
+        <Link to={BUSINESS}>
+          <Button
+            type='primary'
+            children={'Done'}
+          />
+        </Link>
       </div> : <div>
         <br />
         <Text>Don't see your business here? </Text>

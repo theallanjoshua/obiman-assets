@@ -9,6 +9,7 @@ import BillCompositionReadonly from './bill-composition-readonly';
 import { Bill } from 'obiman-data-models';
 import EditBill from './edit-bill';
 import PrintBill from './print-bill';
+import { Business } from 'obiman-data-models';
 
 const Frills = ({ isBottom }) => <div style={{ paddingLeft: '10px' }}>
   {[ ...new Array(10) ].map((item, index) => <span
@@ -37,7 +38,7 @@ export default class AllBills extends React.Component {
   showPrintModal = billToPrint => this.setState({ billToPrint, showPrintModal: true });
   hideModal = () => this.setState({ showEditModal: false, showPrintModal: false });
   render = () => <Spin spinning={this.props.loading}>
-  {this.props.bills.length ?
+  {(this.props.bills || []).length ?
     <div className='flex-wrap'>
       {this.props.bills.map(item => {
         const bill = new Bill(item);
@@ -78,12 +79,12 @@ export default class AllBills extends React.Component {
             children={<>
               <BillCompositionReadonly
                 composition={bill.getGroupedComposition()}
-                currency={this.props.currency || billData.currency}
+                currency={billData.currency}
                 isCustomerView={this.props.isCustomerView}
               />
               <BillTotal
                 bill={billData}
-                currency={this.props.currency || billData.currency}
+                currency={billData.currency}
               />
             </>}
           />
@@ -96,12 +97,12 @@ export default class AllBills extends React.Component {
     visible={this.state.showEditModal}
     billToUpdate={this.state.billToUpdate}
     businessId={this.state.billToUpdate.businessId}
+    currency={this.state.billToUpdate.currency}
     hideModal={this.hideModal}
     ingredients={(this.props.ingredients || []).filter(({ businessId }) => businessId === this.state.billToUpdate.businessId)}
     products={(this.props.products || []).filter(({ businessId }) => businessId === this.state.billToUpdate.businessId)}
     orders={(this.props.orders || []).filter(({ businessId }) => businessId === this.state.billToUpdate.businessId)}
-    currency={this.props.currency || this.state.billToUpdate.currency}
-    sources={this.props.sources || []}
+    sources={(this.props.allBusinesses.filter(({ id }) => id === this.state.billToUpdate.businessId)[0] || new Business().get()).billSources}
     onSuccess={this.props.onSuccess}
     isCustomerView={this.props.isCustomerView}
   />
@@ -109,6 +110,7 @@ export default class AllBills extends React.Component {
     visible={this.state.showPrintModal}
     billToPrint={this.state.billToPrint}
     hideModal={this.hideModal}
+    currentBusiness={this.props.allBusinesses.filter(({ id }) => id === this.state.billToUpdate.businessId)[0] || new Business().get()}
   />
 </Spin>
 }
