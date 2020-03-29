@@ -85,11 +85,13 @@ export default class NewBill extends React.Component {
     {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
-    <QrReader
-      className='obiman-qr-scanner'
-      onError={this.onError}
-      onScan={this.onScan}
-    />
+    <div className='center-align'>
+      <QrReader
+        className='obiman-qr-scanner'
+        onError={this.onError}
+        onScan={this.onScan}
+      />
+    </div>
     <AddBill
       isCustomerView
       visible={this.state.showAddModal}

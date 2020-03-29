@@ -88,7 +88,7 @@ class TopNav extends React.Component {
     {({ email, avatar }) => <Affix>
       <Row
         className='center-align'
-        style={{ padding: '0px 26px', background: '#001529' }}
+        style={{ paddingLeft: '10px', background: '#001529' }}
       >
         <Col
           xs={20}
@@ -126,7 +126,7 @@ class TopNav extends React.Component {
           <Menu
             theme='dark'
             mode='horizontal'
-            className='center-align'
+            className='right-align'
             selectedKeys={[]}
           >
             <SubMenu

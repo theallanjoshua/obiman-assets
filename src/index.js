@@ -87,7 +87,7 @@ class App extends React.Component {
       <Router>
         <CurrentBusiness />
         <TopNavigation />
-        <Layout style={{ minHeight: '100vh', padding: '30px' }}>
+        <Layout style={{ minHeight: '100vh', padding: '10px' }}>
           <Content>
           <BreadcrumbBar />
           <br />
