@@ -14,7 +14,7 @@ import {
   BILLS,
   ORDERS,
   PAGE_URL_TITLE_MAP,
-  BUSINESS_SPECIFIC_URL_MAP
+  getBusinessSpecificUrl
 } from '../constants/pages';
 import S3ToImage from './s3-to-image';
 import { withRouter } from 'react-router';
@@ -32,7 +32,7 @@ const NavItems = ({ isBottom }) => {
       className={isBottom ? 'space-between' : 'right-align'}
     >
       <Item key={ORDERS}>
-        <Link to={BUSINESS_SPECIFIC_URL_MAP[ORDERS]}>
+        <Link to={getBusinessSpecificUrl(ORDERS)}>
         {isBottom ? <Icon type='shopping' style={{ marginRight: '0px' }} /> :
           <span>
             <Icon type='shopping' />
@@ -41,7 +41,7 @@ const NavItems = ({ isBottom }) => {
         </Link>
       </Item>
       <Item key={BILLS}>
-        <Link to={BUSINESS_SPECIFIC_URL_MAP[BILLS]}>
+        <Link to={getBusinessSpecificUrl(BILLS)}>
         {isBottom ? <Icon type='container' style={{ marginRight: '0px' }} /> :
           <span>
             <Icon type='container' />
@@ -50,7 +50,7 @@ const NavItems = ({ isBottom }) => {
         </Link>
       </Item>
       <Item key={PRODUCTS}>
-        <Link to={BUSINESS_SPECIFIC_URL_MAP[PRODUCTS]}>
+        <Link to={getBusinessSpecificUrl(PRODUCTS)}>
           {isBottom ? <Icon type='table' style={{ marginRight: '0px' }} /> :
           <span>
             <Icon type='table' />
@@ -59,7 +59,7 @@ const NavItems = ({ isBottom }) => {
         </Link>
       </Item>
       <Item key={INGREDIENTS}>
-        <Link to={BUSINESS_SPECIFIC_URL_MAP[INGREDIENTS]}>
+        <Link to={getBusinessSpecificUrl(INGREDIENTS)}>
         {isBottom ? <Icon type='build' style={{ marginRight: '0px' }} /> :
           <span>
             <Icon type='build' />
