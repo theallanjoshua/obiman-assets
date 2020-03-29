@@ -1,6 +1,6 @@
 {
   "name": "obiman-assets",
-  "version": "1.0.64",
+  "version": "1.0.65",
   "description": "The assets package for Obiman (An ordering, inventory & billing management application)",
   "author": "Allan Joshua",
   "license": "ISC",
