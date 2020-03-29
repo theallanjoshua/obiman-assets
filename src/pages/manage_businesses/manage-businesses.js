@@ -20,9 +20,7 @@ class ManageBusinessesComponent extends React.Component {
   componentDidUpdate = prevProps => {
     const { email } = this.props;
     const { email: existingEmail } = prevProps;
-    if(email !== existingEmail) {
-      this.fetchUser()
-    }
+    if(email !== existingEmail) this.fetchUser();
   }
   fetchUser = async () => {
     const { email } = this.props;

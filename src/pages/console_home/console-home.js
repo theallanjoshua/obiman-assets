@@ -29,9 +29,7 @@ class ConsoleHomeComponent extends React.Component {
   };
   componentDidUpdate = prevProps => {
     const { businessId } = this.props;
-    if(businessId && prevProps.businessId !== businessId) {
-      this.fetchAllIngredientsAndProducts();
-    }
+    if(businessId && prevProps.businessId !== businessId) this.fetchAllIngredientsAndProducts();
   };
   fetchAllIngredientsAndProducts = async () => {
     const { businessId } = this.props;

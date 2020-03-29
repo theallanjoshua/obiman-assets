@@ -27,16 +27,14 @@ class ManageOrdersComponent extends React.Component {
   }
   componentDidUpdate = prevProps => {
     const { businessId } = this.props;
-    if(prevProps.businessId !== businessId && businessId) {
-      this.fetchOngoingOrders()
-    }
+    if(prevProps.businessId !== businessId && businessId) this.fetchOngoingOrders();
   }
   fetchOngoingOrders = async () => {
     const { businessId } = this.props;
     this.setState({ loading: true, errorMessage: '' });
     try {
       const products = await fetchAllProducts(businessId);
-      const bills = await fetchBills(businessId, { status: ['Open'] });
+      const { bills } = await fetchBills(businessId, { status: ['Open'] });
       const orderIds = bills.reduce((acc, { composition }) => [ ...acc, ...composition.filter(({ orderId }) => orderId).map(({ orderId }) => orderId) ], []);
       const orders = await fetchOrders(businessId, orderIds);
       const enrichedOrders = getEnrichedOrders(orders, products, bills);

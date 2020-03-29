@@ -61,7 +61,7 @@ export default class OpenBills extends React.Component {
     const { email } = this.props;
     this.setState({ loading: true, errorMessage: '' });
     try {
-      const bills = await fetchBillsByCustomer(email, this.state.query);
+      const { bills } = await fetchBillsByCustomer(email, this.state.query);
       const businessIds = [ ...new Set(bills.map(({ businessId }) => businessId)) ];
       await Promise.all(businessIds.map(businessId => this.fetchIngredients(businessId)));
       await Promise.all(businessIds.map(businessId => this.fetchProducts(businessId)));

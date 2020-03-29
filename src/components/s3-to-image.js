@@ -13,9 +13,7 @@ export default class S3ToImage extends React.Component {
   }
   componentDidMount = () => this.fetchSrc(this.props.s3Key);
   componentDidUpdate = prevProps => {
-    if(this.props.s3Key !== prevProps.s3Key) {
-      this.fetchSrc(this.props.s3Key);
-    }
+    if(this.props.s3Key !== prevProps.s3Key) this.fetchSrc(this.props.s3Key);
   }
   fetchSrc = async s3Key => {
     if (s3Key) {

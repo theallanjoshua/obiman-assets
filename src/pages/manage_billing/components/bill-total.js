@@ -2,6 +2,10 @@ import * as React from 'react';
 import { Statistic } from 'antd';
 import { Utils } from 'obiman-data-models';
 
+const STATUS_MAP = {
+
+};
+
 export default class BillTotal extends React.Component {
   render = () => <div>
     <div

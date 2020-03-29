@@ -32,9 +32,7 @@ class ManageProductsComponent extends React.Component {
   };
   componentDidUpdate = prevProps => {
     const { businessId } = this.props;
-    if(prevProps.businessId !== businessId && businessId) {
-      this.fetchAllProducts()
-    }
+    if(prevProps.businessId !== businessId && businessId) this.fetchAllProducts();
   };
   fetchAllProducts = async () => {
     const { businessId } = this.props;

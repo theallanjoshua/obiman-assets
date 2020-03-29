@@ -14,11 +14,12 @@ import {
   BILLS,
   ORDERS,
   PAGE_URL_TITLE_MAP,
-  getBusinessSpecificUrl
+  getBusinessSpecificUrl,
+  getPathFromLocation
 } from '../constants/pages';
 import S3ToImage from './s3-to-image';
 import { withRouter } from 'react-router';
-import { getCurrentBusinessId } from '../utils/businesses';
+import { getCurrentBusinessId, isBusinessPath } from '../utils/businesses';
 
 const { SubMenu, Item, Divider } = Menu;
 
@@ -28,7 +29,7 @@ const NavItems = ({ isBottom }) => {
     {({ currentBusiness }) => <Menu
       theme='dark'
       mode='horizontal'
-      selectedKeys={[window.location.hash.replace(`#/${BUSINESS}/${businessId}`,'')]}
+      selectedKeys={[ getPathFromLocation().replace(`${BUSINESS}/${businessId}`,'') ]}
       className={isBottom ? 'space-between' : 'right-align'}
     >
       <Item key={ORDERS}>
@@ -137,10 +138,10 @@ class TopNav extends React.Component {
               />}
               >
               <Item>
-                <Link to={getCurrentBusinessId() ? HOME : BUSINESS}>
+                <Link to={isBusinessPath() ? HOME : BUSINESS}>
                   <span>
                     <Icon type='sync' />
-                    <span>{`Switch to ${getCurrentBusinessId() ? 'customer' : 'business'} view`}</span>
+                    <span>{`Switch to ${isBusinessPath() ? 'customer' : 'business'} view`}</span>
                   </span>
                 </Link>
               </Item>

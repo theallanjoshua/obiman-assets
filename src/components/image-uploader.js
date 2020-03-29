@@ -34,9 +34,7 @@ export default class ImageUploader extends React.Component {
   componentDidUpdate = prevProps => {
     const { s3Key: incomingS3Key } = this.props;
     const { s3Key: existingS3Key } = prevProps;
-    if(incomingS3Key !== existingS3Key) {
-      this.fetchUploadedFile(incomingS3Key);
-    }
+    if(incomingS3Key !== existingS3Key) this.fetchUploadedFile(incomingS3Key);
   }
   onUpload = async ({ file }) => {
     this.setState({ loading: true, errorMessage: '' });

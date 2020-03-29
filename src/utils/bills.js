@@ -14,8 +14,11 @@ export const getBillQueryParamsFromQuery = query => Object.keys(query).reduce((a
     case 'updatedDateTo': {
       return query[key] ? [ ...acc, `${key}=${query[key].valueOf()}`] : [ ...acc ];
     };
+    case 'next': {
+      return query[key] ? [ ...acc, `${key}=${encodeURIComponent(JSON.stringify(query[key]))}`] : [ ...acc ];
+    }
     default: {
-      return [ ...acc ];
+      return [ ...acc, `${key}=${query[key]}` ];
     }
   }
 }, []).join('&');
@@ -23,8 +26,7 @@ export const getBillQueryParamsFromQuery = query => Object.keys(query).reduce((a
 export const fetchBills = async (businessId, query) => {
   try {
     const params = getBillQueryParamsFromQuery(query);
-    const { bills } = await Network.get(BILLS_API_URL(businessId, params));
-    return bills;
+    return await Network.get(BILLS_API_URL(businessId, params));
   } catch (errorMessage) {
     throw errorMessage;
   }
@@ -33,8 +35,7 @@ export const fetchBills = async (businessId, query) => {
 export const fetchBillsByCustomer = async (customer, query) => {
   try {
     const params = getBillQueryParamsFromQuery(query);
-    const { bills } = await Network.get(CUSTOMER_BILLS_API_URL(customer, params));
-    return bills;
+    return await Network.get(CUSTOMER_BILLS_API_URL(customer, params));
   } catch (errorMessage) {
     throw errorMessage;
   }

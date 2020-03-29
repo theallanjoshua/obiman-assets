@@ -11,6 +11,7 @@ export const BUSINESS_EDIT = `${BUSINESS}/edit`;
 export const BUSINESS_RESOURCE = `${BUSINESS}/:businessId`;
 
 export const getBusinessSpecificUrl = url => `${BUSINESS}/${getCurrentBusinessId()}${url}`;
+export const getPathFromLocation = () => window.location.hash.replace('#', '');
 
 export const HOME_MENU_ITEM_TITLE = 'Home';
 export const BUSINESS_MENU_ITEM_TITLE = 'Business';

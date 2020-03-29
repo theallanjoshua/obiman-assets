@@ -44,7 +44,7 @@ export default class Dashboard extends React.Component {
     if (updatedDateFrom) {
       this.setState({ loading: true, errorMessage: '' });
       try {
-        const bills = await fetchBills(businessId, query);
+        const { bills } = await fetchBills(businessId, query);
         this.setState({ bills });
       } catch (errorMessage) {
         this.setState({ errorMessage });

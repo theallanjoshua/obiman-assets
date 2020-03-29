@@ -4,7 +4,7 @@ import { ORDERS_API_URL } from '../constants/endpoints';
 export const fetchOrders = async (businessId, orderIds = []) => {
   try {
     const { orders } = orderIds.length ? await Network.get(ORDERS_API_URL(businessId, orderIds)) : { orders: [] };
-    return orders.sort((prv, nxt) => prv.updatedDate - nxt.updatedDate);
+    return orders.sort((prv, nxt) => nxt.updatedDate - prv.updatedDate);
   } catch (errorMessage) {
     throw errorMessage
   }

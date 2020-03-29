@@ -7,3 +7,4 @@ export const ADD_BILL_PAGE_TITLE = 'New bill';
 export const EDIT_BILL_PAGE_TITLE = 'Edit bill';
 export const BILL_ADDED_SUCCESSFULLY_MESSAGE = 'Bill created successfully';
 export const BILL_EDITED_SUCCESSFULLY_MESSAGE = 'Bill updated successfully';
+export const NO_OF_BILLS_PER_REQUEST = 10;

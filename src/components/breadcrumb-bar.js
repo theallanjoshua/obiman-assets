@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { Breadcrumb, Icon } from 'antd';
 import { Link } from 'react-router-dom'
-import { PAGE_URL_TITLE_MAP } from '../constants/pages';
+import { PAGE_URL_TITLE_MAP, getPathFromLocation } from '../constants/pages';
 import { withRouter } from 'react-router';
+import { Consumer } from '../context';
+import { getCurrentBusinessId } from '../utils/businesses';
 
-const getBreadcrumbs = () => window.location.hash
+const getBreadcrumbs = () => getPathFromLocation()
   .replace('#','')
   .split('/')
   .filter(crumb => crumb)
@@ -13,13 +15,15 @@ const getBreadcrumbs = () => window.location.hash
     return [ ...acc, { link: [ link, crumb ].join('/'), title: PAGE_URL_TITLE_MAP[`/${crumb}`] || crumb } ]
   }, []);
 
-const BreadcrumbBar = () => <Breadcrumb>
-  <Breadcrumb.Item key='home'>
-    <Link to='/'><Icon type='home' /></Link>
-  </Breadcrumb.Item>
-  {getBreadcrumbs().map(({ link, title }) => <Breadcrumb.Item key={link}>
-    <Link to={link}>{title}</Link>
-  </Breadcrumb.Item>)}
-</Breadcrumb>;
+const BreadcrumbBar = () => <Consumer>
+  {({ currentBusiness }) => <Breadcrumb>
+    <Breadcrumb.Item key='home'>
+      <Link to='/'><Icon type='home' /></Link>
+    </Breadcrumb.Item>
+    {getBreadcrumbs().map(({ link, title }) => <Breadcrumb.Item key={link}>
+      <Link to={link}>{title === getCurrentBusinessId() ? currentBusiness.label : title}</Link>
+    </Breadcrumb.Item>)}
+  </Breadcrumb>}
+</Consumer>;
 
 export default withRouter(BreadcrumbBar);

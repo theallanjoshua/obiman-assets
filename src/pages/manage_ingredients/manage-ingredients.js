@@ -32,9 +32,7 @@ class ManageIngredientsComponent extends React.Component {
   };
   componentDidUpdate = prevProps => {
     const { businessId } = this.props;
-    if(prevProps.businessId !== businessId && businessId) {
-      this.fetchAllIngredients()
-    }
+    if(prevProps.businessId !== businessId && businessId) this.fetchAllIngredients();
   };
   fetchAllIngredients = async () => {
     const { businessId } = this.props;

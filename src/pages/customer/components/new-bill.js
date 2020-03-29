@@ -46,7 +46,7 @@ export default class NewBill extends React.Component {
         status: bill.getStates().filter(state => state !== bill.getPositiveEndState() && state !== bill.getNegativeEndState()),
         customer: [this.props.email]
       }
-      const bills = await fetchBills(business.id, query);
+      const { bills } = await fetchBills(business.id, query);
       if(bills.length) {
         this.setState({ loading: false, errorMessage: 'Oops! Looks like there is already an ongoing order for this. You can view that in the "Ongoing orders" tab.' });
         return;

@@ -15,9 +15,7 @@ class CurrentBusinessComponent extends React.Component {
     const businessId = this.getBusinessIdFromLocation(location);
     const { location: previousLocation } = prevProps;
     const previousBusinessId = this.getBusinessIdFromLocation(previousLocation);
-    if(businessId !== previousBusinessId) {
-      this.fetchBusiness(businessId);
-    }
+    if(businessId !== previousBusinessId) this.fetchBusiness(businessId);
   }
   fetchBusiness = async businessId => {
     this.props.onLoad(true);

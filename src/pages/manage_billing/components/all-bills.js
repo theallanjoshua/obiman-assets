@@ -10,6 +10,7 @@ import { Bill } from 'obiman-data-models';
 import EditBill from './edit-bill';
 import PrintBill from './print-bill';
 import { Business } from 'obiman-data-models';
+import LazyLoad from 'react-lazyload';
 
 const Frills = ({ isBottom }) => <div style={{ paddingLeft: '10px' }}>
   {[ ...new Array(10) ].map((item, index) => <span
@@ -23,6 +24,11 @@ const Frills = ({ isBottom }) => <div style={{ paddingLeft: '10px' }}>
     }}
   />)}
 </div>
+
+class LazyLoadMoreBills extends React.Component {
+  componentDidMount = () => this.props.onLoadMore();
+  render = () => <span style={{ height: '200px' }} />;
+}
 
 export default class AllBills extends React.Component {
   constructor() {
@@ -91,6 +97,9 @@ export default class AllBills extends React.Component {
           <Frills isBottom />
         </div>
       })}
+      {this.props.next && this.props.onLoadMore && !this.props.loading ? <LazyLoad once>
+        <LazyLoadMoreBills onLoadMore={this.props.onLoadMore} />
+      </LazyLoad>: null}
     </div> :
   <Empty description='No bills available' />}
   <EditBill

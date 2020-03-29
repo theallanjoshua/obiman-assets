@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Alert, Button } from 'antd';
 import {
   MANAGE_BILLS_PAGE_TITLE,
-  ADD_BILL_TEXT
+  ADD_BILL_TEXT,
+  NO_OF_BILLS_PER_REQUEST
 } from '../../constants/manage-billing';
 import PageHeader from '../../components/page-header';
 import { Consumer } from '../../context';
@@ -14,7 +15,6 @@ import { fetchBills, getEnrichedBills } from '../../utils/bills';
 import { fetchOrders } from '../../utils/orders';
 import SearchBills from './components/search-bills';
 import GenerateBillQrCode from './components/generate-bill-qr-code';
-import { Business } from 'obiman-data-models';
 
 class ManageBillingComponent extends React.Component {
   constructor() {
@@ -28,16 +28,18 @@ class ManageBillingComponent extends React.Component {
       orders: [],
       showAddModal: false,
       showGenerateQrCodeModal: false,
-      query: { status: ['Open'] }
+      query: {
+        status: ['Open']
+      },
+      next: null,
+      billsCount: 0
     }
   }
   componentDidMount = () => this.fetchAllBills();
   componentDidUpdate = prevProps => {
     const { id } = this.props.currentBusiness;
     const { id: existingId } = prevProps.currentBusiness;
-    if(id !== existingId) {
-      this.fetchAllBills()
-    }
+    if(id !== existingId) this.fetchAllBills();
   }
   fetchAllBills = async () => {
     const { id: businessId } = this.props.currentBusiness;
@@ -47,7 +49,8 @@ class ManageBillingComponent extends React.Component {
         const ingredients = await fetchAllIngredients(businessId);
         const products = await fetchAllProducts(businessId);
         const enrichedProducts = getEnrichedProducts(products, ingredients).map(item => ({ ...item, businessId }));
-        const bills = await fetchBills(businessId, this.state.query);
+        const { count: billsCount } = await fetchBills(businessId, { ...this.state.query, onlyCount: true });
+        const { bills, next } = await fetchBills(businessId, { ...this.state.query, size: NO_OF_BILLS_PER_REQUEST });
         const orderIds = bills.reduce((acc, { composition }) => [ ...acc, ...composition.filter(({ orderId }) => orderId).map(({ orderId }) => orderId) ], []);
         const orders = await fetchOrders(businessId, orderIds);
         const enrichedBills = getEnrichedBills(bills, products, orders);
@@ -55,7 +58,30 @@ class ManageBillingComponent extends React.Component {
           ingredients: ingredients.map(item => ({ ...item, businessId })),
           products: enrichedProducts,
           bills: enrichedBills,
-          orders: orders.map(item => ({ ...item, businessId }))
+          orders: orders.map(item => ({ ...item, businessId })),
+          next,
+          billsCount
+        });
+      } catch (errorMessage) {
+        this.setState({ errorMessage });
+      }
+      this.setState({ loading: false });
+    }
+  }
+  fetchMoreBills = async () => {
+    const { id: businessId } = this.props.currentBusiness;
+    if(businessId) {
+      this.setState({ loading: true, errorMessage: '' });
+      try {
+        const { products, next: existingNext, orders: existingOrders, bills: existingBills } = this.state;
+        const { bills, next } = await fetchBills(businessId, { ...this.state.query, size: NO_OF_BILLS_PER_REQUEST, next: existingNext });
+        const orderIds = bills.reduce((acc, { composition }) => [ ...acc, ...composition.filter(({ orderId }) => orderId).map(({ orderId }) => orderId) ], []);
+        const orders = await fetchOrders(businessId, orderIds);
+        const enrichedBills = getEnrichedBills(bills, products, orders);
+        this.setState({
+          bills: [ ...existingBills, ...enrichedBills ],
+          orders: [ ...existingOrders, orders.map(item => ({ ...item, businessId })) ],
+          next
         });
       } catch (errorMessage) {
         this.setState({ errorMessage });
@@ -72,7 +98,7 @@ class ManageBillingComponent extends React.Component {
   }
   render = () => <>
     <PageHeader
-      title={MANAGE_BILLS_PAGE_TITLE(this.state.bills.length)}
+      title={MANAGE_BILLS_PAGE_TITLE(this.state.billsCount)}
       extra={<>
         <Button
           style={{ marginRight: '4px' }}
@@ -105,7 +131,9 @@ class ManageBillingComponent extends React.Component {
       products={this.state.products}
       orders={this.state.orders}
       bills={this.state.bills}
+      next={this.state.next}
       onSuccess={this.fetchAllBills}
+      onLoadMore={this.fetchMoreBills}
       allBusinesses={[this.props.currentBusiness]}
     />
     <AddBill
