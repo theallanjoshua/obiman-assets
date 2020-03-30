@@ -6,14 +6,15 @@ import TrendChart from './trend-chart';
 import BarChart from './bar-chart';
 import { Utils } from 'obiman-data-models';
 import AllProducts from '../../manage_products/components/all-products';
+import moment from 'moment';
 
 const { Panel } = Collapse;
-const tripletsLayout = {
+const layout = {
   xs: { span: 24 },
   sm: { span: 24 },
   md: { span: 24 },
   lg: { span: 12 },
-  xl: { span: 8 }
+  xl: { span: 8, offset: 2 }
 };
 
 export default class Dashboard extends React.Component {
@@ -56,13 +57,11 @@ export default class Dashboard extends React.Component {
   }
   groupBySource = bills => this.props.sources.map(source => ({ label: source, data: bills.filter(bill => bill.source === source) }));
   aggregateTotal = bills => bills.reduce((acc, { total }) => acc + total, 0);
-  aggregateProfit = bills => bills.reduce((acc, { profit }) => acc + profit, 0);
   onTabChange = activeKey => this.setState({ activeKey });
   render = () => {
     const { bills } = this.state;
     const totalCount = bills.length;
     const totalSalesData = this.aggregateTotal(bills);
-    const totalProfitData = this.aggregateProfit(bills);
     const totalBillComposition = bills.reduce((acc, bill) => [ ...acc, ...(bill.composition || []) ], []);
     const productData = this.props.products.map(product => ({
       ...product,
@@ -71,9 +70,8 @@ export default class Dashboard extends React.Component {
         .filter(({ id }) => id === product.id)
         .reduce((acc, composition) => ({
           count: acc.count + 1,
-          sales: acc.sales + composition.price,
-          profit: acc.profit + composition.profit
-        }), { count: 0, sales: 0, profit: 0 })
+          sales: acc.sales + composition.price
+        }), { count: 0, sales: 0 })
       }
     }));
     const mostOrderedProducts = productData
@@ -84,10 +82,6 @@ export default class Dashboard extends React.Component {
       .sort((prv, nxt) => nxt.aggregatedData.sales - prv.aggregatedData.sales)
       .filter((item, index) => index < 5)
       .map(({ label, aggregatedData: { sales } }) => ({ label, data: sales }));
-    const mostProfitableProducts = productData
-      .sort((prv, nxt) => nxt.aggregatedData.profit - prv.aggregatedData.profit)
-      .filter((item, index) => index < 5)
-      .map(({ label, aggregatedData: { profit } }) => ({ label, data: profit }));
     const leastOrderedProducts = productData
       .sort((prv, nxt) => prv.aggregatedData.count - nxt.aggregatedData.count)
       .filter(({ label, aggregatedData: { count } }) => count > 0 && !mostOrderedProducts.map(({ label }) => label).includes(label))
@@ -98,11 +92,6 @@ export default class Dashboard extends React.Component {
       .filter(({ label, aggregatedData: { sales } }) => sales > 0 && !mostSoldProducts.map(({ label }) => label).includes(label))
       .filter((item, index) => index < 5)
       .map(({ label, aggregatedData: { sales } }) => ({ label, data: sales }));
-    const leastProfitableProducts = productData
-      .sort((prv, nxt) => prv.aggregatedData.profit - nxt.aggregatedData.profit)
-      .filter(({ label, aggregatedData: { profit } }) => profit > 0 && !mostProfitableProducts.map(({ label }) => label).includes(label))
-      .filter((item, index) => index < 5)
-      .map(({ label, aggregatedData: { profit } }) => ({ label, data: profit }));
     const productsWithoutASale = productData.filter(({ aggregatedData: { count } }) => count === 0);
     return <Card
       key={this.props.title}
@@ -130,7 +119,7 @@ export default class Dashboard extends React.Component {
             key='first'
           >
             <Row gutter={32}>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <Card>
                   <Statistic
                     title='No. of bills'
@@ -140,7 +129,7 @@ export default class Dashboard extends React.Component {
                   />
                 </Card>
               </Col>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <Card>
                   <Statistic
                     title='Total sales'
@@ -151,21 +140,10 @@ export default class Dashboard extends React.Component {
                   />
                 </Card>
               </Col>
-              <Col { ...tripletsLayout }>
-                <Card>
-                  <Statistic
-                    title='Total profit'
-                    value={totalProfitData}
-                    precision={2}
-                    valueStyle={{ color: '#3f8600' }}
-                    prefix={new Utils().getCurrencySymbol(this.props.currency)}
-                  />
-                </Card>
-              </Col>
             </Row>
             <br />
             <Row gutter={8}>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <TrendChart
                   title={'By count'}
                   label={'Count'}
@@ -175,7 +153,7 @@ export default class Dashboard extends React.Component {
                   reduce={bills => bills.length}
                 />
               </Col>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <TrendChart
                   title={'By sales'}
                   label={'Sales'}
@@ -186,17 +164,6 @@ export default class Dashboard extends React.Component {
                   reduce={this.aggregateTotal}
                 />
               </Col>
-              <Col { ...tripletsLayout }>
-                <TrendChart
-                  title={'By profit'}
-                  label={'Profit'}
-                  currency={this.props.currency}
-                  rangeStart={this.props.query.updatedDateFrom}
-                  rangeEnd={this.props.query.updatedDateTo}
-                  data={bills}
-                  reduce={this.aggregateProfit}
-                />
-              </Col>
             </Row>
           </Panel>
           <Panel
@@ -204,7 +171,7 @@ export default class Dashboard extends React.Component {
             key='second'
           >
             <Row gutter={8}>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <PieChart
                   title={'By count'}
                   data={bills}
@@ -212,28 +179,19 @@ export default class Dashboard extends React.Component {
                   reduce={bills => bills.length}
                 />
               </Col>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <PieChart
                   title={'By sales'}
                   currency={this.props.currency}
                   data={bills}
                   group={this.groupBySource}
                   reduce={this.aggregateTotal}
-                />
-              </Col>
-              <Col { ...tripletsLayout }>
-                <PieChart
-                  title={'By profit'}
-                  currency={this.props.currency}
-                  data={bills}
-                  group={this.groupBySource}
-                  reduce={this.aggregateProfit}
                 />
               </Col>
             </Row>
             <br />
             <Row gutter={8}>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <TrendChart
                   title={'By count'}
                   rangeStart={this.props.query.updatedDateFrom}
@@ -243,7 +201,7 @@ export default class Dashboard extends React.Component {
                   reduce={bills => bills.length}
                 />
               </Col>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <TrendChart
                   title={'By sales'}
                   currency={this.props.currency}
@@ -252,17 +210,6 @@ export default class Dashboard extends React.Component {
                   data={bills}
                   group={this.groupBySource}
                   reduce={this.aggregateTotal}
-                />
-              </Col>
-              <Col { ...tripletsLayout }>
-                <TrendChart
-                  title={'By profit'}
-                  currency={this.props.currency}
-                  rangeStart={this.props.query.updatedDateFrom}
-                  rangeEnd={this.props.query.updatedDateTo}
-                  data={bills}
-                  group={this.groupBySource}
-                  reduce={this.aggregateProfit}
                 />
               </Col>
             </Row>
@@ -276,24 +223,17 @@ export default class Dashboard extends React.Component {
             key='first'
           >
             <Row gutter={8}>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <BarChart
                   title={'By count'}
                   data={mostOrderedProducts}
                 />
               </Col>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <BarChart
                   title={'By sales'}
                   currency={this.props.currency}
                   data={mostSoldProducts}
-                />
-              </Col>
-              <Col { ...tripletsLayout }>
-                <BarChart
-                  title={'By profit'}
-                  currency={this.props.currency}
-                  data={mostProfitableProducts}
                 />
               </Col>
             </Row>
@@ -303,24 +243,17 @@ export default class Dashboard extends React.Component {
             key='second'
           >
             <Row gutter={8}>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <BarChart
                   title={'By count'}
                   data={leastOrderedProducts}
                 />
               </Col>
-              <Col { ...tripletsLayout }>
+              <Col { ...layout }>
                 <BarChart
                   title={'By sales'}
                   currency={this.props.currency}
                   data={leastSoldProducts}
-                />
-              </Col>
-              <Col { ...tripletsLayout }>
-                <BarChart
-                  title={'By profit'}
-                  currency={this.props.currency}
-                  data={leastProfitableProducts}
                 />
               </Col>
             </Row>

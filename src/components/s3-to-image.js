@@ -34,13 +34,13 @@ export default class S3ToImage extends React.Component {
     src={this.state.src}
   /> : this.state.src ? <img
     style={{
-      width: this.props.width || 240,
-      height: this.props.height || 160
+      width: 240,
+      height: 160
     }}
     src={this.state.src}
     alt={this.props.alt}
   /> :  <Icon
-    style={{ fontSize: `${this.props.height || 160}px` }}
+    style={{ fontSize: '160px' }}
     theme='filled'
     type='picture'
   />;

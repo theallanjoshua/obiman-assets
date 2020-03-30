@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, Empty, Alert, Card, Radio, Icon } from 'antd';
+import { Table, Empty, Alert, Card, Radio, Icon, Spin } from 'antd';
 import {
   IngredientImage,
   IngredientEdit,
@@ -8,7 +8,6 @@ import {
   IngredientLocation,
   IngredientQuantity,
   IngredientExpiry,
-  IngredientCost,
   ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION,
   INGREDIENT_DELETED_SUCCESSFULLY_MESSAGE
 } from '../../../constants/manage-ingredients';
@@ -68,37 +67,36 @@ export default class AllIngredients extends React.Component {
           <Icon type='unordered-list' />
         </Radio.Button>
       </Radio.Group>
-      {this.state.isCard ? <div className='flex-wrap' style={{ paddingTop: '30px' }}>
-        {ingredients.map(ingredient => <Card
-          key={ingredient.key}
-          style={{
-            maxWidth: '90vw',
-            width: '242px',
-            height: '100%',
-            margin: '0px 20px 20px 0px'
-          }}
-          loading={this.state.loading}
-          cover={<IngredientImage ingredient={ingredient} />}
-          actions={[<IngredientEdit ingredient={ingredient} />, <IngredientDelete ingredient={ingredient} />]}
-        >
-          <Card.Meta
-            title={<IngredientLabel ingredient={ingredient} />}
-            description={<div>
-              <div><IngredientLocation ingredient={ingredient} /></div>
-              <div><IngredientCost ingredient={ingredient} /></div>
-              <div><IngredientExpiry ingredient={ingredient} /></div>
-              <div><IngredientQuantity ingredient={ingredient} /></div>
-            </div>}
-          />
-        </Card>)}
-      </div> : <Table
+      {this.state.isCard ? <Spin spinning={this.state.loading || this.props.loading}>
+        <div className='flex-wrap' style={{ paddingTop: '10px' }}>
+          {ingredients.map(ingredient => <Card
+            key={ingredient.key}
+            style={{
+              maxWidth: '90vw',
+              width: '242px',
+              height: '100%',
+              margin: '0px 10px 10px 0px'
+            }}
+            cover={<IngredientImage ingredient={ingredient} />}
+            actions={[<IngredientEdit ingredient={ingredient} />, <IngredientDelete ingredient={ingredient} />]}
+          >
+            <Card.Meta
+              title={<IngredientLabel ingredient={ingredient} />}
+              description={<div>
+                <div><IngredientLocation ingredient={ingredient} /></div>
+                <div><IngredientExpiry ingredient={ingredient} /></div>
+                <div><IngredientQuantity ingredient={ingredient} /></div>
+              </div>}
+            />
+          </Card>)}
+        </div>
+      </Spin> : <Table
         pagination={{ position: 'both' }}
         scroll={{ x: 2400, y: '50vh' }}
         locale={{ emptyText: <Empty description='No ingredients' /> }}
-        loading={this.props.loading}
+        loading={this.state.loading || this.props.loading}
         columns={ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION}
         dataSource={ingredients}
-        rowSelection={{ onChange: this.props.onSelectionChange }}
       />}
       <EditIngredient
         currency={this.props.currency}

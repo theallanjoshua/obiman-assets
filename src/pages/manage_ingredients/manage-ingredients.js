@@ -2,7 +2,6 @@ import * as React from 'react';
 import AllIngredients from './components/all-ingredients';
 import { Button, Alert } from 'antd';
 import AddIngredient from './components/add-ingredient';
-import BulkEditIngredients from './components/bulk-edit-ingredients';
 import {
   MANAGE_INGREDIENTS_PAGE_TITLE,
   ADD_INGREDIENT_BUTTON_TEXT
@@ -20,7 +19,6 @@ class ManageIngredientsComponent extends React.Component {
       successMessage: '',
       ingredients: [],
       showAddModal: false,
-      selectedIngredientsKeys: [],
       showBulkEditModal: false
     }
   }
@@ -46,9 +44,7 @@ class ManageIngredientsComponent extends React.Component {
     this.setState({ loading: false });
   }
   showAddModal = () => this.setState({ showAddModal: true });
-  showBulkEditModal = () => this.setState({ showBulkEditModal: true });
-  hideModal = () => this.setState({ showAddModal: false, showBulkEditModal: false });
-  onSelectionChange = selectedIngredientsKeys => this.setState({ selectedIngredientsKeys });
+  hideModal = () => this.setState({ showAddModal: false });
   render = () => <>
     <PageHeader
       title={MANAGE_INGREDIENTS_PAGE_TITLE(this.state.ingredients.length)}
@@ -59,13 +55,6 @@ class ManageIngredientsComponent extends React.Component {
           icon='plus'
           onClick={this.showAddModal}
           children={ADD_INGREDIENT_BUTTON_TEXT}
-        />
-        <Button
-          style={{ marginRight: '4px' }}
-          icon='edit'
-          disabled={this.state.selectedIngredientsKeys.length < 2}
-          onClick={this.showBulkEditModal}
-          children={'Bulk edit'}
         />
         <Button
           icon='reload'
@@ -82,8 +71,6 @@ class ManageIngredientsComponent extends React.Component {
       businessId={this.props.businessId}
       loading={this.state.loading}
       ingredients={this.state.ingredients}
-      selectedIngredientsKeys={this.selectedIngredientsKeys}
-      onSelectionChange={this.onSelectionChange}
       fetchAllIngredients={this.fetchAllIngredients}
     />
     <AddIngredient
@@ -91,15 +78,6 @@ class ManageIngredientsComponent extends React.Component {
       locations={this.props.locations}
       businessId={this.props.businessId}
       visible={this.state.showAddModal}
-      hideModal={this.hideModal}
-      fetchAllIngredients={this.fetchAllIngredients}
-    />
-    <BulkEditIngredients
-      currency={this.props.currency}
-      locations={this.props.locations}
-      businessId={this.props.businessId}
-      visible={this.state.showBulkEditModal}
-      ingredients={this.state.ingredients.filter(ingredient => this.state.selectedIngredientsKeys.includes(ingredient.id))}
       hideModal={this.hideModal}
       fetchAllIngredients={this.fetchAllIngredients}
     />

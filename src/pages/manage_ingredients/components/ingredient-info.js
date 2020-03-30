@@ -37,7 +37,6 @@ export default class IngredientInfo extends React.Component {
   setLocation = location => this.set('location', location);
   setThresholdQuantity = thresholdQuantity => this.set('thresholdQuantity', thresholdQuantity);
   setThresholdUnit = thresholdUnit => this.set('thresholdUnit', thresholdUnit);
-  setCost = cost => this.set('cost', cost);
   render = () => {
     const utils = new Utils();
     const ingredient = new Ingredient({ ...this.props.ingredient });
@@ -147,23 +146,6 @@ export default class IngredientInfo extends React.Component {
               {utils.getUnits(ingredientData.unit).map(unit => <Select.Option key={unit} value={unit} children={unit}/>)}
             </Select>
           </div>
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        required
-        hasFeedback
-        label={`Cost price ${ingredientData.unit ? `per ${ingredientData.unit}` : ``}`}
-        { ...formValidation(this.props.showValidationErrors, validationErrors.cost) }
-        children={
-          <InputNumber
-            min={0}
-            precision={2}
-            value={ingredientData.cost}
-            formatter={value => `${new Utils().getCurrencySymbol(this.props.currency)} ${value}`}
-            parser={value => value.replace(`${new Utils().getCurrencySymbol(this.props.currency)}`, '').trim()}
-            onChange={this.setCost}
-          />
         }
       />
     </Form>

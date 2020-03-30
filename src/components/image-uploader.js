@@ -73,13 +73,15 @@ export default class ImageUploader extends React.Component {
   </Spin> :
   <Card
     loading={this.state.loading}
-    cover={<img
-      style={{
-        width: 240,
-        height: 160
-      }}
-      src={this.state.uploadedFile.url}
-    />}
+    cover={<div className='center-align'>
+      <img
+        style={{
+          width: 240,
+          height: 160
+        }}
+        src={this.state.uploadedFile.url}
+      />
+    </div>}
     actions={[<Text
       type='danger'
       children={'Remove'}

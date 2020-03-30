@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Utils } from 'obiman-data-models';
 import moment from 'moment';
-import { Popconfirm, Button, Tag, Paragraph, Typography } from 'antd';
+import { Popconfirm, Button, Tag, Typography } from 'antd';
 import { DEFAULT_TABLE_FEATURES } from './app';
 import Timestamp from '../components/timestamp';
 import S3ToImage from '../components/s3-to-image';
@@ -14,11 +14,7 @@ export const PRODUCT_ADDED_SUCCESSFULLY_MESSAGE = label => `${label} added to pr
 export const EDIT_MODAL_HEADER = 'Edit product';
 export const PRODUCT_EDITED_SUCCESSFULLY_MESSAGE = label => `${label} edited successfully`;
 
-export const ProductImage = ({ product, width, height }) => <S3ToImage
-  s3Key={product.image}
-  width={width}
-  height={height}
-/>;
+export const ProductImage = ({ product, size }) => <S3ToImage s3Key={product.image} />;
 export const ProductLabel = ({ product }) => product.label;
 export const ProductEdit = ({ product }) => <Button
   type='link'
@@ -52,18 +48,15 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Product',
     dataIndex: 'label',
-    render: (text, product) => <div>
-      <ProductImage product={product} />
-      <div className='vertical-center-align space-between'>
-        <ProductLabel product={product} />
-        <div className='right-align'>
-          <ProductEdit product={product} />
-          <ProductDelete product={product} />
-        </div>
+    render: (text, product) => <div className='space-between'>
+      <ProductLabel product={product} />
+      <div className='right-align'>
+        <ProductEdit product={product} />
+        <ProductDelete product={product} />
       </div>
     </div>,
     fixed: 'left',
-    width: 272,
+    width: 200,
     ...DEFAULT_TABLE_FEATURES(({ label }) => label, ({ label }) => label, 'Search products')
   },
   {
@@ -77,12 +70,6 @@ export const ALL_PRODUCTS_TABLE_COLUMN_DEFINITION = [
     dataIndex: 'classification',
     render: (text, product) => <ProductClassification product={product} />,
     ...DEFAULT_TABLE_FEATURES(({ classification }) => classification, ({ classification }) => classification, 'Search classification')
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    render: (text, product) => <ProductDescription product={product} />,
-    ...DEFAULT_TABLE_FEATURES(({ description }) => description, ({ description }) => description, 'Search description')
   },
   {
     title: 'Selling price',

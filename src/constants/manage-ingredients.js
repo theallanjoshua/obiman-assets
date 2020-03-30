@@ -14,11 +14,7 @@ export const INGREDIENT_ADDED_SUCCESSFULLY_MESSAGE = label => `${label} added to
 export const EDIT_MODAL_HEADER = 'Edit ingredient';
 export const INGREDIENT_EDITED_SUCCESSFULLY_MESSAGE = label => `${label} edited successfully`;
 
-export const IngredientImage = ({ ingredient, width, height }) => <S3ToImage
-  s3Key={ingredient.image}
-  width={width}
-  height={height}
-/>;
+export const IngredientImage = ({ ingredient }) => <S3ToImage s3Key={ingredient.image} />;
 export const IngredientLabel = ({ ingredient }) => ingredient.label;
 export const IngredientEdit = ({ ingredient }) => <Button
   type='link'
@@ -58,27 +54,20 @@ export const IngredientExpiry = ({ ingredient }) => {
     </div> :
     <span>Expires <Timestamp value={expiryDate} /></span> : '-'
 }
-export const IngredientCost = ({ ingredient }) => {
-  const { cost, currency, unit } = ingredient;
-  return cost ? `${new Utils().getCurrencySymbol(currency)}${cost.toLocaleString()}/${unit}` : '-';
-}
 
 export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
   {
     title: 'Ingredient',
     dataIndex: 'label',
-    render: (text, ingredient) => <div>
-      <IngredientImage ingredient={ingredient} />
-      <div className='vertical-center-align space-between'>
-        <IngredientLabel ingredient={ingredient} />
-        <div className='right-align'>
-          <IngredientEdit ingredient={ingredient} />
-          <IngredientDelete ingredient={ingredient} />
-        </div>
+    render: (text, ingredient) => <div className='space-between'>
+      <IngredientLabel ingredient={ingredient} />
+      <div className='right-align'>
+        <IngredientEdit ingredient={ingredient} />
+        <IngredientDelete ingredient={ingredient} />
       </div>
     </div>,
     fixed: 'left',
-    width: 272,
+    width: 200,
     ...DEFAULT_TABLE_FEATURES(({ label }) => label, ({ label }) => label, 'Search ingredients')
   },
   {
@@ -98,12 +87,6 @@ export const ALL_INGREDIENTS_TABLE_COLUMN_DEFINITION = [
     dataIndex: 'location',
     render: (text, ingredient) => <IngredientLocation ingredient={ingredient} />,
     ...DEFAULT_TABLE_FEATURES(({ location }) => location, ({ location }) => location, 'Search locations')
-  },
-  {
-    title: 'Cost price',
-    dataIndex: 'cost',
-    render: (text, ingredient) => <IngredientCost ingredient={ingredient} />,
-    ...DEFAULT_TABLE_FEATURES(({ cost }) => cost, ({ cost, currency, unit }) => cost ? `${new Utils().getCurrencySymbol(currency)}${cost.toLocaleString()}/${unit}` : '-', 'Search cost price')
   },
   {
     title: 'Created by',

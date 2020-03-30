@@ -48,7 +48,7 @@ export default class NewBill extends React.Component {
       }
       const { bills } = await fetchBills(business.id, query);
       if(bills.length) {
-        this.setState({ loading: false, errorMessage: 'Looks like there is already an ongoing order for this.\nYou can view that in the "Ongoing orders" tab.' });
+        this.setState({ loading: false, errorMessage: 'Looks like there is already an ongoing order for this. You can view that in the "Ongoing orders" tab.' });
         return;
       }
       const ingredients = await fetchAllIngredients(business.id);
@@ -69,13 +69,13 @@ export default class NewBill extends React.Component {
   hideModal = () => {
     this.setState({
       showAddModal: false,
-      successMessage: this.state.addSuccessful ? 'Your order has been created successfully.\nSwitch over to the "Ongoing orders" tab to view it!' : '',
+      successMessage: this.state.addSuccessful ? 'Your order has been created successfully. Switch over to the "Ongoing orders" tab to view it!' : '',
       addSuccessful: false
     });
     setTimeout(() => this.setState({ successMessage: '' }), 5000);
   }
   onSuccess = () => this.setState({ addSuccessful: true });
-  onError = errorMessage => this.setState({ errorMessage });
+  onError = () => this.setState({ errorMessage: 'Obiman can\'t access you camera. Click "Allow" on the permissions prompt and refresh the page!' });
   onScan = data => {
     if(data && data !== this.state.data) {
       this.setState({ data });
@@ -85,7 +85,7 @@ export default class NewBill extends React.Component {
     {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
-    {!this.state.data ? <div className='center-align'>
+    {!this.state.data && !this.state.errorMessage ? <div className='center-align'>
       <QrReader
         className='obiman-qr-scanner'
         onError={this.onError}

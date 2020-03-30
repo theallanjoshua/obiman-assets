@@ -37,7 +37,6 @@ export default class ProductInfo extends React.Component {
   setComposition = composition => this.set('composition', composition);
   setRecipe = e => this.set('recipe', e.target.value);
   setPrice = price => this.set('price', price);
-  setProfit = profit => this.set('profit', profit);
   setTax = tax => this.set('tax', tax);
   setClassification = classification => this.set('classification', classification);
   render = () => {
@@ -111,22 +110,6 @@ export default class ProductInfo extends React.Component {
             formatter={value => `${new Utils().getCurrencySymbol(this.props.currency)} ${value}`}
             parser={value => value.replace(`${new Utils().getCurrencySymbol(this.props.currency)}`, '').trim()}
             onChange={this.setPrice}
-          />
-        }
-      />
-      <Form.Item
-        { ...formItemLayout }
-        required
-        label={'Profit'}
-        { ...formValidation(this.props.showValidationErrors, validationErrors.profit) }
-        children={
-          <InputNumber
-            min={0}
-            precision={2}
-            value={productData.profit}
-            formatter={value => `${new Utils().getCurrencySymbol(this.props.currency)} ${value}`}
-            parser={value => value.replace(`${new Utils().getCurrencySymbol(this.props.currency)}`, '').trim()}
-            onChange={this.setProfit}
           />
         }
       />

@@ -20,8 +20,7 @@ class ManageProductsComponent extends React.Component {
       products: [],
       ingredients: [],
       productToUpdate: {},
-      showAddModal: false,
-      showEditModal: false
+      showAddModal: false
     }
   }
   componentDidMount = () => {

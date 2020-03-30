@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, Empty, Alert, Card, Radio, Icon } from 'antd';
+import { Table, Empty, Alert, Card, Radio, Icon, Spin } from 'antd';
 import {
   ALL_PRODUCTS_TABLE_COLUMN_DEFINITION,
   PRODUCT_DELETED_SUCCESSFULLY_MESSAGE,
@@ -68,34 +68,35 @@ export default class AllProducts extends React.Component {
           <Icon type='unordered-list' />
         </Radio.Button>
       </Radio.Group>
-      {this.state.isCard ? <div className='flex-wrap' style={{ paddingTop: '30px' }}>
-        {products.map(product => <Card
-          key={product.key}
-          style={{
-            maxWidth: '90vw',
-            width: '242px',
-            height: '100%',
-            margin: '0px 20px 20px 0px'
-          }}
-          loading={this.state.loading}
-          cover={<ProductImage product={product} />}
-          actions={[<ProductEdit product={product} />, <ProductDelete product={product} />]}
-        >
-          <Card.Meta
-            title={<ProductLabel product={product} />}
-            description={<div>
-              <div><ProductClassification product={product} /></div>
-              <div><ProductPrice product={product} /></div>
-              <div><ProductIssues product={product} /></div>
-              <div><ProductDescription product={product} /></div>
-            </div>}
-          />
-        </Card>)}
-      </div> : <Table
+      {this.state.isCard ? <Spin spinning={this.state.loading || this.props.loading}>
+        <div className='flex-wrap' style={{ paddingTop: '10px' }}>
+          {products.map(product => <Card
+            key={product.key}
+            style={{
+              maxWidth: '90vw',
+              width: '242px',
+              height: '100%',
+              margin: '0px 10px 10px 0px'
+            }}
+            cover={<ProductImage product={product} />}
+            actions={[<ProductEdit product={product} />, <ProductDelete product={product} />]}
+          >
+            <Card.Meta
+              title={<ProductLabel product={product} />}
+              description={<div>
+                <div><ProductClassification product={product} /></div>
+                <div><ProductPrice product={product} /></div>
+                <div><ProductIssues product={product} /></div>
+                <div><ProductDescription product={product} /></div>
+              </div>}
+            />
+          </Card>)}
+        </div>
+      </Spin> : <Table
         pagination={{ position: 'both' }}
         scroll={{ x: 2400, y: '50vh' }}
         locale={{ emptyText: <Empty description='No products' /> }}
-        loading={this.props.loading}
+        loading={this.state.loading || this.props.loading}
         columns={ALL_PRODUCTS_TABLE_COLUMN_DEFINITION}
         dataSource={products}
       />}
