@@ -101,6 +101,9 @@ export default class EditIngredient extends React.Component {
       disabled: this.state.loading
     }}
   >
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
+    <br />
     <IngredientInfo
       currency={this.props.currency}
       locations={this.props.locations}
@@ -108,7 +111,7 @@ export default class EditIngredient extends React.Component {
       showValidationErrors={this.state.showValidationErrors}
       onChange={this.onChange}
     />
-    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
-    {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
   </Modal>;
 }

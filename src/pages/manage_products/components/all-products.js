@@ -53,8 +53,8 @@ export default class AllProducts extends React.Component {
       onDelete: this.deleteProduct
     }));
     return <div>
-      {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
-      {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
+      {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+      {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
       {this.state.errorMessage || this.state.successMessage ? <br /> : null}
       <Radio.Group
         value={this.state.isCard}

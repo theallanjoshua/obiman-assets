@@ -54,7 +54,7 @@ class Credentials {
       if (session) {
         return session.getIdToken().getJwtToken();
       } else {
-        throw 'Oops! Your credentials have expired, redirecting to login page'
+        throw 'Your credentials have expired, redirecting to login page'
       }
     } catch (error) {
       throw error;

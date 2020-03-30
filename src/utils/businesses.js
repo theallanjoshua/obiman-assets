@@ -1,6 +1,6 @@
 import Network from './network';
 import { BUSINESSES_API_URL } from '../constants/endpoints';
-import { BUSINESS, getPathFromLocation } from '../constants/pages';
+import { BUSINESS, EDIT, getPathFromLocation } from '../constants/pages';
 
 export const fetchBusinesses = async (businessIds = []) => {
   try {
@@ -12,5 +12,8 @@ export const fetchBusinesses = async (businessIds = []) => {
 }
 
 export const isBusinessPath = (path = getPathFromLocation()) => path.includes(BUSINESS);
-export const getBusinessIdFromPath = path => isBusinessPath(path) ? path.replace(BUSINESS, '').split('/')[1] || '' : '';
+export const getBusinessIdFromPath = path => {
+  const businessId = isBusinessPath(path) ? path.replace(BUSINESS, '').split('/')[1] || '' : '';
+  return `/${businessId}` !== EDIT ? businessId : '';
+}
 export const getCurrentBusinessId = () => getBusinessIdFromPath(getPathFromLocation());

@@ -40,7 +40,7 @@ class ManageBusinessesComponent extends React.Component {
   showEditModal = businessToUpdate => this.setState({ businessToUpdate, showEditModal: true });
   hideModal = () => this.setState({ showAddModal: false, showEditModal: false });
   render = () => <div>
-    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
     <AllBusinesses
       loading={this.state.loading}
       businesses={this.state.businesses}

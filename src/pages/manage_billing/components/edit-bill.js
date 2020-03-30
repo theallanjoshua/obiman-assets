@@ -122,6 +122,9 @@ export default class EditBill extends React.Component {
       disabled: this.state.loading
     }}
   >
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
+    <br />
     <Spin spinning={this.state.loading}>
       <BillInfo
         showValidationErrors={this.state.showValidationErrors}
@@ -135,7 +138,7 @@ export default class EditBill extends React.Component {
         isCustomerView={this.props.isCustomerView}
       />
     </Spin>
-    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
-    {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
   </Modal>;
 }

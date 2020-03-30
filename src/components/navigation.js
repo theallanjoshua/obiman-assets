@@ -32,21 +32,12 @@ const NavItems = ({ isBottom }) => {
       selectedKeys={[ getPathFromLocation().replace(`${BUSINESS}/${businessId}`,'') ]}
       className={isBottom ? 'space-between' : 'right-align'}
     >
-      <Item key={ORDERS}>
-        <Link to={getBusinessSpecificUrl(ORDERS)}>
-        {isBottom ? <Icon type='shopping' style={{ marginRight: '0px' }} /> :
+      <Item key={INGREDIENTS}>
+        <Link to={getBusinessSpecificUrl(INGREDIENTS)}>
+        {isBottom ? <Icon type='build' style={{ marginRight: '0px' }} /> :
           <span>
-            <Icon type='shopping' />
-            {PAGE_URL_TITLE_MAP[ORDERS]}
-          </span>}
-        </Link>
-      </Item>
-      <Item key={BILLS}>
-        <Link to={getBusinessSpecificUrl(BILLS)}>
-        {isBottom ? <Icon type='container' style={{ marginRight: '0px' }} /> :
-          <span>
-            <Icon type='container' />
-            {PAGE_URL_TITLE_MAP[BILLS]}
+            <Icon type='build' />
+            {PAGE_URL_TITLE_MAP[INGREDIENTS]}
           </span>}
         </Link>
       </Item>
@@ -59,12 +50,21 @@ const NavItems = ({ isBottom }) => {
           </span>}
         </Link>
       </Item>
-      <Item key={INGREDIENTS}>
-        <Link to={getBusinessSpecificUrl(INGREDIENTS)}>
-        {isBottom ? <Icon type='build' style={{ marginRight: '0px' }} /> :
+      <Item key={BILLS}>
+        <Link to={getBusinessSpecificUrl(BILLS)}>
+        {isBottom ? <Icon type='container' style={{ marginRight: '0px' }} /> :
           <span>
-            <Icon type='build' />
-            {PAGE_URL_TITLE_MAP[INGREDIENTS]}
+            <Icon type='container' />
+            {PAGE_URL_TITLE_MAP[BILLS]}
+          </span>}
+        </Link>
+      </Item>
+      <Item key={ORDERS}>
+        <Link to={getBusinessSpecificUrl(ORDERS)}>
+        {isBottom ? <Icon type='shopping' style={{ marginRight: '0px' }} /> :
+          <span>
+            <Icon type='shopping' />
+            {PAGE_URL_TITLE_MAP[ORDERS]}
           </span>}
         </Link>
       </Item>

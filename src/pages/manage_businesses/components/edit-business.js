@@ -71,6 +71,9 @@ export default class EditBusiness extends React.Component {
       disabled: this.state.loading
     }}
   >
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
+    <br />
     <Spin spinning={this.state.loading}>
       <BusinessInfo
         business={this.state.businessToUpdate}
@@ -79,7 +82,7 @@ export default class EditBusiness extends React.Component {
       />
     </Spin>
     <br />
-    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
-    {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
   </Modal>;
 }

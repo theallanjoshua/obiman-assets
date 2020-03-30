@@ -83,7 +83,7 @@ class Network {
       } else {
         switch(response.status) {
           case 428: {
-            throw `Oops! Looks like somebody else beat you to it. Refresh ${errors.join(', ')}, apply your changes and try again!`;
+            throw `Looks like somebody else beat you to it. Refresh ${errors.join(', ')}, apply your changes and try again!`;
           }
           default: {
             throw errors.join(', ');

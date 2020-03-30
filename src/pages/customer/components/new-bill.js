@@ -36,7 +36,7 @@ export default class NewBill extends React.Component {
     try {
       const businesses = await fetchBusinesses(businessId ? [businessId] : []);
       if(!businesses || !businesses.length || businesses.length > 1) {
-        this.setState({ loading: false, errorMessage: 'Oops! The QR code seems to be invalid.' });
+        this.setState({ loading: false, errorMessage: 'The QR code seems to be invalid.' });
         return;
       }
       const business = businesses[0];
@@ -48,7 +48,7 @@ export default class NewBill extends React.Component {
       }
       const { bills } = await fetchBills(business.id, query);
       if(bills.length) {
-        this.setState({ loading: false, errorMessage: 'Oops! Looks like there is already an ongoing order for this. You can view that in the "Ongoing orders" tab.' });
+        this.setState({ loading: false, errorMessage: 'Looks like there is already an ongoing order for this.\nYou can view that in the "Ongoing orders" tab.' });
         return;
       }
       const ingredients = await fetchAllIngredients(business.id);
@@ -69,7 +69,7 @@ export default class NewBill extends React.Component {
   hideModal = () => {
     this.setState({
       showAddModal: false,
-      successMessage: this.state.addSuccessful ? 'Your order has been created successfully. You can now view, edit & manage them in the "Ongoing orders" tab.' : '',
+      successMessage: this.state.addSuccessful ? 'Your order has been created successfully.\nSwitch over to the "Ongoing orders" tab to view it!' : '',
       addSuccessful: false
     });
     setTimeout(() => this.setState({ successMessage: '' }), 5000);
@@ -82,16 +82,16 @@ export default class NewBill extends React.Component {
     }
   };
   render = () => <Spin spinning={this.state.loading}>
-    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
-    {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
     <br />
-    <div className='center-align'>
+    {!this.state.data ? <div className='center-align'>
       <QrReader
         className='obiman-qr-scanner'
         onError={this.onError}
         onScan={this.onScan}
       />
-    </div>
+    </div> : null}
     <AddBill
       isCustomerView
       visible={this.state.showAddModal}

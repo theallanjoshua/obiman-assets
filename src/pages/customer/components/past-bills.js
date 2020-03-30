@@ -61,7 +61,7 @@ export default class PastBills extends React.Component {
         onClick={this.fetchBills}
       />
     </div>
-    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
     <br />
     <br />
     <AllBills

@@ -3,7 +3,7 @@ import { Icon, Input } from 'antd';
 
 const { Search } = Input;
 
-export const PAGE_ERROR = 'Oops! Something went wrong! Try refreshing the page. If the issue persists, raise out to us at some@email.com';
+export const PAGE_ERROR = 'Something went wrong! Try refreshing the page. If the issue persists, raise out to us at some@email.com';
 export const ADD_BUTTON_TEXT = 'Add';
 export const SAVE_BUTTON_TEXT = 'Save';
 export const DATE_TIME_FORMAT = 'MMM Do YYYY, h:mm a';

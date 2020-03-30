@@ -85,6 +85,9 @@ export default class BulkEditIngredients extends React.Component {
       loading: this.state.loading
     }}
   >
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
+    <br />
     <Collapse>
       {this.state.ingredients.map(ingredient => <Panel
         key={ingredient.id}
@@ -101,7 +104,7 @@ export default class BulkEditIngredients extends React.Component {
       </Panel>)}
     </Collapse>
     <br />
-    {this.state.errorMessage ? <Alert description={this.state.errorMessage} type='error' showIcon /> : null}
-    {this.state.successMessage ? <Alert description={this.state.successMessage} type='success' showIcon /> : null}
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
   </Modal>;
 }
