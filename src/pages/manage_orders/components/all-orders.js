@@ -28,7 +28,7 @@ class OrdersByState extends React.Component {
     this.setState({ loading: true, errorMessage: '', successMessage: '' });
     try {
       await Network.put(ORDERS_API_URL(businessId), ordersToUpdate);
-      this.setState({ successMessage: 'Orders updated successfully' });
+      this.setState({ successMessage: 'Orders updated successfully', selectedOrderIds: [] });
       this.props.fetchOngoingOrders();
       setTimeout(() => this.setState({ successMessage: '' }), 2000);
     } catch (errorMessage) {
@@ -53,7 +53,7 @@ class OrdersByState extends React.Component {
     return <>
       {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
       {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
-      <br />
+      {this.state.successMessage || this.state.errorMessage ? <br /> : null}
       {groupedOrders.length ? <Tree
         checkable
         selectable={false}
@@ -78,13 +78,13 @@ class OrdersByState extends React.Component {
       </Tree> : null}
       <br />
       <div className='flex-wrap'>
-        {this.props.nextStates.map(nextState => <Button
-          key={nextState}
+        {this.props.nextStates.map(({ id, label }) => <Button
+          key={id}
           style={{ marginLeft: '10px' }}
-          children={nextState}
-          type={(order.getStates().filter(({ id, isNegative }) => id === nextState && isNegative).length ? 'danger' : 'primary')}
+          children={label}
+          type={order.getStateById(id).isNegative ? 'danger' : 'primary'}
           disabled={!this.state.selectedOrderIds.length || this.state.loading}
-          onClick={() => this.editOrders(nextState)}
+          onClick={() => this.editOrders(id)}
         />)}
       </div>
     </>
@@ -93,13 +93,12 @@ class OrdersByState extends React.Component {
 const AllOrders = ({ loading, orders, fetchOngoingOrders, businessId }) => {
   const order = new Order();
   return <Tabs defaultActiveKey={order.getStartState()}>
-    {order
-      .getStates()
-      .map(({ id, business: { shortLabel, nextStates } }) => {
+    {order.getStates()
+      .map(({ id, business: { label, nextStates } }) => {
         const ordersByState = orders.filter(({ status }) => status === id);
         return <TabPane
           key={id}
-          tab={`${shortLabel} (${ordersByState.length})`}
+          tab={`${label} (${ordersByState.length})`}
         >
           <Spin spinning={loading}>
             <OrdersByState

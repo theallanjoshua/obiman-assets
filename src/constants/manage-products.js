@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Utils } from 'obiman-data-models';
 import moment from 'moment';
-import { Popconfirm, Button, Tag, Typography } from 'antd';
+import { Popconfirm, Button, Tag, Typography, Tooltip } from 'antd';
 import { DEFAULT_TABLE_FEATURES } from './app';
 import Timestamp from '../components/timestamp';
 import S3ToImage from '../components/s3-to-image';
@@ -33,12 +33,17 @@ export const ProductDelete = ({ product }) => <Popconfirm
 </Popconfirm>;
 export const ProductIssues = ({ product }) => {
   const { issues } = product;
-  return issues.map(issue => <Tag key={issue} style={{ margin: '5px' }} color='#f50' children={issue} />);
+  return issues.map(issue => <Tag key={issue} style={{ margin: '1px' }} color='#f50' children={issue} />);
 }
 export const ProductClassification = ({ product }) => product.classification;
-export const ProductDescription = ({ product }) => <Typography.Paragraph ellipsis={{ rows: 3, expandable: true }}>
-  {product.description}
-</Typography.Paragraph>
+export const ProductDescription = ({ product }) => <Tooltip
+  title={product.description}
+  placement={'rightBottom'}
+>
+  <Typography.Paragraph ellipsis={{ rows: 3 }}>
+    {product.description}
+  </Typography.Paragraph>
+</Tooltip>
 export const ProductPrice = ({ product }) => {
   const { price, currency } = product;
   return `${new Utils().getCurrencySymbol(currency)}${price.toLocaleString()}`

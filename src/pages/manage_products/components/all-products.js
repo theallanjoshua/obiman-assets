@@ -78,6 +78,7 @@ export default class AllProducts extends React.Component {
               height: '100%',
               margin: '0px 10px 10px 0px'
             }}
+            bodyStyle={{ flexGrow: 1 }}
             cover={<ProductImage product={product} />}
             actions={[<ProductEdit product={product} />, <ProductDelete product={product} />]}
           >

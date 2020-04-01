@@ -16,7 +16,7 @@ export default class PastBills extends React.Component {
       bills: [],
       businesses: [],
       query: {
-        status: [ bill.getPositiveEndState(), bill.getNegativeEndState() ]
+        status: bill.getEndStates()
       },
       next: null
     }
@@ -62,8 +62,7 @@ export default class PastBills extends React.Component {
       />
     </div>
     {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
-    <br />
-    <br />
+    {this.state.errorMessage ? <br /> : null}
     <AllBills
       isCustomerView
       loading={this.state.loading}

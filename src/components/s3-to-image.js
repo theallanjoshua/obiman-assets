@@ -2,6 +2,7 @@ import * as React from 'react';
 import Network from '../utils/network';
 import { Avatar, Icon } from 'antd';
 import toMaterialStyle from 'material-color-hash';
+import LazyLoad from 'react-lazyload';
 
 export default class S3ToImage extends React.Component {
   constructor() {
@@ -32,14 +33,16 @@ export default class S3ToImage extends React.Component {
     children={(this.props.alt || '').substr(0,1).toUpperCase()}
     size='small'
     src={this.state.src}
-  /> : this.state.src ? <img
-    style={{
-      width: 240,
-      height: 160
-    }}
-    src={this.state.src}
-    alt={this.props.alt}
-  /> :  <Icon
+  /> : this.state.src ? <LazyLoad once>
+    <img
+      style={{
+        width: 240,
+        height: 160
+      }}
+      src={this.state.src}
+      alt={this.props.alt}
+    />
+  </LazyLoad> :  <Icon
     style={{ fontSize: '160px' }}
     theme='filled'
     type='picture'

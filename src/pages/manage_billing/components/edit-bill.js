@@ -2,8 +2,6 @@ import * as React from 'react';
 import { Alert, Spin, Modal, Typography } from 'antd';
 import BillInfo from './bill-info';
 import { Bill, Utils } from 'obiman-data-models';
-import Network from '../../../utils/network';
-import { BILLS_API_URL } from '../../../constants/endpoints';
 import {
   BILL_EDITED_SUCCESSFULLY_MESSAGE,
   EDIT_BILL_PAGE_TITLE
@@ -21,7 +19,6 @@ const INITIAL_STATE = {
   ingredients: [],
   products: [],
   billToUpdate: {},
-  previousBill: {},
   showValidationErrors: false
 }
 
@@ -39,7 +36,7 @@ export default class EditBill extends React.Component {
     const { visible: prevVisible } = prevProps;
     const { visible, ingredients, products, billToUpdate } = this.props;
     if (!prevVisible && visible) {
-      this.setState({ ...INITIAL_STATE, ingredients, products, billToUpdate, previousBill: billToUpdate });
+      this.setState({ ...INITIAL_STATE, ingredients, products, billToUpdate });
     }
   }
   getIngredients = () => {
@@ -63,21 +60,16 @@ export default class EditBill extends React.Component {
     return getEnrichedProducts(products, this.getIngredients());
   }
   onChange = billToUpdate => this.setState({ billToUpdate });
-  editBill = async () => {
-    const { businessId } = this.props;
+  onSave = async () => {
     const bill = new Bill(this.state.billToUpdate);
     if (Object.keys(bill.validate()).length) {
       this.setState({ showValidationErrors: true });
     } else {
-      const billData = bill
-        .enrich(this.props.products, this.props.orders)
-        .get();
       this.setState({ loading: true, errorMessage: '', successMessage: '' });
       try {
-        await Network.put(BILLS_API_URL(businessId), billData);
+        const billData = bill.get();
+        await this.props.onSave(billData);
         this.setState({ errorMessage: '', successMessage: BILL_EDITED_SUCCESSFULLY_MESSAGE });
-        this.props.onSuccess(businessId);
-        setTimeout(this.props.hideModal, 2000);
       } catch (errorMessage) {
         this.setState({ errorMessage });
       }
@@ -112,7 +104,7 @@ export default class EditBill extends React.Component {
     width={'720px'}
     visible={this.props.visible}
     closable={!this.state.loading}
-    onOk={this.editBill}
+    onOk={this.onSave}
     okButtonProps={{
       disabled: !!this.state.successMessage,
       loading: this.state.loading
@@ -124,7 +116,7 @@ export default class EditBill extends React.Component {
   >
     {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
-    <br />
+    {this.state.successMessage || this.state.errorMessage ? <br /> : null}
     <Spin spinning={this.state.loading}>
       <BillInfo
         showValidationErrors={this.state.showValidationErrors}

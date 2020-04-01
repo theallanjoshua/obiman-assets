@@ -129,26 +129,6 @@ export default class BillInfo extends React.Component {
         />
         </Col>
       </Row>
-      {!this.props.isCustomerView ? <Form.Item
-        { ...formItemLayout }
-        label={'Status'}
-        required
-        hasFeedback
-        { ...formValidation(this.props.showValidationErrors, validationErrors.status) }
-        children={
-          <Select
-            showSearch
-            allowClear
-            filterOption
-            placeholder={'Eg: Open'}
-            optionFilterProp='children'
-            value={billData.status || undefined}
-            onChange={this.setStatus}
-          >
-            {bill.getStates().map(state => <Select.Option key={state} value={state} children={state}/>)}
-          </Select>
-        }
-      /> : null}
     </Form>
   };
 }

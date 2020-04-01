@@ -21,7 +21,7 @@ export default class OpenBills extends React.Component {
       orders: [],
       businesses: [],
       query: {
-        status: bill.getStates().filter(state => state !== bill.getPositiveEndState() && state !== bill.getNegativeEndState())
+        status: bill.getStateIds().filter(state => !bill.getEndStates().includes(state))
       }
     }
   }
@@ -59,7 +59,7 @@ export default class OpenBills extends React.Component {
   }
   fetchBills = async () => {
     const { email } = this.props;
-    this.setState({ loading: true, errorMessage: '' });
+    this.setState({ loading: true, errorMessage: '', ingredients: [], products: [], orders: [] });
     try {
       const { bills } = await fetchBillsByCustomer(email, this.state.query);
       const businessIds = [ ...new Set(bills.map(({ businessId }) => businessId)) ];
@@ -83,8 +83,7 @@ export default class OpenBills extends React.Component {
       />
     </div>
     {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
-    <br />
-    <br />
+    {this.state.errorMessage ? <br /> : null}
     <AllBills
       isCustomerView
       loading={this.state.loading}

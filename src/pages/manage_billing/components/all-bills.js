@@ -1,29 +1,13 @@
 import * as React from 'react';
-import { Spin, Card, Button, Empty, Tooltip } from 'antd';
-import {
-  EDIT_BILL_BUTTON_TEXT,
-  PRINT_BILL_BUTTON_TEXT
-} from '../../../constants/manage-billing';
-import BillTotal from './bill-total';
-import BillCompositionReadonly from './bill-composition-readonly';
-import { Bill } from 'obiman-data-models';
+import { Spin, Empty } from 'antd';
 import EditBill from './edit-bill';
 import PrintBill from './print-bill';
 import { Business } from 'obiman-data-models';
 import LazyLoad from 'react-lazyload';
-
-const Frills = ({ isBottom }) => <div style={{ paddingLeft: '10px' }}>
-  {[ ...new Array(10) ].map((item, index) => <span
-    key={index}
-    style={{
-      width: 0,
-      height: 0,
-      borderLeft: '15px solid transparent',
-      borderRight: '15px solid transparent',
-      [isBottom ? 'borderTop' : 'borderBottom']: '15px solid white'
-    }}
-  />)}
-</div>
+import Network from '../../../utils/network';
+import { BILLS_API_URL } from '../../../constants/endpoints';
+import Bill from './bill';
+import { Bill as BDM } from 'obiman-data-models';
 
 class LazyLoadMoreBills extends React.Component {
   componentDidMount = () => this.props.onLoadMore();
@@ -43,60 +27,32 @@ export default class AllBills extends React.Component {
   showEditModal = billToUpdate => this.setState({ billToUpdate, showEditModal: true });
   showPrintModal = billToPrint => this.setState({ billToPrint, showPrintModal: true });
   hideModal = () => this.setState({ showEditModal: false, showPrintModal: false });
+  onSave = async billToSave => {
+    try {
+      const { businessId } = billToSave;
+      const billData = new BDM(billToSave)
+        .enrich(this.props.products, this.props.orders)
+        .get();
+      await Network.put(BILLS_API_URL(businessId), billData);
+      this.props.onSuccess(businessId);
+      setTimeout(this.hideModal, 2000);
+    } catch (errorMessage) {
+      throw errorMessage;
+    }
+  }
   render = () => <Spin spinning={this.props.loading}>
-  {(this.props.bills || []).length ?
-    <div className='flex-wrap'>
-      {this.props.bills.map(item => {
-        const bill = new Bill(item);
-        const billData = bill.get();
-        return <div key={billData.id} >
-          <Frills />
-          <Card
-            bordered={false}
-            style={{
-              maxWidth: '90vw',
-              width: '300px',
-              margin: '10px'
-            }}
-            bodyStyle={{ padding: '0px' }}
-            title={<div>
-              <div className='flex-wrap space-between'>
-                {this.props.isCustomerView ? billData.businessLabel : `${billData.source} ${billData.sourceId}`}
-                <div>
-                  {this.props.isCustomerView && [ bill.getPositiveEndState(), bill.getNegativeEndState() ].includes(billData.status) ? null : <Tooltip
-                    title={EDIT_BILL_BUTTON_TEXT}
-                    children={<Button
-                      type='link'
-                      icon='edit'
-                      onClick={() => this.showEditModal(bill)}
-                    />}
-                  />}
-                  <Tooltip
-                    title={PRINT_BILL_BUTTON_TEXT}
-                    children={<Button
-                      type='link'
-                      icon='printer'
-                      onClick={() => this.showPrintModal(bill)}
-                    />}
-                  />
-                </div>
-              </div>
-            </div>}
-            children={<>
-              <BillCompositionReadonly
-                composition={bill.getGroupedComposition()}
-                currency={billData.currency}
-                isCustomerView={this.props.isCustomerView}
-              />
-              <BillTotal
-                bill={billData}
-                currency={billData.currency}
-              />
-            </>}
-          />
-          <Frills isBottom />
-        </div>
-      })}
+    {(this.props.bills || []).length ? <div className='flex-wrap'>
+      {this.props.bills.map(item => <div key={item.id} >
+        <Bill
+          bill={item}
+          orders={(this.props.orders || []).filter(({ businessId }) => businessId === item.businessId)}
+          isCustomerView={this.props.isCustomerView}
+          showEditModal={this.showEditModal}
+          showPrintModal={this.showPrintModal}
+          onSave={this.onSave}
+          onSuccess={() => this.props.onSuccess(item.businessId)}
+        />
+      </div>)}
       {this.props.next && this.props.onLoadMore && !this.props.loading ? <LazyLoad once>
         <LazyLoadMoreBills onLoadMore={this.props.onLoadMore} />
       </LazyLoad>: null}
@@ -105,15 +61,14 @@ export default class AllBills extends React.Component {
   <EditBill
     visible={this.state.showEditModal}
     billToUpdate={this.state.billToUpdate}
-    businessId={this.state.billToUpdate.businessId}
     currency={this.state.billToUpdate.currency}
-    hideModal={this.hideModal}
     ingredients={(this.props.ingredients || []).filter(({ businessId }) => businessId === this.state.billToUpdate.businessId)}
     products={(this.props.products || []).filter(({ businessId }) => businessId === this.state.billToUpdate.businessId)}
     orders={(this.props.orders || []).filter(({ businessId }) => businessId === this.state.billToUpdate.businessId)}
     sources={(this.props.allBusinesses.filter(({ id }) => id === this.state.billToUpdate.businessId)[0] || new Business().get()).billSources}
-    onSuccess={this.props.onSuccess}
+    onSave={this.onSave}
     isCustomerView={this.props.isCustomerView}
+    hideModal={this.hideModal}
   />
   <PrintBill
     visible={this.state.showPrintModal}

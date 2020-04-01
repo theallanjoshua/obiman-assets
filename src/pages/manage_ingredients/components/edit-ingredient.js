@@ -103,7 +103,7 @@ export default class EditIngredient extends React.Component {
   >
     {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
-    <br />
+    {this.state.successMessage || this.state.errorMessage ? <br /> : null}
     <IngredientInfo
       currency={this.props.currency}
       locations={this.props.locations}

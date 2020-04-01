@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { Table } from 'antd';
-import { Utils, Order } from 'obiman-data-models';
+import { Utils, Order, Bill } from 'obiman-data-models';
+
+const bill = new Bill();
+const order = new Order();
+const orderCancelState = order.getStates().filter(({ isNegative, isEndState }) => isNegative && !isEndState)[0].id;
 
 export default class BillCompositionReadonly extends React.Component {
-  getStatusShortHandLabel = status => (new Order().getStates().filter(({ id }) => id === status)[0] || { business: { shortLabel: '' }, customer: { shortLabel: '' } })[this.props.isCustomerView ? 'customer' : 'business'].shortLabel;
+  getStatusShortHandLabel = status => order.getStateById(status)[this.props.isCustomerView ? 'customer' : 'business'].label;
   render = () => this.props.composition.length ? <Table
     size='small'
     columns={[
       {
         title: 'Qty',
-        dataIndex: 'quantity',
-        width: '50px'
+        dataIndex: 'quantity'
       },
       {
         title: 'Product',
@@ -25,7 +28,7 @@ export default class BillCompositionReadonly extends React.Component {
         title: 'Status',
         dataIndex: 'status',
         render: (text, { status, children = [], quantity }) => {
-          const orderPositiveEndState = new Order().getPositiveEndState();
+          const orderPositiveEndState = order.getPositiveEndState();
           if(status) {
             return this.getStatusShortHandLabel(status);
           } else {
@@ -41,5 +44,12 @@ export default class BillCompositionReadonly extends React.Component {
       children: entity.children.map(child => ({ ...child, key: child.orderId }))
     }))}
     pagination={false}
+    expandIcon={null}
+    expandRowByClick
+    rowSelection={this.props.onSelectionChange && this.props.isCustomerView && !bill.getEndStates().includes(this.props.billStatus) ? {
+      getCheckboxProps: ({ orderId, status }) => ({ disabled: !orderId || [ order.getNegativeEndState(), orderCancelState ].includes(status) }),
+      selectedRowKeys: this.props.selectedOrderIds,
+      onChange: this.props.onSelectionChange
+    } : null}
   /> : null
 }

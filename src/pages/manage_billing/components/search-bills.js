@@ -9,7 +9,7 @@ export default class SearchBills extends React.Component {
   constructor() {
     super();
     this.state = {
-      status: [bill.getStartState()],
+      status: bill.getStateIds().filter(id => !bill.getEndStates().includes(id)),
       source: [],
       updatedDateFrom: undefined,
       updatedDateTo: undefined
@@ -37,7 +37,7 @@ export default class SearchBills extends React.Component {
           value={this.state.status || undefined}
           onChange={this.setStatus}
         >
-          {bill.getStates().map(state => <Select.Option key={state} value={state} children={state}/>)}
+          {bill.getStates().map(({ id, business: { label } }) => <Select.Option key={id} value={id} children={label}/>)}
         </Select>
       }
     />

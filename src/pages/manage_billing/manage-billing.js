@@ -15,6 +15,9 @@ import { fetchBills, getEnrichedBills } from '../../utils/bills';
 import { fetchOrders } from '../../utils/orders';
 import SearchBills from './components/search-bills';
 import GenerateBillQrCode from './components/generate-bill-qr-code';
+import { Bill } from 'obiman-data-models';
+
+const bill = new Bill();
 
 class ManageBillingComponent extends React.Component {
   constructor() {
@@ -28,9 +31,7 @@ class ManageBillingComponent extends React.Component {
       orders: [],
       showAddModal: false,
       showGenerateQrCodeModal: false,
-      query: {
-        status: ['Open']
-      },
+      query: { status: bill.getStateIds().filter(id => !bill.getEndStates().includes(id)) },
       next: null,
       billsCount: 0
     }
@@ -118,7 +119,7 @@ class ManageBillingComponent extends React.Component {
     <br />
     {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
-    <br />
+    {this.state.successMessage || this.state.errorMessage ? <br /> : null}
     <SearchBills
       onChange={this.onSearchChange}
       sources={this.props.currentBusiness.billSources}

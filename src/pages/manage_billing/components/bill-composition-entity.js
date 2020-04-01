@@ -23,25 +23,8 @@ export default class BillCompositionEntity extends React.Component {
   render = () => {
     const { id: bceId, quantity: bceQuantity = 1 } = this.props.entity;
     const validationErrors = new BCE({ ...this.props.entity }).validate();
-    const selectedProduct = this.props.products.filter(({ id }) => id === bceId)[0] || { maxRepetition: 0, price: 0 };
+    const { maxRepetition = 0, price = 0 } = this.props.products.filter(({ id }) => id === bceId)[0] || {};
     return <Row gutter={8}>
-      <Col span={4}>
-        <Form.Item
-          { ...formItemLayout }
-          required
-          { ...formValidation(this.props.showValidationErrors, validationErrors.quantity) }
-          children={
-            <div className='input-select-group'>
-              <InputNumber
-                min={0}
-                max={bceId ? selectedProduct.maxRepetition + bceQuantity : undefined}
-                value={bceQuantity}
-                onChange={this.setQuantity}
-              />
-            </div>
-          }
-        />
-      </Col>
       <Col span={10}>
         <Form.Item
           { ...formItemLayout }
@@ -75,13 +58,30 @@ export default class BillCompositionEntity extends React.Component {
           }
         />
       </Col>
+      <Col span={4}>
+        <Form.Item
+          { ...formItemLayout }
+          required
+          { ...formValidation(this.props.showValidationErrors, validationErrors.quantity) }
+          children={
+            <div className='input-select-group'>
+              <InputNumber
+                min={0}
+                max={bceId ? maxRepetition + bceQuantity : undefined}
+                value={bceQuantity}
+                onChange={this.setQuantity}
+              />
+            </div>
+          }
+        />
+      </Col>
       <Col span={5}>
         <Form.Item
           { ...formItemLayout }
           children={<Statistic
             precision={2}
             prefix={new Utils().getCurrencySymbol(this.props.currency)}
-            value={selectedProduct.price}
+            value={price}
             valueStyle={{ fontSize: 'initial' }}
           />}
         />
@@ -92,7 +92,7 @@ export default class BillCompositionEntity extends React.Component {
           children={<Statistic
             precision={2}
             prefix={new Utils().getCurrencySymbol(this.props.currency)}
-            value={selectedProduct.price * bceQuantity}
+            value={price * bceQuantity}
             valueStyle={{ fontSize: 'initial' }}
           />}
         />

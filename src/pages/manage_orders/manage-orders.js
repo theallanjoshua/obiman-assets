@@ -7,6 +7,9 @@ import AllOrders from './components/all-orders';
 import { fetchAllProducts } from '../../utils/products';
 import { fetchBills } from '../../utils/bills';
 import { fetchOrders, getEnrichedOrders } from '../../utils/orders';
+import { Bill } from 'obiman-data-models';
+
+const bill = new Bill();
 
 class ManageOrdersComponent extends React.Component {
   constructor() {
@@ -34,7 +37,7 @@ class ManageOrdersComponent extends React.Component {
     this.setState({ loading: true, errorMessage: '' });
     try {
       const products = await fetchAllProducts(businessId);
-      const { bills } = await fetchBills(businessId, { status: ['Open'] });
+      const { bills } = await fetchBills(businessId, { status: bill.getStateIds().filter(id => !bill.getEndStates().includes(id)) });
       const orderIds = bills.reduce((acc, { composition }) => [ ...acc, ...composition.filter(({ orderId }) => orderId).map(({ orderId }) => orderId) ], []);
       const orders = await fetchOrders(businessId, orderIds);
       const enrichedOrders = getEnrichedOrders(orders, products, bills);
@@ -55,7 +58,7 @@ class ManageOrdersComponent extends React.Component {
     <br />
     {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
-    <br />
+    {this.state.successMessage || this.state.errorMessage ? <br /> : null}
     <br />
     <AllOrders
       businessId={this.props.businessId}

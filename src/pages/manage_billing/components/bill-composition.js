@@ -24,11 +24,11 @@ export default class BillComposition extends React.Component {
     <Row gutter={8}>
       <Col span={22}>
         <Row gutter={8}>
-          <Col span={4}>
-            <label>Qty</label>
-          </Col>
           <Col span={10}>
             <label>Product</label>
+          </Col>
+          <Col span={4}>
+            <label>Qty</label>
           </Col>
           <Col span={5}>
             <label>Price</label>
