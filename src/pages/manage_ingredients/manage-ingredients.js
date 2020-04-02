@@ -54,6 +54,7 @@ class ManageIngredientsComponent extends React.Component {
           type='primary'
           icon='plus'
           onClick={this.showAddModal}
+          disabled={this.state.loading}
           children={ADD_INGREDIENT_BUTTON_TEXT}
         />
         <Button

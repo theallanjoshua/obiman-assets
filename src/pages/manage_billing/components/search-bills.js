@@ -6,13 +6,15 @@ import DateRange from '../../../components/date-range';
 const bill = new Bill();
 
 export default class SearchBills extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    const { query } = props;
     this.state = {
-      status: bill.getStateIds().filter(id => !bill.getEndStates().includes(id)),
+      status: [],
       source: [],
       updatedDateFrom: undefined,
-      updatedDateTo: undefined
+      updatedDateTo: undefined,
+      ...query
     }
   }
   setSource = source => this.setState({ source });

@@ -59,7 +59,6 @@ class ManageOrdersComponent extends React.Component {
     {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
     {this.state.successMessage || this.state.errorMessage ? <br /> : null}
-    <br />
     <AllOrders
       businessId={this.props.businessId}
       loading={this.state.loading}

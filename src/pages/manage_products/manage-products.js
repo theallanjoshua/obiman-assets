@@ -57,6 +57,7 @@ class ManageProductsComponent extends React.Component {
           type='primary'
           icon='plus'
           onClick={this.showAddModal}
+          disabled={this.state.loading}
           children={ADD_PRODUCT_BUTTON_TEXT}
         />
         <Button

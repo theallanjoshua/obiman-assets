@@ -14,9 +14,11 @@ class OrdersByState extends React.Component {
       loading: false,
       errorMessage: '',
       successMessage: '',
+      expandedKeys: [],
       selectedOrderIds: []
     }
   }
+  onExpand = expandedKeys => this.setState({ expandedKeys });
   onSelectionChange = selectedOrderIds => this.setState({ selectedOrderIds });
   editOrders = async status => {
     const { businessId, orders } = this.props;
@@ -50,13 +52,40 @@ class OrdersByState extends React.Component {
         }]
       }];
     }, []);
+    const keysToExpand = groupedOrders.reduce((acc, { source, sourceId, customers }) => [ ...acc, `${source}${sourceId}`, ...customers.map(({ customer }) => `${source}${sourceId}${customer}`)], [])
+    const keysToSelect = groupedOrders.reduce((acc, { customers }) => [ ...acc, ...customers.reduce((subAcc, { products }) => [ ...subAcc, ...products.map(({ key }) => key)], [])], [])
     return <>
       {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
       {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
       {this.state.successMessage || this.state.errorMessage ? <br /> : null}
+      {keysToExpand.length === this.state.expandedKeys.length ? <Button
+        children={'Collapse all'}
+        type='link'
+        disabled={!groupedOrders.length}
+        onClick={() => this.onExpand([])}
+      /> : <Button
+        children={'Expand all'}
+        type='link'
+        disabled={!groupedOrders.length}
+        onClick={() => this.onExpand(keysToExpand)}
+      />}
+      {keysToSelect.length === this.state.selectedOrderIds.length ? <Button
+        children={'Deselect all'}
+        type='link'
+        disabled={!groupedOrders.length}
+        onClick={() => this.onSelectionChange([])}
+      /> : <Button
+        children={'Select all'}
+        type='link'
+        disabled={!groupedOrders.length}
+        onClick={() => this.onSelectionChange(keysToSelect)}
+      />}
       {groupedOrders.length ? <Tree
         checkable
         selectable={false}
+        expandedKeys={this.state.expandedKeys}
+        onExpand={this.onExpand}
+        checkedKeys={this.state.selectedOrderIds}
         onCheck={this.onSelectionChange}
       >
         {groupedOrders.map(({ source, sourceId, customers }) => <TreeNode
@@ -66,7 +95,7 @@ class OrdersByState extends React.Component {
         >
           {customers.map(({ customer, products = [] }) => <TreeNode
             disableCheckbox
-            key={customer}
+            key={`${source}${sourceId}${customer}`}
             title={`${customer} (${products.length})`}
           >
             {products.map(({ key, title }) => <TreeNode

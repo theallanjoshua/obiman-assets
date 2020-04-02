@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Button } from 'antd';
+import { Alert } from 'antd';
 import AllBills from '../../manage_billing/components/all-bills';
 import { fetchBillsByCustomer, getEnrichedBills } from '../../../utils/bills';
 import { fetchAllIngredients } from '../../../utils/ingredients';
@@ -76,12 +76,6 @@ export default class OpenBills extends React.Component {
     this.setState({ loading: false });
   }
   render = () => <>
-    <div className='right-align'>
-      <Button
-        icon='reload'
-        onClick={this.fetchBills}
-      />
-    </div>
     {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.errorMessage ? <br /> : null}
     <AllBills

@@ -26,7 +26,7 @@ export const getBillQueryParamsFromQuery = query => Object.keys(query).reduce((a
 export const fetchBills = async (businessId, query) => {
   try {
     const params = getBillQueryParamsFromQuery(query);
-    return await Network.get(BILLS_API_URL(businessId, params));
+    return params ? await Network.get(BILLS_API_URL(businessId, params)) : [];
   } catch (errorMessage) {
     throw errorMessage;
   }
@@ -35,7 +35,7 @@ export const fetchBills = async (businessId, query) => {
 export const fetchBillsByCustomer = async (customer, query) => {
   try {
     const params = getBillQueryParamsFromQuery(query);
-    return await Network.get(CUSTOMER_BILLS_API_URL(customer, params));
+    return params ? await Network.get(CUSTOMER_BILLS_API_URL(customer, params)) : [];
   } catch (errorMessage) {
     throw errorMessage;
   }

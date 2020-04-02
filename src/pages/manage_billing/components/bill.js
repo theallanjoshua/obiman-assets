@@ -82,30 +82,25 @@ export default class Bill extends React.Component {
           margin: '10px'
         }}
         bodyStyle={{ padding: '0px' }}
-        title={<div>
-          {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
-          {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
-          {this.state.successMessage || this.state.errorMessage ? <br /> : null}
-          <div className='flex-wrap space-between'>
-            {`${this.props.isCustomerView ? `${billData.businessLabel} (` : ''}${billData.source} ${billData.sourceId}${this.props.isCustomerView ? ')' : ''}`}
-            <div>
-              {this.props.isCustomerView && bill.getEndStates().includes(billData.status) ? null : <Tooltip
-                title={EDIT_BILL_BUTTON_TEXT}
-                children={<Button
-                  type='link'
-                  icon='edit'
-                  onClick={() => this.props.showEditModal(billData)}
-                />}
+        title={<div className='flex-wrap space-between'>
+          {`${this.props.isCustomerView ? `${billData.businessLabel} (` : ''}${billData.source} ${billData.sourceId}${this.props.isCustomerView ? ')' : ''}`}
+          <div>
+            {this.props.isCustomerView && bill.getEndStates().includes(billData.status) ? null : <Tooltip
+              title={EDIT_BILL_BUTTON_TEXT}
+              children={<Button
+                type='link'
+                icon='edit'
+                onClick={() => this.props.showEditModal(billData)}
               />}
-              <Tooltip
-                title={PRINT_BILL_BUTTON_TEXT}
-                children={<Button
-                  type='link'
-                  icon='printer'
-                  onClick={() => this.props.showPrintModal(billData)}
-                />}
-              />
-            </div>
+            />}
+            <Tooltip
+              title={PRINT_BILL_BUTTON_TEXT}
+              children={<Button
+                type='link'
+                icon='printer'
+                onClick={() => this.props.showPrintModal(billData)}
+              />}
+            />
           </div>
         </div>}
         children={<>
@@ -125,6 +120,9 @@ export default class Bill extends React.Component {
               isCustomerView={this.props.isCustomerView}
             />
             <br />
+            {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+            {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
+            {this.state.successMessage || this.state.errorMessage ? <br /> : null}
             {this.state.selectedOrderIds.length ? <Button
               style={{ margin: '5px' }}
               children={orderCancelState.id}

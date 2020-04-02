@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { Alert, Button } from 'antd';
+import { Alert, Button, Tabs, Typography } from 'antd';
 import {
-  MANAGE_BILLS_PAGE_TITLE,
   ADD_BILL_TEXT,
   NO_OF_BILLS_PER_REQUEST
 } from '../../constants/manage-billing';
-import PageHeader from '../../components/page-header';
 import { Consumer } from '../../context';
 import AllBills from './components/all-bills';
 import AddBill from './components/add-bill';
@@ -16,24 +14,23 @@ import { fetchOrders } from '../../utils/orders';
 import SearchBills from './components/search-bills';
 import GenerateBillQrCode from './components/generate-bill-qr-code';
 import { Bill } from 'obiman-data-models';
+import BillsCount from './components/bills-count';
 
 const bill = new Bill();
+const { TabPane } = Tabs;
+const { Text } = Typography;
 
-class ManageBillingComponent extends React.Component {
-  constructor() {
-    super();
+class BillsByQuery extends React.Component {
+  constructor(props) {
+    super(props);
+    const { query = {} } = props;
     this.state = {
       loading: false,
       errorMessage: '',
-      ingredients: [],
-      products: [],
       bills: [],
       orders: [],
-      showAddModal: false,
-      showGenerateQrCodeModal: false,
-      query: { status: bill.getStateIds().filter(id => !bill.getEndStates().includes(id)) },
-      next: null,
-      billsCount: 0
+      query,
+      next: null
     }
   }
   componentDidMount = () => this.fetchAllBills();
@@ -44,24 +41,19 @@ class ManageBillingComponent extends React.Component {
   }
   fetchAllBills = async () => {
     const { id: businessId } = this.props.currentBusiness;
+    const { query } = this.state;
     if(businessId) {
       this.setState({ loading: true, errorMessage: '' });
       try {
-        const ingredients = await fetchAllIngredients(businessId);
-        const products = await fetchAllProducts(businessId);
-        const enrichedProducts = getEnrichedProducts(products, ingredients).map(item => ({ ...item, businessId }));
-        const { count: billsCount } = await fetchBills(businessId, { ...this.state.query, onlyCount: true });
-        const { bills, next } = await fetchBills(businessId, { ...this.state.query, size: NO_OF_BILLS_PER_REQUEST });
+        const { products } = this.props;
+        const { bills, next } = await fetchBills(businessId, { ...query, size: NO_OF_BILLS_PER_REQUEST });
         const orderIds = bills.reduce((acc, { composition }) => [ ...acc, ...composition.filter(({ orderId }) => orderId).map(({ orderId }) => orderId) ], []);
         const orders = await fetchOrders(businessId, orderIds);
         const enrichedBills = getEnrichedBills(bills, products, orders);
         this.setState({
-          ingredients: ingredients.map(item => ({ ...item, businessId })),
-          products: enrichedProducts,
           bills: enrichedBills,
-          orders: orders.map(item => ({ ...item, businessId })),
-          next,
-          billsCount
+          orders: orders,
+          next
         });
       } catch (errorMessage) {
         this.setState({ errorMessage });
@@ -71,19 +63,73 @@ class ManageBillingComponent extends React.Component {
   }
   fetchMoreBills = async () => {
     const { id: businessId } = this.props.currentBusiness;
+    const { query } = this.state;
     if(businessId) {
       this.setState({ loading: true, errorMessage: '' });
       try {
-        const { products, next: existingNext, orders: existingOrders, bills: existingBills } = this.state;
-        const { bills, next } = await fetchBills(businessId, { ...this.state.query, size: NO_OF_BILLS_PER_REQUEST, next: existingNext });
+        const { products } = this.props;
+        const { next: existingNext, orders: existingOrders, bills: existingBills } = this.state;
+        const { bills, next } = await fetchBills(businessId, { ...query, size: NO_OF_BILLS_PER_REQUEST, next: existingNext });
         const orderIds = bills.reduce((acc, { composition }) => [ ...acc, ...composition.filter(({ orderId }) => orderId).map(({ orderId }) => orderId) ], []);
         const orders = await fetchOrders(businessId, orderIds);
         const enrichedBills = getEnrichedBills(bills, products, orders);
         this.setState({
           bills: [ ...existingBills, ...enrichedBills ],
-          orders: [ ...existingOrders, orders.map(item => ({ ...item, businessId })) ],
+          orders: [ ...existingOrders, orders ],
           next
         });
+      } catch (errorMessage) {
+        this.setState({ errorMessage });
+      }
+      this.setState({ loading: false });
+    }
+  }
+  render = () => <>
+    {this.state.errorMessage ? <br /> : null}
+    {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
+    {this.state.errorMessage ? <br /> : null}
+    <AllBills
+      loading={this.state.loading}
+      ingredients={this.props.ingredients.map(item => ({ ...item, businessId: this.props.currentBusiness.id }))}
+      products={this.props.products.map(item => ({ ...item, businessId: this.props.currentBusiness.id }))}
+      orders={this.state.orders.map(item => ({ ...item, businessId: this.props.currentBusiness.id }))}
+      bills={this.state.bills}
+      next={this.state.next}
+      onSuccess={this.fetchAllBills}
+      onLoadMore={this.fetchMoreBills}
+      allBusinesses={[this.props.currentBusiness]}
+    />
+  </>;
+}
+
+class ManageBillingComponent extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      loading: true,
+      errorMessage: '',
+      ingredients: [],
+      products: [],
+      showAddModal: false,
+      showGenerateQrCodeModal: false,
+      query: { status: bill.getEndStates() }
+    }
+  }
+  componentDidMount = () => this.fetchAllIngredientsAndProducts();
+  componentDidUpdate = prevProps => {
+    const { id } = this.props.currentBusiness;
+    const { id: existingId } = prevProps.currentBusiness;
+    if(id !== existingId) this.fetchAllIngredientsAndProducts();
+  }
+  fetchAllIngredientsAndProducts = async () => {
+    const { id: businessId } = this.props.currentBusiness;
+    if(businessId) {
+      this.setState({ loading: true, errorMessage: '' });
+      try {
+        const ingredients = await fetchAllIngredients(businessId);
+        const products = await fetchAllProducts(businessId);
+        const enrichedProducts = getEnrichedProducts(products, ingredients);
+        this.setState({ ingredients, products: enrichedProducts });
       } catch (errorMessage) {
         this.setState({ errorMessage });
       }
@@ -98,51 +144,75 @@ class ManageBillingComponent extends React.Component {
     this.fetchAllBills();
   }
   render = () => <>
-    <PageHeader
-      title={MANAGE_BILLS_PAGE_TITLE(this.state.billsCount)}
-      extra={<>
-        <Button
-          style={{ marginRight: '4px' }}
-          type='primary'
-          icon='plus'
-          onClick={this.showAddModal}
-          children={ADD_BILL_TEXT}
-        />
-        <Button
-          style={{ marginRight: '4px' }}
-          icon='qrcode'
-          children='Generate QR Code'
-          onClick={this.showGenerateQrCodeModal}
-        />
-      </>}
-    />
+    <div className='right-align flex-wrap'>
+      <Button
+        style={{ marginRight: '4px' }}
+        type='primary'
+        icon='plus'
+        disabled={this.state.loading}
+        onClick={this.showAddModal}
+        children={ADD_BILL_TEXT}
+      />
+      <Button
+        style={{ marginRight: '4px' }}
+        icon='qrcode'
+        children='Generate QR Code'
+        onClick={this.showGenerateQrCodeModal}
+      />
+      <Button
+        icon='reload'
+        onClick={this.fetchAllIngredientsAndProducts}
+      />
+    </div>
     <br />
     {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
-    {this.state.successMessage ? <Alert message='Yay!' description={this.state.successMessage} type='success' showIcon /> : null}
-    {this.state.successMessage || this.state.errorMessage ? <br /> : null}
-    <SearchBills
-      onChange={this.onSearchChange}
-      sources={this.props.currentBusiness.billSources}
-    />
-    <br />
-    <br />
-    <AllBills
-      loading={this.state.loading}
-      ingredients={this.state.ingredients}
-      products={this.state.products}
-      orders={this.state.orders}
-      bills={this.state.bills}
-      next={this.state.next}
-      onSuccess={this.fetchAllBills}
-      onLoadMore={this.fetchMoreBills}
-      allBusinesses={[this.props.currentBusiness]}
-    />
+    {this.state.errorMessage ? <br /> : null}
+    {!this.state.loading ? <Tabs defaultActiveKey={bill.getStartState()}>
+      {bill.getStates()
+      .filter(({ id }) => !bill.getEndStates().includes(id))
+      .map(({ id, business: { label } }) => <TabPane
+        key={id}
+        tab={<span>
+          {`${label} (`}
+          <BillsCount businessId={this.props.currentBusiness.id} query={{ status: [ id ] }} />
+          {`)`}
+        </span>}
+      >
+        <BillsByQuery
+          query={{ status: [ id ] }}
+          currentBusiness={this.props.currentBusiness}
+          ingredients={this.state.ingredients}
+          products={this.state.products}
+        />
+      </TabPane>)}
+      <TabPane key={'search'} tab={'Search'}>
+        <SearchBills
+          query={this.state.query}
+          onChange={this.onSearchChange}
+          sources={this.props.currentBusiness.billSources}
+        />
+        <br />
+        <span>
+          <Text style={{ paddingLeft: '10px' }} strong>{` Results`}</Text>
+          {` (`}
+          <BillsCount businessId={this.props.currentBusiness.id} query={this.state.query} />
+          {`)`}
+        </span>
+        <BillsByQuery
+          enableSearch
+          query={this.state.query}
+          ingredients={this.state.ingredients}
+          products={this.state.products}
+          currentBusiness={this.props.currentBusiness}
+        />
+      </TabPane>
+    </Tabs> : null}
     <AddBill
       visible={this.state.showAddModal}
       ingredients={this.state.ingredients}
       products={this.state.products}
       hideModal={this.hideModal}
-      onSuccess={this.fetchAllBills}
+      onSuccess={this.fetchAllIngredientsAndProducts}
       businessId={this.props.currentBusiness.id}
       currency={this.props.currentBusiness.currency}
       sources={this.props.currentBusiness.billSources}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Spin, Empty } from 'antd';
+import { Spin, Empty, Button } from 'antd';
 import EditBill from './edit-bill';
 import PrintBill from './print-bill';
 import { Business } from 'obiman-data-models';
@@ -41,6 +41,12 @@ export default class AllBills extends React.Component {
     }
   }
   render = () => <Spin spinning={this.props.loading}>
+    <div className='right-align'>
+      <Button
+        icon='reload'
+        onClick={this.props.onSuccess}
+      />
+    </div>
     {(this.props.bills || []).length ? <div className='flex-wrap'>
       {this.props.bills.map(item => <div key={item.id} >
         <Bill

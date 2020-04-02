@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Button } from 'antd';
+import { Alert } from 'antd';
 import AllBills from '../../manage_billing/components/all-bills';
 import { fetchBillsByCustomer } from '../../../utils/bills';
 import { Bill } from 'obiman-data-models';
@@ -55,12 +55,6 @@ export default class PastBills extends React.Component {
     this.setState({ loading: false });
   }
   render = () => <>
-    <div className='right-align'>
-      <Button
-        icon='reload'
-        onClick={this.fetchBills}
-      />
-    </div>
     {this.state.errorMessage ? <Alert message='Oops!' description={this.state.errorMessage} type='error' showIcon /> : null}
     {this.state.errorMessage ? <br /> : null}
     <AllBills
@@ -70,6 +64,7 @@ export default class PastBills extends React.Component {
       allBusinesses={this.state.businesses}
       next={this.state.next}
       onLoadMore={this.fetchMoreBills}
+      onSuccess={this.fetchBills}
     />
   </>;
 }
